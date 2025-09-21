@@ -18,7 +18,7 @@ static void LoadScene_StartScene();
 static void LoadScene_GameScene();
 
 // 卸载场景 - 请务必保证场景中的对象都正确销毁了
-static void UnloadScene();
+static void UnloadScene(SceneId oldSceneId);
 static void UnloadScene_StartScene();
 static void UnloadScene_GameScene();
 
@@ -32,7 +32,7 @@ void InitScene(SceneId newSceneId)
 // 修改场景
 void ChangeScene(SceneId newSceneId)
 {
-    UnloadScene();
+    UnloadScene(currentScene->sceneId);
     LoadScene(newSceneId);
 }
 
@@ -79,9 +79,9 @@ void LoadScene_GameScene()
 }
 
 // 卸载场景
-void UnloadScene()
+void UnloadScene(SceneId oldSceneId)
 {
-    switch (currentScene->sceneId)
+    switch (oldSceneId)
     {
     case None:
         break;
