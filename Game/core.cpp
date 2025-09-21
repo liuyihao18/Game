@@ -60,7 +60,7 @@ void GameLoop(HWND hWnd, WPARAM wParam, LPARAM lParam)
     GameUpdate(deltaTime / 1000.0);
 
     // 最后进行渲染，实际的渲染函数是GameRender，只重绘画面部分
-    RECT rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+    RECT rect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
     InvalidateRect(hWnd, &rect, FALSE);
 }
 
@@ -102,7 +102,8 @@ void ShowAverageFps()
 {
     static double lastShowTime = -1;
     // 控制刷新间隔
-    if (GetGameTime() - lastShowTime < 1) {
+    if (GetGameTime() - lastShowTime < 1)
+    {
         return;
     }
     lastShowTime = GetGameTime();

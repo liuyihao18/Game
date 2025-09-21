@@ -13,10 +13,10 @@
 #include <algorithm>
 
 #pragma region 按钮核心代码
-static std::map<std::string, Button*> m;
+static std::map<std::string, Button *> m;
 static std::vector<Button *> buttons;
 
-void CreateButton(const char* name, double x, double y, int width, int height, ButtonRenderFunc render, OnClickFunc onClick)
+void CreateButton(const char *name, double x, double y, int width, int height, ButtonRenderFunc render, OnClickFunc onClick)
 {
     Button *button = new Button();
     button->position = {x, y};
@@ -30,12 +30,13 @@ void CreateButton(const char* name, double x, double y, int width, int height, B
     buttons.push_back(button);
 }
 
-void DestroyButton(const char* name)
+void DestroyButton(const char *name)
 {
-    if (!m.count(name)) return;
+    if (!m.count(name))
+        return;
 
-    Button* button = m[name];
-    std::vector<Button*>::iterator iter = find(buttons.begin(), buttons.end(), button);
+    Button *button = m[name];
+    std::vector<Button *>::iterator iter = find(buttons.begin(), buttons.end(), button);
     delete button;
     buttons.erase(iter);
     m.erase(name);
@@ -51,26 +52,29 @@ void DestroyButtons()
     buttons.clear();
 }
 
-Button* GetButton(const char* name)
+Button *GetButton(const char *name)
 {
-    if (!m.count(name)) return nullptr;
+    if (!m.count(name))
+        return nullptr;
 
     return m[name];
 }
 
-void EnableButton(const char* name)
+void EnableButton(const char *name)
 {
-    if (!m.count(name)) return;
+    if (!m.count(name))
+        return;
 
-    Button* button = m[name];
+    Button *button = m[name];
     button->isEnabled = true;
 }
 
-void DisableButton(const char* name)
+void DisableButton(const char *name)
 {
-    if (!m.count(name)) return;
+    if (!m.count(name))
+        return;
 
-    Button* button = m[name];
+    Button *button = m[name];
     button->isEnabled = false;
 }
 
@@ -101,7 +105,7 @@ void PressButtons(int mouseX, int mouseY)
 
 void RenderButtons(HDC hdc_memBuffer, HDC hdc_loadBmp)
 {
-    for (Button* button : buttons)
+    for (Button *button : buttons)
     {
         if (!button->isEnabled)
         {
@@ -116,7 +120,7 @@ extern HBITMAP bmp_StartButton;
 
 void RenderStartButton(HDC hdc_memBuffer, HDC hdc_loadBmp)
 {
-    Button* button = GetButton("StartButton");
+    Button *button = GetButton("StartButton");
 
     SelectObject(hdc_loadBmp, bmp_StartButton);
     TransparentBlt(

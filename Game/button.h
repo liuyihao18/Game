@@ -24,19 +24,19 @@ struct Button
     int width;        // 宽度
     int height;       // 高度
 
-    bool isEnabled;   // 是否激活
+    bool isEnabled; // 是否激活
 
     ButtonRenderFunc render;
     OnClickFunc onClick;
 };
 
 // 按钮系统的对外函数
-void CreateButton(const char* name, double x, double y, int width, int height, ButtonRenderFunc render, OnClickFunc onClick);
-void DestroyButton(const char* name);
+void CreateButton(const char *name, double x, double y, int width, int height, ButtonRenderFunc render, OnClickFunc onClick);
+void DestroyButton(const char *name);
 void DestroyButtons();
-Button* GetButton(const char* name);
-void EnableButton(const char* name);
-void DisableButton(const char* name);
+Button *GetButton(const char *name);
+void EnableButton(const char *name);
+void DisableButton(const char *name);
 void PressButtons(int mouseX, int mouseY);
 void RenderButtons(HDC hdc_memBuffer, HDC hdc_loadBmp);
 

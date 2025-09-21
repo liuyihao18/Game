@@ -26,7 +26,7 @@ void CreatePlayer()
 {
     player = new Player();
     // 玩家初始位置
-    player->position = { 550, 350 };
+    player->position = {550, 350};
     player->width = 50;
     player->height = 50;
     // 玩家初始速度
