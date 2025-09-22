@@ -4,6 +4,8 @@
  */
 
 #include "framework.h"
+#include <atlconv.h>
+#include <commctrl.h>
 #include "core.h"
 #include "mouse.h"
 #include "keyboard.h"
