@@ -5,7 +5,6 @@
  */
 
 #include "framework.h"
-#include "core.h"
 #include "scene.h"
 #include "player.h"
 #include "enemy.h"

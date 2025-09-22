@@ -8,6 +8,8 @@
 #include "mouse.h"
 #include "keyboard.h"
 #include "config.h"
+#include <atlconv.h>
+#include <commctrl.h>
 #include <time.h>
 
 #define MAX_LOADSTRING 100

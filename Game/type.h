@@ -5,12 +5,14 @@
 
 #pragma once
 
+// 二维向量
 struct Vector2
 {
     double x;
     double y;
 };
 
+// 矩形
 struct Rect
 {
     double left;
@@ -19,6 +21,7 @@ struct Rect
     double bottom;
 };
 
+// 圆
 struct Circle
 {
     Vector2 center;

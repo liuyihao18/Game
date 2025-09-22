@@ -12,10 +12,8 @@
 #define IDI_SMALL 108
 #define IDC_GAME 109
 #define IDR_MAINFRAME 128
-#define IDB_BITMAP_STARTBUTTON 131
 #define IDB_BITMAP_START_BUTTON 133
-#define IDB_BITMAP1 138
-#define IDB_BITMAP_PLAYER 138
+#define IDB_BITMAP_PLAYER 134
 #define IDC_STATIC -1
 
 // Next default values for new objects
