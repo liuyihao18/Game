@@ -5,15 +5,21 @@
 
 #pragma once
 
+#include "framework.h"
+
 /* 主计时器ID */
 #define MAIN_TIMER 1
 
 /* 游戏初始化函数 */
 void GameInit(HWND hWnd, WPARAM wParam, LPARAM lParam);
 void GameResourceInit(HWND hWnd, WPARAM wParam, LPARAM lParam);
+void InitTQTimer(HWND hWnd);
+void InitMMTimer(HWND hWnd);
+void DeleteTQTimer();
+void DeleteMMTimer();
 
 /* 游戏主循环函数 */
-void GameLoop(HWND hWnd, WPARAM wParam, LPARAM lParam);
+void GameLoop(HWND hWnd);
 void GameCheckCollision();         // 游戏碰撞检测
 void GameUpdate(double deltaTime); // 游戏更新 - 相邻两帧的时间间隔，单位：秒
 

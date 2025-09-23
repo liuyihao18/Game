@@ -157,7 +157,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // 游戏初始化
         GameInit(hWnd, wParam, lParam);
         // 游戏主循环开始
+#if TIMER_USE == TIMER_WM_TIMER
         SetTimer(hWnd, MAIN_TIMER, 1000 / FPS, NULL);
+#elif TIMER_USE == TIMER_TQ_TIMER
+        InitTQTimer(hWnd);
+#elif TIMER_USE == TIMER_MM_TIMER
+        InitMMTimer(hWnd);
+#endif
     }
     break;
     case WM_KEYDOWN:
@@ -189,12 +195,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // 鼠标左键松开事件
         LButtonUp(hWnd, wParam, lParam);
     }
+    break;
+#if TIMER_USE == TIMER_WM_TIMER
     case WM_TIMER:
     {
         // 游戏主循环逻辑
-        GameLoop(hWnd, wParam, lParam);
+        if (wParam == MAIN_TIMER) {
+            GameLoop(hWnd);
+        }
     }
     break;
+#endif
     case WM_COMMAND:
     {
         int wmId = LOWORD(wParam);
@@ -219,6 +230,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     break;
     case WM_DESTROY:
+#if TIMER_USE == TIMER_WM_TIMER
+        KillTimer(hWnd, MAIN_TIMER);
+#elif TIMER_USE == TIMER_TQ_TIMER
+        DeleteTQTimer();
+#elif TIMER_USE == TIMER_MM_TIMER
+        DeleteMMTimer();
+#endif
         PostQuitMessage(0);
         break;
     default:

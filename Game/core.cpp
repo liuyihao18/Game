@@ -37,7 +37,7 @@ void GameInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 }
 
 // 游戏帧循环
-void GameLoop(HWND hWnd, WPARAM wParam, LPARAM lParam)
+void GameLoop(HWND hWnd)
 {
     // 游戏时间处理
     double currentFrameTimestamp = GetCurrentTimestamp();
