@@ -18,6 +18,7 @@ const int statusBarParts[2] = {100, -1}; // 状态栏分栏，第一个分区宽
 /* 游戏内参数 */
 #define FPS 100 // 游戏运行帧率，但是WIN32的定时器非常不准！
 
+// 使用的计时器
 #define TIMER_WM_TIMER 0
 #define TIMER_TQ_TIMER 1
 #define TIMER_MM_TIMER 2

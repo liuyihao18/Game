@@ -4,8 +4,7 @@
  */
 
 #include "framework.h"
-#include <atlconv.h>
-#include <commctrl.h>
+#include "timer.h"
 #include "core.h"
 #include "mouse.h"
 #include "keyboard.h"
