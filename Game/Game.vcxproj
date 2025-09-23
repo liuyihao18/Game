@@ -149,6 +149,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="render.cpp" />
     <ClCompile Include="scene.cpp" />
+    <ClCompile Include="timer.cpp" />
     <ClCompile Include="update.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
