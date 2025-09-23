@@ -189,6 +189,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // 鼠标左键松开事件
         LButtonUp(hWnd, wParam, lParam);
     }
+    break;
     case WM_TIMER:
     {
         // 游戏主循环逻辑
