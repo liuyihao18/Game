@@ -3,7 +3,8 @@
  * 如果要添加新的鼠标功能，修改在这里
  */
 
-#include "framework.h"
+#include "stdafx.h"
+
 #include "mouse.h"
 
 static int mouseX;

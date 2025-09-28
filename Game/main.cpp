@@ -3,12 +3,17 @@
  * 除非需要添加新的事件处理逻辑，不然基本不需要修改这个文件
  */
 
-#include "framework.h"
+#include "stdafx.h"
+
+#include "resource.h"
+#include "config.h"
+#include "info.h"
 #include "timer.h"
+
 #include "core.h"
 #include "mouse.h"
 #include "keyboard.h"
-#include "config.h"
+
 #include <atlconv.h>
 #include <commctrl.h>
 #include <time.h>

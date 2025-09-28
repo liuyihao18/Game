@@ -6,7 +6,6 @@
 #pragma once
 
 #include "type.h"
-#include <vector>
 
 struct Enemy
 {

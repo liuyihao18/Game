@@ -3,7 +3,9 @@
  * 如果要添加新的资源，写在这里
  */
 
-#include "framework.h"
+#include "stdafx.h"
+
+#include "resource.h"
 #include "util.h"
 
 #pragma region 静态图片资源

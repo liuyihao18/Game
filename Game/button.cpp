@@ -4,13 +4,12 @@
  * 除非需要修改按钮相关的逻辑，不要修改核心代码
  */
 
-#include "framework.h"
+#include "stdafx.h"
+
+#include "info.h"
+
 #include "button.h"
 #include "scene.h"
-#include <map>
-#include <vector>
-#include <string>
-#include <algorithm>
 
 #pragma region 按钮核心代码
 static std::map<std::string, Button *> m;

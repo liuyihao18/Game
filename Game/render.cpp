@@ -3,12 +3,14 @@
  * 所有视觉的更新，都需要写在这里
  */
 
-#include "framework.h"
-#include "scene.h"
+#include "stdafx.h"
+
+#include "config.h"
+
 #include "button.h"
+#include "scene.h"
 #include "player.h"
 #include "enemy.h"
-#include "config.h"
 
 extern HBITMAP bmp_WhiteBackground;
 extern HBITMAP bmp_BlackBackground;

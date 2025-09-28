@@ -3,10 +3,11 @@
  * 敌人AI等逻辑实现在这
  */
 
-#include "framework.h"
-#include "enemy.h"
+#include "stdafx.h"
+
 #include "config.h"
-#include <set>
+#include "enemy.h"
+#include "info.h"
 
 static std::set<Enemy *> enemies;
 

@@ -3,10 +3,13 @@
  * 玩家操作等逻辑实现在这
  */
 
-#include "framework.h"
-#include "player.h"
-#include "keyboard.h"
+#include "stdafx.h"
+
+#include "info.h"
 #include "util.h"
+
+#include "keyboard.h"
+#include "player.h"
 
 static Player *player;
 

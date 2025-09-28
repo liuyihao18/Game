@@ -3,11 +3,13 @@
  * 除非你想要自己使用某个计时器，不然不需要改这个文件
  */
 
-#include "framework.h"
-#include "timer.h"
-#include "core.h"
+#include "stdafx.h"
+
 #include "config.h"
-#include <mmsystem.h>
+#include "info.h"
+#include "timer.h"
+
+#include "core.h"
 
 #pragma region TQTIMER
 

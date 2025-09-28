@@ -3,14 +3,15 @@
  * 除非你想要修改游戏逻辑结构，不然不需要改这个文件
  */
 
-#include "framework.h"
-#include "core.h"
-#include "mouse.h"
-#include "scene.h"
-#include "button.h"
+#include "stdafx.h"
+
 #include "config.h"
-#include <deque>
-#include <numeric>
+#include "info.h"
+#include "core.h"
+
+#include "scene.h"
+#include "mouse.h"
+#include "button.h"
 
 // 内部游戏时间：单位（ms）
 static double gameTime = 0;

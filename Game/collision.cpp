@@ -4,11 +4,11 @@
  * 可以添加其他的碰撞检测方法
  */
 
-#include "framework.h"
+#include "stdafx.h"
+
 #include "scene.h"
 #include "player.h"
 #include "enemy.h"
-#include <vector>
 
 // 检查角色和敌人的碰撞
 static void GameCheckCollision_StartScene();

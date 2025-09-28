@@ -3,10 +3,10 @@
  * 想要实现的和游戏无关的函数，都可以扔在这里
  */
 
-#include "framework.h"
-#include "util.h"
+#include "stdafx.h"
+
 #include "config.h"
-#include <cmath>
+#include "util.h"
 
 // 向量模长
 double Length(Vector2 in)

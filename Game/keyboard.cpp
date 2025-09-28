@@ -3,9 +3,9 @@
  * 如果要添加新的键盘功能，修改在这里
  */
 
-#include "framework.h"
+#include "stdafx.h"
+
 #include "keyboard.h"
-#include <vector>
 
 static std::vector<bool> keyboard(128, 0);
 

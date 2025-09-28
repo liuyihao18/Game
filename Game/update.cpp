@@ -3,7 +3,8 @@
  * 所有游戏状态的更新，都需要写在这里
  */
 
-#include "framework.h"
+#include "stdafx.h"
+
 #include "scene.h"
 #include "player.h"
 #include "enemy.h"

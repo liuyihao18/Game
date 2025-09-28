@@ -3,9 +3,10 @@
  * 如果要添加新的游戏场景或者修改游戏场景相关的逻辑，修改在这里
  */
 
-#include "framework.h"
-#include "scene.h"
+#include "stdafx.h"
+
 #include "button.h"
+#include "scene.h"
 #include "player.h"
 #include "enemy.h"
 
