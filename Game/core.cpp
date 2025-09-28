@@ -109,8 +109,6 @@ void ShowAverageFps()
     }
     lastShowTime = GetGameTime();
     double averageFps = 1000.0 / GetAverageDeltaTime();
-    TCHAR buffer[128];
-    swprintf_s(buffer, TEXT("FPS: %.1f"), averageFps);
     // 在状态栏位置0显示FPS
-    Log(0, buffer);
+    Log(0, "FPS: %.1f", averageFps);
 }

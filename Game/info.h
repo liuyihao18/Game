@@ -6,8 +6,8 @@
 #pragma once
 
 // 打印日志
-void Log(int pos, const char* message);
-void Log(int pos, const TCHAR* message);
+void Log(int pos, const char* format, ...);
+void Log(int pos, const TCHAR* format, ...);
 
 // 游戏时间函数
 double GetGameTime(); // 获取当前游戏时间，单位：秒

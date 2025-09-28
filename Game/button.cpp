@@ -131,7 +131,7 @@ void RenderStartButton(HDC hdc_memBuffer, HDC hdc_loadBmp)
 
 void OnStartButtonClick()
 {
-    Log(1, "游戏开始！");
+    Log(1, TEXT("游戏开始！"));
     ChangeScene(SceneId::GameScene);
 }
 

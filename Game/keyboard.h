@@ -5,10 +5,10 @@
 
 #pragma once
 
-#define VK_W 0x57
-#define VK_S 0x53
-#define VK_A 0x41
-#define VK_D 0x44
+#define VK_W 'W'
+#define VK_S 'S'
+#define VK_A 'A'
+#define VK_D 'D'
 
 // Windows应用程序框架的写入函数
 void KeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam);

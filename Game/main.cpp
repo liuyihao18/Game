@@ -291,16 +291,33 @@ BOOL CreateStatusBar(HWND hWnd, WPARAM wParam, LPARAM lParam)
     return TRUE;
 }
 
-// 状态栏打印日志（普通字符串）
-void Log(int pos, const char *message)
+// 状态栏打印日志
+void Log(int pos, const char* format, ...)
 {
+    va_list args;
+    va_start(args, format);
+
+    char message[256];
+    vsprintf_s(message, format, args); 
+
+    va_end(args);
+
     TCHAR wMessage[256];
     MultiByteToWideChar(CP_ACP, 0, message, -1, wMessage, 256);
-    Log(pos, wMessage);
+    
+    SendMessage(hStatus, SB_SETTEXT, pos, (LPARAM)wMessage);
 }
 
-// 状态栏打印日志（宽字符串）
-void Log(int pos, const TCHAR *message)
+// 状态栏打印日志
+void Log(int pos, const TCHAR* format, ...)
 {
-    SendMessage(hStatus, SB_SETTEXT, pos, (LPARAM)message);
+    va_list args;
+    va_start(args, format);
+
+    TCHAR wMessage[256];
+    wsprintf(wMessage, format, args);
+
+    va_end(args);
+
+    SendMessage(hStatus, SB_SETTEXT, pos, (LPARAM)wMessage);
 }
