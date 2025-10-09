@@ -1,8 +1,4 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
+# This workflow was written by ChatGPT.
 name: MSBuild
 
 on:
@@ -14,10 +10,6 @@ on:
 env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: .
-
-  # Configuration type to build.
-  # You can convert this to a build matrix if you need coverage of multiple configuration types.
-  # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
   BUILD_CONFIGURATION: Release
 
 permissions:
@@ -28,17 +20,44 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
 
     - name: Restore NuGet packages
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+      working-directory: ${{ env.GITHUB_WORKSPACE }}
+      run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
 
     - name: Build
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      # Add additional options to the MSBuild command line here (like platform or verbosity level).
-      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
+      working-directory: ${{ env.GITHUB_WORKSPACE }}
+      run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} ${{ env.SOLUTION_FILE_PATH }}
+
+    # ✅ 打包 Release 目录为 zip
+    - name: Zip build output
+      shell: pwsh
+      run: |
+        $outputDir = Join-Path $env:GITHUB_WORKSPACE "build_output"
+        New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
+
+        # 假设 Release 目录在项目的 bin\Release 下，可以根据项目结构修改
+        $releasePath = Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -Include "bin\Release" -Directory | Select-Object -First 1
+        if ($null -eq $releasePath) {
+          Write-Error "Release folder not found. Check your build output path."
+          exit 1
+        }
+
+        $zipPath = Join-Path $outputDir "build.zip"
+        Compress-Archive -Path "$($releasePath.FullName)\*" -DestinationPath $zipPath
+        Write-Host "Zipped output to $zipPath"
+
+    # ✅ 上传 zip 文件到 GitHub Actions artifact
+    - name: Upload build zip
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-zip
+        path: build_output/build.zip
