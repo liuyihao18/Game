@@ -204,7 +204,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_TIMER:
     {
         // 游戏主循环逻辑
-        if (wParam == MAIN_TIMER) {
+        if (wParam == MAIN_TIMER)
+        {
             GameLoop(hWnd);
         }
     }
@@ -292,24 +293,24 @@ BOOL CreateStatusBar(HWND hWnd, WPARAM wParam, LPARAM lParam)
 }
 
 // 状态栏打印日志
-void Log(int pos, const char* format, ...)
+void Log(int pos, const char *format, ...)
 {
     va_list args;
     va_start(args, format);
 
     char message[256];
-    vsprintf_s(message, format, args); 
+    vsprintf_s(message, format, args);
 
     va_end(args);
 
     TCHAR wMessage[256];
     MultiByteToWideChar(CP_ACP, 0, message, -1, wMessage, 256);
-    
+
     SendMessage(hStatus, SB_SETTEXT, pos, (LPARAM)wMessage);
 }
 
 // 状态栏打印日志
-void Log(int pos, const TCHAR* format, ...)
+void Log(int pos, const TCHAR *format, ...)
 {
     va_list args;
     va_start(args, format);
