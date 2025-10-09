@@ -5,8 +5,9 @@
 
 #include "stdafx.h"
 
-#include "button.h"
 #include "scene.h"
+#include "ui.h"
+
 #include "player.h"
 #include "enemy.h"
 
@@ -63,20 +64,8 @@ void LoadScene(SceneId newSceneId)
 
     // 修改当前场景
     currentScene->sceneId = newSceneId;
-}
-
-void LoadScene_StartScene()
-{
-    // 创建按钮
-    CreateButton("StartButton", 450, 222, 300, 200, RenderStartButton, OnStartButtonClick);
-}
-
-void LoadScene_GameScene()
-{
-    // 初始化玩家
-    InitPlayer();
-    // 初始化敌人
-    InitEnemy();
+    // 创建UI
+    CreateUi();
 }
 
 // 卸载场景
@@ -95,18 +84,35 @@ void UnloadScene(SceneId oldSceneId)
     default:
         break;
     }
+
+    // 销毁UI
+    DestroyUi();
+}
+
+void LoadScene_StartScene()
+{
+    // TODO: 开始场景需要初始化的对象
+}
+
+void LoadScene_GameScene()
+{
+    // 初始化玩家对象
+    InitPlayer();
+    // 初始化敌人对象
+    InitEnemy();
+    // TODO: 游戏场景需要初始化的对象
 }
 
 void UnloadScene_StartScene()
 {
-    // 清空按钮
-    DestroyButtons();
+    // TODO: 开始场景需要销毁的对象
 }
 
 void UnloadScene_GameScene()
 {
-    // 清空角色
+    // 清空角色对象
     DestroyPlayer();
-    // 清空敌人
+    // 清空敌人对象
     DestroyEnemies();
+    // TODO: 游戏场景需要销毁的对象
 }

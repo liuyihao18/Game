@@ -6,9 +6,9 @@
 #include "stdafx.h"
 
 #include "config.h"
-#include "info.h"
 #include "timer.h"
 
+#include "info.h"
 #include "core.h"
 
 #pragma region TQTIMER

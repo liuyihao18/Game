@@ -6,8 +6,10 @@
 #include "stdafx.h"
 
 #include "config.h"
-#include "enemy.h"
+
 #include "info.h"
+
+#include "enemy.h"
 
 static std::set<Enemy *> enemies;
 

@@ -6,12 +6,13 @@
 #include "stdafx.h"
 
 #include "config.h"
+
 #include "info.h"
 #include "core.h"
-
-#include "scene.h"
 #include "mouse.h"
 #include "button.h"
+
+#include "scene.h"
 
 // 内部游戏时间：单位（ms）
 static double gameTime = 0;

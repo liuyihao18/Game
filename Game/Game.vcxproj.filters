@@ -99,6 +99,9 @@
     <ClInclude Include="player.h">
       <Filter>头文件\对象</Filter>
     </ClInclude>
+    <ClInclude Include="ui.h">
+      <Filter>头文件\逻辑</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core.cpp">
@@ -145,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="util.cpp">
       <Filter>源文件\工具</Filter>
+    </ClCompile>
+    <ClCompile Include="ui.cpp">
+      <Filter>源文件\逻辑</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

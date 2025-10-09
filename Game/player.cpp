@@ -9,6 +9,7 @@
 #include "util.h"
 
 #include "keyboard.h"
+
 #include "player.h"
 
 static Player *player;
