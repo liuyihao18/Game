@@ -287,7 +287,7 @@ BOOL CreateStatusBar(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
     SendMessage(hStatus, SB_SETPARTS, sizeof(statusBarParts) / sizeof(int), (LPARAM)statusBarParts);
 
-    Log(0, "状态栏已启用");
+    Log(0, TEXT("状态栏已启用"));
 
     return TRUE;
 }

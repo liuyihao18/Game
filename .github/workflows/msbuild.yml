@@ -38,27 +38,8 @@ jobs:
       working-directory: ${{ env.GITHUB_WORKSPACE }}
       run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} ${{ env.SOLUTION_FILE_PATH }}
 
-    # ✅ 打包 Release 目录为 zip
-    - name: Zip build output
-      shell: pwsh
-      run: |
-        $outputDir = Join-Path $env:GITHUB_WORKSPACE "build_output"
-        New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
-
-        # 假设 Release 目录在项目的 x64\Release 下，可以根据项目结构修改
-        $releasePath = Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -Include "Release" -Directory | Select-Object -First 1
-        
-        if ($null -eq $releasePath) {
-          Write-Error "❌ Release folder not found. Check your build output path."
-          exit 1
-        }
-
-        $zipPath = Join-Path $outputDir "build.zip"
-        Compress-Archive -Path "$($releasePath.FullName)\*" -DestinationPath $zipPath
-
-    # ✅ 上传 zip 文件到 GitHub Actions artifact
-    - name: Upload build zip
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: build-zip
-        path: build_output/build.zip
+        name: build
+        path: ${{ env.GITHUB_WORKSPACE }}/x64/Release/
