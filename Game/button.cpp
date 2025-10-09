@@ -36,9 +36,9 @@ void DestroyButton(const char *name)
 
     Button *button = m[name];
     std::vector<Button *>::iterator iter = find(buttons.begin(), buttons.end(), button);
-    delete button;
     buttons.erase(iter);
     m.erase(name);
+    delete button;
 }
 
 void DestroyButtons()
