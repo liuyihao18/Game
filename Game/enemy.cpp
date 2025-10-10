@@ -40,8 +40,8 @@ void CreateRandomEnemy()
 
 void DestroyEnemy(Enemy *enemy)
 {
-    delete enemy;
     enemies.erase(enemy);
+    delete enemy;
 }
 
 void DestroyEnemies()

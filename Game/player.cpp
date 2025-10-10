@@ -40,6 +40,7 @@ void CreatePlayer()
 void DestroyPlayer()
 {
     delete player;
+    player = nullptr;
 }
 
 Player *GetPlayer()
