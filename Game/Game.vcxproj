@@ -141,6 +141,7 @@
     <ClInclude Include="button.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="type.h" />
+    <ClInclude Include="ui.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +163,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="timer.cpp" />
+    <ClCompile Include="ui.cpp" />
     <ClCompile Include="update.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
