@@ -9,10 +9,9 @@
 
 #include "info.h"
 #include "core.h"
-#include "mouse.h"
-#include "button.h"
 
 #include "scene.h"
+#include "ui.h"
 
 // 内部游戏时间：单位（ms）
 static double gameTime = 0;
@@ -49,11 +48,8 @@ void GameLoop(HWND hWnd)
     UpdateDeltaTime(deltaTime);
     ShowAverageFps();
 
-    // 先计算输入
-    if (IsMouseLButtonDown())
-    {
-        PressButtons(GetMouseX(), GetMouseY());
-    }
+    // 先处理UI输入
+    ProcessUiInput();
 
     // 再计算碰撞
     GameCheckCollision();

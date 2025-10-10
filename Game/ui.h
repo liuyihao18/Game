@@ -10,3 +10,6 @@ void CreateUi();
 void DestroyUi();
 // 渲染UI
 void RenderUi(HDC hdc_memBuffer, HDC hdc_loadBmp);
+
+// 处理UI输入
+void ProcessUiInput();

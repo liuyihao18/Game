@@ -5,10 +5,11 @@
 
 #include "stdafx.h"
 
+#include "mouse.h"
+#include "button.h"
+
 #include "scene.h"
 #include "ui.h"
-
-#include "button.h"
 
 // 创建UI
 static void CreateUi_StartScene();
@@ -73,6 +74,14 @@ void RenderUi(HDC hdc_memBuffer, HDC hdc_loadBmp)
         // TODO: 更多的游戏场景
     default:
         break;
+    }
+}
+
+void ProcessUiInput()
+{
+    if (IsMouseLButtonDown())
+    {
+        PressButtons(GetMouseX(), GetMouseY());
     }
 }
 
