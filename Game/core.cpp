@@ -11,6 +11,7 @@
 #include "core.h"
 
 #include "scene.h"
+#include "object.h"
 #include "ui.h"
 
 // 内部游戏时间：单位（ms）
@@ -34,6 +35,9 @@ void GameInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
     firstFrameTimestamp = GetCurrentTimestamp();
     lastFrameTimestamp = firstFrameTimestamp;
     GameResourceInit(hWnd, wParam, lParam);
+    // 初始化游戏内容    
+    InitGameObjects();
+    InitUi();
     InitScene(StartScene);
 }
 

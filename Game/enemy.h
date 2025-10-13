@@ -26,6 +26,6 @@ void DestroyEnemies();
 // 获取所有敌人
 std::vector<Enemy *> GetEnemies();
 // 更新所有敌人
-void UpdateEnemies(double DeltaTime);
+void UpdateEnemies(double deltaTime);
 // 渲染所有敌人
 void RenderEnemies(HDC hdc_memBuffer, HDC hdc_loadBmp);

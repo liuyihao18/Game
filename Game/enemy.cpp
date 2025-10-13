@@ -18,8 +18,7 @@ static double deltaGenerateTime = 3;
 
 void InitEnemy()
 {
-    CreateRandomEnemy();
-    lastGenerateTime = GetGameTime();
+    // TODO: 敌人管理中需要在初始化阶段做的事情
 }
 
 void CreateEnemy(double x, double y, int radius)
@@ -58,7 +57,7 @@ std::vector<Enemy *> GetEnemies()
     return std::vector<Enemy *>(enemies.begin(), enemies.end());
 }
 
-void UpdateEnemies(double DeltaTime)
+void UpdateEnemies(double deltaTime)
 {
     // 每5秒在随机位置创建一个敌人
     double gameTime = GetGameTime();

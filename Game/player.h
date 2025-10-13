@@ -34,6 +34,6 @@ void DestroyPlayer();
 // 获取角色
 Player *GetPlayer();
 // 更新角色
-void UpdatePlayer(double DeltaTime);
+void UpdatePlayer(double deltaTime);
 // 渲染角色
 void RenderPlayer(HDC hdc_memBuffer, HDC hdc_loadBmp);

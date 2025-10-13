@@ -133,6 +133,7 @@
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="info.h" />
     <ClInclude Include="mouse.h" />
+    <ClInclude Include="object.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="Resource.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="mouse.cpp" />
+    <ClCompile Include="object.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="main.cpp" />

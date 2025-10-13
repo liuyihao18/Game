@@ -75,9 +75,6 @@
     <ClInclude Include="config.h">
       <Filter>头文件\配置</Filter>
     </ClInclude>
-    <ClInclude Include="info.h">
-      <Filter>头文件\工具</Filter>
-    </ClInclude>
     <ClInclude Include="core.h">
       <Filter>头文件\框架</Filter>
     </ClInclude>
@@ -108,6 +105,12 @@
     <ClInclude Include="button.h">
       <Filter>头文件\UI</Filter>
     </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>头文件\对象</Filter>
+    </ClInclude>
+    <ClInclude Include="info.h">
+      <Filter>头文件\工具</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core.cpp">
@@ -128,9 +131,6 @@
     <ClCompile Include="player.cpp">
       <Filter>源文件\对象</Filter>
     </ClCompile>
-    <ClCompile Include="render.cpp">
-      <Filter>源文件\逻辑</Filter>
-    </ClCompile>
     <ClCompile Include="collision.cpp">
       <Filter>源文件\逻辑</Filter>
     </ClCompile>
@@ -143,9 +143,6 @@
     <ClCompile Include="resource.cpp">
       <Filter>源文件\资源</Filter>
     </ClCompile>
-    <ClCompile Include="update.cpp">
-      <Filter>源文件\逻辑</Filter>
-    </ClCompile>
     <ClCompile Include="scene.cpp">
       <Filter>源文件\逻辑</Filter>
     </ClCompile>
@@ -157,6 +154,15 @@
     </ClCompile>
     <ClCompile Include="button.cpp">
       <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="object.cpp">
+      <Filter>源文件\对象</Filter>
+    </ClCompile>
+    <ClCompile Include="render.cpp">
+      <Filter>源文件\框架</Filter>
+    </ClCompile>
+    <ClCompile Include="update.cpp">
+      <Filter>源文件\框架</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

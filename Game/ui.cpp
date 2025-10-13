@@ -23,6 +23,11 @@ static void DestroyUi_GameScene();
 static void RenderUi_StartScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
 static void RenderUi_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
 
+void InitUi()
+{
+    // TODO: UI中需要在初始化阶段做的事情
+}
+
 void CreateUi()
 {
     switch (GetCurrentScene()->sceneId)

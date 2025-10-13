@@ -23,7 +23,7 @@ static const int bmp_CellHeight = 50;
 
 void InitPlayer()
 {
-    CreatePlayer();
+    // TODO: 角色管理中需要在初始化阶段做的事情
 }
 
 void CreatePlayer()
