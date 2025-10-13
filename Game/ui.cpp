@@ -21,12 +21,18 @@ static void CreateUi_GameScene();
 static void DestroyUi_StartScene();
 static void DestroyUi_GameScene();
 
+// 更新UI
+static void UpdateUi_StartScene(double deltaTime);
+static void UpdateUi_GameScene(double deltaTime);
+
 // 渲染UI
 static void RenderUi_StartScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
 static void RenderUi_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
 
 void InitUi()
 {
+    InitButton();
+
     // TODO: UI中需要在初始化阶段做的事情
 }
 
@@ -59,6 +65,24 @@ void DestroyUi()
         break;
     case GameScene:
         DestroyUi_GameScene();
+        break;
+        // TODO: 更多的游戏场景
+    default:
+        break;
+    }
+}
+
+void UpdateUi(double deltaTime)
+{
+    switch (GetCurrentScene()->sceneId)
+    {
+    case None:
+        break;
+    case StartScene:
+        UpdateUi_StartScene(deltaTime);
+        break;
+    case GameScene:
+        UpdateUi_GameScene(deltaTime);
         break;
         // TODO: 更多的游戏场景
     default:
@@ -99,7 +123,7 @@ void CreateUi_StartScene()
     const int height = 200;
     const int x = (WINDOW_WIDTH - width) / 2 - 10; // what the f**k offset to center this?
     const int y = 196;
-    CreateButton("StartButton", x, y, width, height, RenderStartButton, OnStartButtonClick);
+    CreateButton(StartButton, x, y, width, height, RenderStartButton, OnStartButtonClick);
     // TODO: 开始场景其他需要创建的UI组件
 }
 
@@ -117,7 +141,19 @@ void DestroyUi_StartScene()
 
 void DestroyUi_GameScene()
 {
+    // 清空按钮（虽然没有按钮）
+    DestroyButtons();
     // TODO: 游戏场景其他需要销毁的UI组件
+}
+
+void UpdateUi_StartScene(double deltaTime)
+{
+	// TODO: 开始场景需要更新的UI数据
+}
+
+void UpdateUi_GameScene(double deltaTime)
+{
+	// TODO: 游戏场景需要更新的UI数据
 }
 
 void RenderUi_StartScene(HDC hdc_memBuffer, HDC hdc_loadBmp)

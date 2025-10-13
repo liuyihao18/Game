@@ -11,34 +11,40 @@
 #include "scene.h"
 
 #pragma region 按钮核心代码
-static std::map<std::string, Button *> m;
-static std::vector<Button *> buttons;
 
-void CreateButton(const char *name, double x, double y, int width, int height, RenderFunc render, OnClickFunc onClick)
+static std::set<Button *> buttons;
+
+void InitButton()
+{
+    // TODO: 按钮管理中需要在初始化阶段做的事情
+}
+
+void CreateButton(ButtonId buttonId, double x, double y, int width, int height, RenderButtonFunc render, OnButtonClickFunc onClick)
 {
     Button *button = new Button();
-    button->position = {x, y};
+
+    button->buttonId = buttonId;
+
+    button->position.x = x;
+    button->position.y = y;
     button->width = width;
     button->height = height;
+
     button->isEnabled = true;
 
     button->render = render;
     button->onClick = onClick;
 
-    m[name] = button;
-    buttons.push_back(button);
+    buttons.insert(button);
 }
 
-void DestroyButton(const char *name)
+void DestroyButton(ButtonId buttonId)
 {
-    if (!m.count(name))
-        return;
-
-    Button *button = m[name];
-    std::vector<Button *>::iterator iter = find(buttons.begin(), buttons.end(), button);
-    buttons.erase(iter);
-    m.erase(name);
-    delete button;
+    if (Button *button = GetButton(buttonId))
+    {
+        buttons.erase(button);
+        delete button;
+    }
 }
 
 void DestroyButtons()
@@ -47,42 +53,49 @@ void DestroyButtons()
     {
         delete button;
     }
-    m.clear();
     buttons.clear();
 }
 
-Button *GetButton(const char *name)
+std::vector<Button *> GetButtons()
 {
-    if (!m.count(name))
-        return nullptr;
-
-    return m[name];
+    return std::vector<Button *>(buttons.begin(), buttons.end());
 }
 
-void EnableButton(const char *name)
+Button *GetButton(ButtonId buttonId)
 {
-    if (!m.count(name))
-        return;
+    for (Button *button : buttons)
+    {
+        if (button->buttonId == buttonId)
+        {
+            return button;
+        }
+    }
 
-    Button *button = m[name];
-    button->isEnabled = true;
+    return nullptr;
 }
 
-void DisableButton(const char *name)
+void EnableButton(ButtonId buttonId)
 {
-    if (!m.count(name))
-        return;
+    if (Button *button = GetButton(buttonId))
+    {
+        button->isEnabled = true;
+    }
+}
 
-    Button *button = m[name];
-    button->isEnabled = false;
+void DisableButton(ButtonId buttonId)
+{
+    if (Button *button = GetButton(buttonId))
+    {
+        button->isEnabled = false;
+    }
 }
 
 void PressButtons(int mouseX, int mouseY)
 {
+    // 注意：如果有按钮重叠，点击结果是不确定的！
     Button *pressedButton = nullptr;
-    for (std::vector<Button *>::reverse_iterator iter = buttons.rbegin(); iter != buttons.rend(); ++iter)
+    for (Button *button : buttons)
     {
-        Button *button = *iter;
         if (!button->isEnabled)
         {
             continue;
@@ -110,17 +123,15 @@ void RenderButtons(HDC hdc_memBuffer, HDC hdc_loadBmp)
         {
             continue;
         }
-        button->render(hdc_memBuffer, hdc_loadBmp);
+        button->render(button, hdc_memBuffer, hdc_loadBmp);
     }
 }
 #pragma endregion
 
 extern HBITMAP bmp_StartButton;
 
-void RenderStartButton(HDC hdc_memBuffer, HDC hdc_loadBmp)
+void RenderStartButton(Button *button, HDC hdc_memBuffer, HDC hdc_loadBmp)
 {
-    Button *button = GetButton("StartButton");
-
     SelectObject(hdc_loadBmp, bmp_StartButton);
     TransparentBlt(
         hdc_memBuffer, (int)button->position.x, (int)button->position.y,

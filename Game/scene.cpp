@@ -48,7 +48,8 @@ void UpdateScene(double deltaTime)
 {
     // 更新游戏对象
     UpdateGameObjects(deltaTime);
-    // UI理论上不需要更新逻辑
+    // 更新UI
+	UpdateUi(deltaTime);
 }
 
 // 渲染场景

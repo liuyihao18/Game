@@ -10,6 +10,8 @@ void InitUi();
 void CreateUi();
 // 销毁UI
 void DestroyUi();
+// 更新UI
+void UpdateUi(double deltaTime);
 // 渲染UI
 void RenderUi(HDC hdc_memBuffer, HDC hdc_loadBmp);
 

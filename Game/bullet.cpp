@@ -17,7 +17,8 @@ void InitBullet()
 void CreateBullet(double x, double y, int damage, double speed)
 {
 	Bullet *bullet = new Bullet();
-	bullet->position = {x, y};
+	bullet->position.x = x;
+	bullet->position.y = y;
 	bullet->radius = BULLET_RADIUS;
 	bullet->damage = damage;
 	bullet->speed = speed;
@@ -52,7 +53,7 @@ void UpdateBullets(double deltaTime)
 		// 子弹向上移动
 		bullet->position.y -= bullet->speed * deltaTime;
 		// 超出屏幕的子弹删除
-		if (bullet->position.y + bullet->radius < -10)
+		if (bullet->position.y + bullet->radius < 0)
 		{
 			DestroyBullet(bullet);
 		}

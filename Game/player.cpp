@@ -28,7 +28,8 @@ void CreatePlayer()
 {
     player = new Player();
     // 玩家初始位置
-    player->position = {(GAME_WIDTH - PLAYER_WIDTH) / 2, GAME_HEIGHT - PLAYER_HEIGHT - 20};
+    player->position.x = (GAME_WIDTH - PLAYER_WIDTH) / 2;
+    player->position.y = GAME_HEIGHT - PLAYER_HEIGHT - 20;
     player->width = PLAYER_WIDTH;
     player->height = PLAYER_HEIGHT;
     // 玩家初始属性

@@ -161,12 +161,6 @@
     <ClCompile Include="object.cpp">
       <Filter>源文件\对象</Filter>
     </ClCompile>
-    <ClCompile Include="render.cpp">
-      <Filter>源文件\框架</Filter>
-    </ClCompile>
-    <ClCompile Include="update.cpp">
-      <Filter>源文件\框架</Filter>
-    </ClCompile>
     <ClCompile Include="bullet.cpp">
       <Filter>源文件\对象</Filter>
     </ClCompile>

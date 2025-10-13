@@ -29,7 +29,8 @@ void InitEnemy()
 void CreateEnemy(double x, double y)
 {
     Enemy *enemy = new Enemy();
-    enemy->position = {x, y};
+    enemy->position.x = x;
+    enemy->position.y = y;
     enemy->width = ENEMY_WIDTH;
     enemy->height = ENEMY_HEIGHT;
     enemy->attributes.health = 3;
