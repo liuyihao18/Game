@@ -30,8 +30,10 @@ void CreatePlayer()
     player->position = {(GAME_WIDTH - PLAYER_WIDTH) / 2, GAME_HEIGHT - PLAYER_HEIGHT - 20};
     player->width = PLAYER_WIDTH;
     player->height = PLAYER_HEIGHT;
-    // 玩家初始速度
-    player->status.velocity = 500;
+    // 玩家初始属性
+    player->attributes.health = 10;
+    player->attributes.score = 0;
+    player->attributes.velocity = 500;
 }
 
 void DestroyPlayer()
@@ -66,8 +68,8 @@ void UpdatePlayer(double deltaTime)
         direction.x += 1;
     }
     direction = Normalize(direction);
-    player->position.x += direction.x * player->status.velocity * deltaTime;
-    player->position.y += direction.y * player->status.velocity * deltaTime;
+    player->position.x += direction.x * player->attributes.velocity * deltaTime;
+    player->position.y += direction.y * player->attributes.velocity * deltaTime;
 
     // 更新角色帧动画（假设1s播放完全部的动画）
     frameIndex = (int)(GetGameTime() * bmp_RowSize * bmp_ColSize) % (bmp_RowSize * bmp_ColSize);

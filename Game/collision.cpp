@@ -55,16 +55,18 @@ void GameCheckCollision_GameScene()
 // 检查角色和敌人的碰撞
 void GameCheckCollision_GameScene_Player_Enemies()
 {
-    const Player *player = GetPlayer();
+    // 玩家用简单矩形表示
+    Player *player = GetPlayer();
+    Rect rect{};
+    rect.left = player->position.x;
+    rect.right = player->position.x + player->width;
+    rect.top = player->position.y;
+    rect.bottom = player->position.y + player->height;
+    // 敌人用简单圆形表示
     std::vector<Enemy *> enemies = GetEnemies();
+    Circle c{};
     for (Enemy *enemy : enemies)
     {
-        Rect rect;
-        rect.left = player->position.x;
-        rect.right = player->position.x + player->width;
-        rect.top = player->position.y;
-        rect.bottom = player->position.y + player->height;
-        Circle c;
         c.center.x = enemy->position.x + enemy->radius;
         c.center.y = enemy->position.y + enemy->radius;
         c.radius = enemy->radius;
@@ -72,6 +74,8 @@ void GameCheckCollision_GameScene_Player_Enemies()
         {
             // 碰撞后摧毁敌人
             DestroyEnemy(enemy);
+            // 加分
+            player->attributes.score++;
         }
     }
 }

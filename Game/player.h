@@ -7,9 +7,10 @@
 #include "type.h"
 
 // 玩家状态
-struct Status
+struct Attributes
 {
-    double health;
+    int health;
+    int score;
     double velocity;
 
     // TODO: 其他相关的状态数值
@@ -22,7 +23,7 @@ struct Player
     int width;
     int height;
 
-    Status status;
+    Attributes attributes;
 };
 
 // 初始化角色
