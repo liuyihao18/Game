@@ -27,3 +27,14 @@ struct Circle
     Vector2 center;
     double radius;
 };
+
+// 状态
+struct Attributes
+{
+    int health;
+    int score;
+    double speed;
+
+    // TODO: 其他相关的状态数值
+};
+// 现在玩家和敌人共用一个状态结构体，需要的话可以拆成两个

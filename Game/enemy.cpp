@@ -9,6 +9,15 @@
 
 static std::set<Enemy *> enemies;
 
+// 渲染信息
+extern HBITMAP bmp_Enemy;
+static int frameIndex = 0;
+static const int bmp_RowSize = 1;
+static const int bmp_ColSize = 1;
+static const int bmp_CellWidth = 200;
+static const int bmp_CellHeight = 200;
+
+// 上次产生时间
 static double lastGenerateTime = 0;
 static double deltaGenerateTime = 2;
 
@@ -17,11 +26,15 @@ void InitEnemy()
     // TODO: 敌人管理中需要在初始化阶段做的事情
 }
 
-void CreateEnemy(double x, double y, int radius)
+void CreateEnemy(double x, double y)
 {
     Enemy *enemy = new Enemy();
     enemy->position = {x, y};
-    enemy->radius = radius;
+    enemy->width = ENEMY_WIDTH;
+	enemy->height = ENEMY_HEIGHT;
+	enemy->attributes.health = 3;
+    enemy->attributes.speed = 300;
+	enemy->attributes.score = 1;
     enemies.insert(enemy);
 }
 
@@ -29,8 +42,8 @@ void CreateRandomEnemy()
 {
     CreateEnemy(
         GetRandomDouble(50, GAME_WIDTH - 50),
-        GetRandomDouble(50, GAME_HEIGHT - 50),
-        15);
+		-100 // 从上方稍微高一点的位置生成
+    );
 }
 
 void DestroyEnemy(Enemy *enemy)
@@ -55,7 +68,7 @@ std::vector<Enemy *> GetEnemies()
 
 void UpdateEnemies(double deltaTime)
 {
-    // 每5秒在随机位置创建一个敌人
+    // 每隔一定时间在随机位置创建一个敌人
     double gameTime = GetGameTime();
     if (gameTime - lastGenerateTime > deltaGenerateTime)
     {
@@ -64,33 +77,28 @@ void UpdateEnemies(double deltaTime)
     }
 
     // TODO: 更多的敌人逻辑
-    for (Enemy *enemy : enemies)
+    for (Enemy *enemy : GetEnemies())
     {
+        enemy->position.y += enemy->attributes.speed * deltaTime; // 敌人向下移动
+        if (enemy->position.y > GAME_HEIGHT + 50) // 超出屏幕后删除
+        {
+            DestroyEnemy(enemy);
+		}
     }
 }
 
 void RenderEnemies(HDC hdc_memBuffer, HDC hdc_loadBmp)
 {
-    // 创建画笔和刷子
-    HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 255));   // 蓝色画笔
-    HBRUSH hBrush = CreateSolidBrush(RGB(200, 200, 255)); // 浅蓝填充
-
-    // 选中画笔和刷子
-    HPEN hOldPen = (HPEN)SelectObject(hdc_memBuffer, hPen);
-    HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc_memBuffer, hBrush);
-
     // 画出敌人
+    const int frameRowIndex = frameIndex / bmp_ColSize;
+    const int frameColIndex = frameIndex % bmp_ColSize;
     for (Enemy *enemy : enemies)
     {
-        Ellipse(hdc_memBuffer, (int)enemy->position.x, (int)enemy->position.y,
-                (int)enemy->position.x + 2 * enemy->radius, (int)enemy->position.y + 2 * enemy->radius);
+        SelectObject(hdc_loadBmp, bmp_Enemy);
+        TransparentBlt(
+            hdc_memBuffer, (int)enemy->position.x, (int)enemy->position.y,
+            enemy->width, enemy->height,
+            hdc_loadBmp, frameColIndex * bmp_CellWidth, frameRowIndex * bmp_CellHeight, bmp_CellWidth, bmp_CellHeight,
+            RGB(255, 255, 255));
     }
-
-    // 恢复原对象
-    SelectObject(hdc_memBuffer, hOldPen);
-    SelectObject(hdc_memBuffer, hOldBrush);
-
-    // 删除新建对象
-    DeleteObject(hPen);
-    DeleteObject(hBrush);
 }

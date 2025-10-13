@@ -18,6 +18,8 @@ static void GameCheckCollision_GameScene_Player_Enemies();
 
 // 工具函数：矩形与圆碰撞检测
 static bool IsRectCircleCollision(Rect rect, Circle c);
+// 工具函数：矩形与矩形碰撞检测
+static bool IsRectRectCollision(Rect r1, Rect r2);
 
 // 检查全部的碰撞
 void GameCheckCollision()
@@ -57,25 +59,26 @@ void GameCheckCollision_GameScene_Player_Enemies()
 {
     // 玩家用简单矩形表示
     Player *player = GetPlayer();
-    Rect rect{};
-    rect.left = player->position.x;
-    rect.right = player->position.x + player->width;
-    rect.top = player->position.y;
-    rect.bottom = player->position.y + player->height;
+    Rect rect1{};
+    rect1.left = player->position.x;
+    rect1.right = player->position.x + player->width;
+    rect1.top = player->position.y;
+    rect1.bottom = player->position.y + player->height;
     // 敌人用简单圆形表示
     std::vector<Enemy *> enemies = GetEnemies();
-    Circle c{};
+    Rect rect2{};
     for (Enemy *enemy : enemies)
     {
-        c.center.x = enemy->position.x + enemy->radius;
-        c.center.y = enemy->position.y + enemy->radius;
-        c.radius = enemy->radius;
-        if (IsRectCircleCollision(rect, c))
+		rect2.left = enemy->position.x;
+		rect2.right = enemy->position.x + enemy->width;
+		rect2.top = enemy->position.y;
+		rect2.bottom = enemy->position.y + enemy->height;
+        if (IsRectRectCollision(rect1, rect2))
         {
-            // 碰撞后摧毁敌人
+            // 碰撞后扣血、加分摧毁敌人
+            player->attributes.health--;
+            player->attributes.score += enemy->attributes.score;
             DestroyEnemy(enemy);
-            // 加分
-            player->attributes.score++;
         }
     }
 }
@@ -91,4 +94,13 @@ bool IsRectCircleCollision(Rect rect, Circle c)
     double dy = c.center.y - closestY;
 
     return (dx * dx + dy * dy) <= (c.radius * c.radius);
+}
+
+// 矩形与矩形碰撞检测
+bool IsRectRectCollision(Rect r1, Rect r2)
+{
+    return !(r2.left > r1.right ||
+             r2.right < r1.left ||
+             r2.top > r1.bottom ||
+             r2.bottom < r1.top);
 }

@@ -23,6 +23,8 @@
 /* 对象参数 */
 #define PLAYER_WIDTH 100
 #define PLAYER_HEIGHT PLAYER_WIDTH / 2 * 3
+#define ENEMY_WIDTH 80
+#define ENEMY_HEIGHT ENEMY_WIDTH
 
 /* 状态栏 */
 const int statusBarParts[2] = {100, -1}; // 状态栏分栏，第一个分区宽度100，第二个占满剩余

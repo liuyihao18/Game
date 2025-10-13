@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bullet.h" />
     <ClInclude Include="core.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="config.h" />
@@ -146,6 +147,7 @@
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="bullet.cpp" />
     <ClCompile Include="button.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="core.cpp" />
@@ -174,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Game.ico" />
+    <Image Include="res\enemy.bmp" />
     <Image Include="res\plane.bmp" />
     <Image Include="res\Player.bmp" />
     <Image Include="res\Start.bmp" />

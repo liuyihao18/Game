@@ -33,7 +33,7 @@ void CreatePlayer()
     // 玩家初始属性
     player->attributes.health = 10;
     player->attributes.score = 0;
-    player->attributes.velocity = 500;
+    player->attributes.speed = 500;
 }
 
 void DestroyPlayer()
@@ -68,8 +68,8 @@ void UpdatePlayer(double deltaTime)
         direction.x += 1;
     }
     direction = Normalize(direction);
-    player->position.x += direction.x * player->attributes.velocity * deltaTime;
-    player->position.y += direction.y * player->attributes.velocity * deltaTime;
+    player->position.x += direction.x * player->attributes.speed * deltaTime;
+    player->position.y += direction.y * player->attributes.speed * deltaTime;
 
     // 更新角色帧动画（假设1s播放完全部的动画）
     frameIndex = (int)(GetGameTime() * bmp_RowSize * bmp_ColSize) % (bmp_RowSize * bmp_ColSize);

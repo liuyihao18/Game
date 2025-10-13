@@ -6,16 +6,6 @@
 
 #include "type.h"
 
-// 玩家状态
-struct Attributes
-{
-    int health;
-    int score;
-    double velocity;
-
-    // TODO: 其他相关的状态数值
-};
-
 // 玩家
 struct Player
 {

@@ -111,6 +111,9 @@
     <ClInclude Include="info.h">
       <Filter>头文件\框架</Filter>
     </ClInclude>
+    <ClInclude Include="bullet.h">
+      <Filter>头文件\对象</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core.cpp">
@@ -164,6 +167,9 @@
     <ClCompile Include="update.cpp">
       <Filter>源文件\框架</Filter>
     </ClCompile>
+    <ClCompile Include="bullet.cpp">
+      <Filter>源文件\对象</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc">
@@ -184,6 +190,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\plane.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\enemy.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>
