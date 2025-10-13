@@ -17,8 +17,8 @@ extern HBITMAP bmp_Player;
 static int frameIndex = 0;
 static const int bmp_RowSize = 1;
 static const int bmp_ColSize = 4;
-static const int bmp_CellWidth = 50;
-static const int bmp_CellHeight = 50;
+static const int bmp_CellWidth = 200;
+static const int bmp_CellHeight = 300;
 
 void InitPlayer()
 {
@@ -29,9 +29,9 @@ void CreatePlayer()
 {
     player = new Player();
     // 玩家初始位置
-    player->position = {550, 350};
-    player->width = 50;
-    player->height = 50;
+    player->position = {550, 600};
+    player->width = 100;
+    player->height = 150;
     // 玩家初始速度
     player->status.velocity = 500;
 }

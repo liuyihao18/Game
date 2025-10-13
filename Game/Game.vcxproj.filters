@@ -183,5 +183,8 @@
     <Image Include="res\Player.bmp">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="res\plane.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>
