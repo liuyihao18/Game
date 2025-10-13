@@ -1,30 +1,30 @@
-/**
- * Õâ¸öÎÄ¼şÊÇ×Óµ¯µÄÔ´ÎÄ¼ş
- * ×Óµ¯Âß¼­ÊµÏÖÔÚÕâ
+ï»¿/**
+ * è¿™ä¸ªæ–‡ä»¶æ˜¯å­å¼¹çš„æºæ–‡ä»¶
+ * å­å¼¹é€»è¾‘å®ç°åœ¨è¿™
  */
 
 #include "stdafx.h"
 
 #include "bullet.h"
 
-static std::set<Bullet*> bullets;
+static std::set<Bullet *> bullets;
 
 void InitBullet()
 {
-	// TODO: ×Óµ¯¹ÜÀíÖĞĞèÒªÔÚ³õÊ¼»¯½×¶Î×öµÄÊÂÇé
+	// TODO: å­å¼¹ç®¡ç†ä¸­éœ€è¦åœ¨åˆå§‹åŒ–é˜¶æ®µåšçš„äº‹æƒ…
 }
 
 void CreateBullet(double x, double y, int damage, double speed)
 {
-	Bullet* bullet = new Bullet();
-	bullet->position = { x, y };
+	Bullet *bullet = new Bullet();
+	bullet->position = {x, y};
 	bullet->radius = BULLET_RADIUS;
 	bullet->damage = damage;
 	bullet->speed = speed;
 	bullets.insert(bullet);
 }
 
-void DestroyBullet(Bullet* bullet)
+void DestroyBullet(Bullet *bullet)
 {
 	bullets.erase(bullet);
 	delete bullet;
@@ -32,26 +32,26 @@ void DestroyBullet(Bullet* bullet)
 
 void DestroyBullets()
 {
-	for (Bullet* bullet : bullets)
+	for (Bullet *bullet : bullets)
 	{
 		delete bullet;
 	}
 	bullets.clear();
 }
 
-std::vector<Bullet*> GetBullets()
+std::vector<Bullet *> GetBullets()
 {
-	return std::vector<Bullet*>(bullets.begin(), bullets.end());
+	return std::vector<Bullet *>(bullets.begin(), bullets.end());
 }
 
 void UpdateBullets(double deltaTime)
 {
-	// TODO: ¸ü¶àµÄ×Óµ¯Âß¼­
-	for (Bullet* bullet : GetBullets())
+	// TODO: æ›´å¤šçš„å­å¼¹é€»è¾‘
+	for (Bullet *bullet : GetBullets())
 	{
-		// ×Óµ¯ÏòÉÏÒÆ¶¯
-		bullet->position.y -= bullet->speed * deltaTime; 
-		// ³¬³öÆÁÄ»µÄ×Óµ¯É¾³ı
+		// å­å¼¹å‘ä¸Šç§»åŠ¨
+		bullet->position.y -= bullet->speed * deltaTime;
+		// è¶…å‡ºå±å¹•çš„å­å¼¹åˆ é™¤
 		if (bullet->position.y + bullet->radius < -10)
 		{
 			DestroyBullet(bullet);
@@ -61,29 +61,26 @@ void UpdateBullets(double deltaTime)
 
 void RenderBullets(HDC hdc_memBuffer, HDC hdc_loadBmp)
 {
-	// ´´½¨ºìÉ«ÊµĞÄ»­Ë¢
+	// åˆ›å»ºçº¢è‰²å®å¿ƒç”»åˆ·
 	HBRUSH hBrush = CreateSolidBrush(RGB(255, 0, 0));
 	HBRUSH oldBrush = (HBRUSH)SelectObject(hdc_memBuffer, hBrush);
 
-	// ÉèÖÃ»­±ÊÎª¿Õ£¬±ÜÃâ±ß¿òÓ°Ïì
+	// è®¾ç½®ç”»ç¬”ä¸ºç©ºï¼Œé¿å…è¾¹æ¡†å½±å“
 	HPEN hPen = (HPEN)SelectObject(hdc_memBuffer, GetStockObject(NULL_PEN));
-	
-	// »æÖÆ×Óµ¯
-	for (Bullet* bullet : bullets)
+
+	// ç»˜åˆ¶å­å¼¹
+	for (Bullet *bullet : bullets)
 	{
 		Ellipse(
 			hdc_memBuffer,
 			(int)(bullet->position.x - bullet->radius),
 			(int)(bullet->position.y - bullet->radius),
 			(int)(bullet->position.x + bullet->radius),
-			(int)(bullet->position.y + bullet->radius)
-		);
+			(int)(bullet->position.y + bullet->radius));
 	}
 
-	// »Ö¸´ GDI ¶ÔÏó
+	// æ¢å¤ GDI å¯¹è±¡
 	SelectObject(hdc_memBuffer, oldBrush);
 	SelectObject(hdc_memBuffer, hPen);
 	DeleteObject(hBrush);
 }
-
-

@@ -1,27 +1,28 @@
-/**
- * Õâ¸öÎÄ¼şÊÇ×Óµ¯µÄÍ·ÎÄ¼ş
- * ×Óµ¯Âß¼­ÊµÏÖÔÚÕâ
+ï»¿/**
+ * è¿™ä¸ªæ–‡ä»¶æ˜¯å­å¼¹çš„å¤´æ–‡ä»¶
+ * å­å¼¹é€»è¾‘å®ç°åœ¨è¿™
  */
 
 #pragma once
 
-struct Bullet {
+struct Bullet
+{
 	Vector2 position;
 	int radius;
 	int damage;
 	double speed;
 };
 
-// ³õÊ¼»¯×Óµ¯
+// åˆå§‹åŒ–å­å¼¹
 void InitBullet();
-// ´´½¨×Óµ¯
+// åˆ›å»ºå­å¼¹
 void CreateBullet(double x, double y, int damage, double speed);
-// ´İ»Ù×Óµ¯
-void DestroyBullet(Bullet* bullet);
+// æ‘§æ¯å­å¼¹
+void DestroyBullet(Bullet *bullet);
 void DestroyBullets();
-// »ñÈ¡ËùÓĞ×Óµ¯
-std::vector<Bullet*> GetBullets();
-// ¸üĞÂËùÓĞ×Óµ¯
+// è·å–æ‰€æœ‰å­å¼¹
+std::vector<Bullet *> GetBullets();
+// æ›´æ–°æ‰€æœ‰å­å¼¹
 void UpdateBullets(double deltaTime);
-// äÖÈ¾ËùÓĞ×Óµ¯
+// æ¸²æŸ“æ‰€æœ‰å­å¼¹
 void RenderBullets(HDC hdc_memBuffer, HDC hdc_loadBmp);

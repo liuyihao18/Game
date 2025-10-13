@@ -94,12 +94,12 @@ void ProcessUiInput()
 
 void CreateUi_StartScene()
 {
-	// 创建按钮
+    // 创建按钮
     const int width = 300;
     const int height = 200;
     const int x = (WINDOW_WIDTH - width) / 2 - 10; // what the f**k offset to center this?
     const int y = 196;
-	CreateButton("StartButton", x, y, width, height, RenderStartButton, OnStartButtonClick);
+    CreateButton("StartButton", x, y, width, height, RenderStartButton, OnStartButtonClick);
     // TODO: 开始场景其他需要创建的UI组件
 }
 
@@ -154,7 +154,7 @@ void RenderUi_StartScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
     const int top = 456;
     const int right = left + width;
     const int bottom = top + height;
-    RECT rect = { left, top, right, bottom };
+    RECT rect = {left, top, right, bottom};
     // 绘制
     DrawText(hdc_memBuffer, TEXT("使用WASD或方向键控制飞机移动\n使用空格发射子弹\n\n请大家好好学习这个框架_(:зゝ∠)_"), -1, &rect, DT_CENTER);
     // 恢复原来的字体
@@ -214,14 +214,13 @@ void RenderUi_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
     const int top = 80;
     const int right = left + width;
     const int bottom = top + height;
-    RECT rect = { left, top, right, bottom };
+    RECT rect = {left, top, right, bottom};
     // 绘制
     TCHAR buffer[128];
-    swprintf_s(buffer, sizeof(buffer) / sizeof(TCHAR), 
-        TEXT("第一关\n\n\n生命值: %d\n\n积分: %d"), 
-        GetPlayer()->attributes.health,
-        GetPlayer()->attributes.score
-    );
+    swprintf_s(buffer, sizeof(buffer) / sizeof(TCHAR),
+               TEXT("第一关\n\n\n生命值: %d\n\n积分: %d"),
+               GetPlayer()->attributes.health,
+               GetPlayer()->attributes.score);
     DrawText(hdc_memBuffer, buffer, -1, &rect, DT_CENTER);
     // 恢复原来的字体
     SelectObject(hdc_memBuffer, hOldFont);

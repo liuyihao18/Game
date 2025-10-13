@@ -1,13 +1,13 @@
-/**
- * уБ╦Жнд╪Чйгпео╒м╥нд╪Ч
- * сцрт╩Ях║р╩п╘сно╥пео╒╩Р╢Рс║хуж╬
+О╩©/**
+ * Х©≥Д╦╙Ф√┤Д╩╤Ф≤╞Д©║Ф│╞Е╓╢Ф√┤Д╩╤
+ * Г■╗Д╩╔Х▌╥Е▐√Д╦─Д╨⌡Ф╦╦Ф┬▐Д©║Ф│╞Ф┬√Ф┴⌠Е█╟Ф≈╔Е©≈
  */
 
 #pragma once
 
-// ╢Рс║хуж╬
-void Log(int pos, const char* format, ...);
-void Log(int pos, const TCHAR* format, ...);
+// Ф┴⌠Е█╟Ф≈╔Е©≈
+void Log(int pos, const char *format, ...);
+void Log(int pos, const TCHAR *format, ...);
 
-// сно╥й╠╪Д╨╞йЩ
-double GetGameTime(); // ╩Ях║╣╠г╟сно╥й╠╪Дё╛╣╔н╩ё╨цК
+// Ф╦╦Ф┬▐Ф≈╤И≈╢Е┤╫Ф∙╟
+double GetGameTime(); // Х▌╥Е▐√Е╫⌠Е┴█Ф╦╦Ф┬▐Ф≈╤И≈╢О╪▄Е█∙Д╫█О╪ Г╖▓

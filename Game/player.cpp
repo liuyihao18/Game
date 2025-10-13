@@ -70,20 +70,20 @@ void UpdatePlayer(double deltaTime)
     {
         direction.x += 1;
     }
-	// 归一化方向向量，保证所有方向移动速度一致
+    // 归一化方向向量，保证所有方向移动速度一致
     direction = Normalize(direction);
     player->position.x += direction.x * player->attributes.speed * deltaTime;
     player->position.y += direction.y * player->attributes.speed * deltaTime;
 
-	// 限制角色在屏幕内
+    // 限制角色在屏幕内
     if (player->position.x < 0)
     {
         player->position.x = 0;
-	}
+    }
     if (player->position.x > GAME_WIDTH - player->width)
     {
         player->position.x = GAME_WIDTH - player->width;
-	}
+    }
     if (player->position.y < 0)
     {
         player->position.y = 0;
@@ -91,7 +91,7 @@ void UpdatePlayer(double deltaTime)
     if (player->position.y > GAME_HEIGHT - player->height)
     {
         player->position.y = GAME_HEIGHT - player->height;
-	}
+    }
 
     // 发射子弹
     if (GetKeyDown(VK_SPACE))
@@ -103,17 +103,17 @@ void UpdatePlayer(double deltaTime)
             CreateBullet(
                 player->position.x + player->width / 2.0,
                 player->position.y,
-                1,      // 伤害
-                800.0   // 速度
-            ); 
-			// 0.3秒发射一次
-			player->attributes.bulletCd = player->attributes.maxBulletCd; 
+                1,    // 伤害
+                800.0 // 速度
+            );
+            // 0.3秒发射一次
+            player->attributes.bulletCd = player->attributes.maxBulletCd;
         }
         else
         {
-			player->attributes.bulletCd -= deltaTime;
+            player->attributes.bulletCd -= deltaTime;
         }
-	}
+    }
 
     // 更新角色帧动画（假设1s播放完全部的动画）
     frameIndex = (int)(GetGameTime() * bmp_RowSize * bmp_ColSize) % (bmp_RowSize * bmp_ColSize);

@@ -14,7 +14,7 @@
 static std::map<std::string, Button *> m;
 static std::vector<Button *> buttons;
 
-void CreateButton(const char *name, double x, double y, int width, int height, ButtonRenderFunc render, OnClickFunc onClick)
+void CreateButton(const char *name, double x, double y, int width, int height, RenderFunc render, OnClickFunc onClick)
 {
     Button *button = new Button();
     button->position = {x, y};

@@ -51,9 +51,9 @@ void GameCheckCollision_StartScene()
 
 void GameCheckCollision_GameScene()
 {
-	// 玩家和敌人的碰撞
+    // 玩家和敌人的碰撞
     GameCheckCollision_GameScene_Player_Enemies();
-	// 敌人和子弹的碰撞
+    // 敌人和子弹的碰撞
     GameCheckCollision_GameScene_Enemies_Bullets();
 
     // TODO: 更多的碰撞逻辑
@@ -74,10 +74,10 @@ void GameCheckCollision_GameScene_Player_Enemies()
     Rect rect2{};
     for (Enemy *enemy : enemies)
     {
-		rect2.left = enemy->position.x;
-		rect2.right = enemy->position.x + enemy->width;
-		rect2.top = enemy->position.y;
-		rect2.bottom = enemy->position.y + enemy->height;
+        rect2.left = enemy->position.x;
+        rect2.right = enemy->position.x + enemy->width;
+        rect2.top = enemy->position.y;
+        rect2.bottom = enemy->position.y + enemy->height;
         if (IsRectRectCollision(rect1, rect2))
         {
             // 碰撞后扣血、加分摧毁敌人
@@ -88,7 +88,7 @@ void GameCheckCollision_GameScene_Player_Enemies()
             {
                 Log(1, TEXT("游戏结束！"));
                 ChangeScene(SceneId::StartScene);
-			}
+            }
         }
     }
 }
@@ -97,18 +97,18 @@ void GameCheckCollision_GameScene_Player_Enemies()
 void GameCheckCollision_GameScene_Enemies_Bullets()
 {
     // 敌人用简单矩形表示
-	std::vector<Enemy*> enemies = GetEnemies();
+    std::vector<Enemy *> enemies = GetEnemies();
     Rect rect{};
     // 子弹用简单圆形表示
-	std::vector<Bullet*> bullets = GetBullets();
-	Circle circle{};
-    for (Enemy* enemy : enemies)
+    std::vector<Bullet *> bullets = GetBullets();
+    Circle circle{};
+    for (Enemy *enemy : enemies)
     {
         rect.left = enemy->position.x;
         rect.right = enemy->position.x + enemy->width;
         rect.top = enemy->position.y;
         rect.bottom = enemy->position.y + enemy->height;
-        for (Bullet* bullet : bullets)
+        for (Bullet *bullet : bullets)
         {
             circle.center = bullet->position;
             circle.radius = bullet->radius;
@@ -123,7 +123,7 @@ void GameCheckCollision_GameScene_Enemies_Bullets()
                 }
                 DestroyBullet(bullet);
             }
-		}
+        }
     }
 }
 

@@ -104,7 +104,6 @@ void GameUpdate(double deltaTime)
     UpdateScene(deltaTime);
 }
 
-
 // 获取当前游戏时间，单位（s）
 double GetGameTime()
 {

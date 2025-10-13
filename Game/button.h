@@ -8,8 +8,7 @@
 #include "type.h"
 
 // 这真的是纯C语言的内容
-struct Button;
-typedef void (*ButtonRenderFunc)(HDC hdc_memBuffer, HDC hdc_loadBmp);
+typedef void (*RenderFunc)(HDC hdc_memBuffer, HDC hdc_loadBmp);
 typedef void (*OnClickFunc)(void);
 
 struct Button
@@ -20,17 +19,17 @@ struct Button
 
     bool isEnabled; // 是否激活
 
-    ButtonRenderFunc render;
+    RenderFunc render;
     OnClickFunc onClick;
 };
 
 // 按钮系统的对外函数
-void CreateButton(const char *name, double x, double y, int width, int height, ButtonRenderFunc render, OnClickFunc onClick);
+void CreateButton(const char *name, double x, double y, int width, int height, RenderFunc render, OnClickFunc onClick);
 void DestroyButton(const char *name);
 void DestroyButtons();
 Button *GetButton(const char *name);
 void EnableButton(const char *name);
-void DisableButton(const char *name);
+void DisableButton(const char *name); // 如果禁用按钮，就相当于按钮被隐藏了
 void PressButtons(int mouseX, int mouseY);
 void RenderButtons(HDC hdc_memBuffer, HDC hdc_loadBmp);
 
