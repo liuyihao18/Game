@@ -5,8 +5,6 @@
 
 #include "stdafx.h"
 
-#include "config.h"
-
 #include "scene.h"
 #include "object.h"
 #include "ui.h"

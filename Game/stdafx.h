@@ -27,3 +27,6 @@
 #include <map>
 #include <algorithm>
 #include <numeric>
+// 配置与系统信息
+#include "config.h"
+#include "info.h"

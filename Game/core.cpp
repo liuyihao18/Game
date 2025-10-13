@@ -5,9 +5,6 @@
 
 #include "stdafx.h"
 
-#include "config.h"
-
-#include "info.h"
 #include "core.h"
 
 #include "scene.h"

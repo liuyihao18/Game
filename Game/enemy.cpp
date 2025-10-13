@@ -5,16 +5,12 @@
 
 #include "stdafx.h"
 
-#include "config.h"
-
-#include "info.h"
-
 #include "enemy.h"
 
 static std::set<Enemy *> enemies;
 
 static double lastGenerateTime = 0;
-static double deltaGenerateTime = 3;
+static double deltaGenerateTime = 2;
 
 void InitEnemy()
 {

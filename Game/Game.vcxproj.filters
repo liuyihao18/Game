@@ -109,7 +109,7 @@
       <Filter>头文件\对象</Filter>
     </ClInclude>
     <ClInclude Include="info.h">
-      <Filter>头文件\工具</Filter>
+      <Filter>头文件\框架</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

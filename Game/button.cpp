@@ -6,8 +6,6 @@
 
 #include "stdafx.h"
 
-#include "info.h"
-
 #include "button.h"
 
 #include "scene.h"

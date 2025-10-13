@@ -6,10 +6,8 @@
 #include "stdafx.h"
 
 #include "resource.h"
-#include "config.h"
 #include "timer.h"
 
-#include "info.h"
 #include "core.h"
 #include "mouse.h"
 #include "keyboard.h"

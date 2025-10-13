@@ -5,12 +5,11 @@
 
 #include "stdafx.h"
 
-#include "info.h"
-#include "util.h"
-
 #include "keyboard.h"
 
 #include "player.h"
+
+#include "util.h"
 
 static Player *player;
 

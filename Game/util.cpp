@@ -5,8 +5,6 @@
 
 #include "stdafx.h"
 
-#include "config.h"
-
 #include "util.h"
 
 // 向量模长
