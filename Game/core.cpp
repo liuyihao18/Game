@@ -8,7 +8,6 @@
 #include "core.h"
 
 #include "scene.h"
-#include "object.h"
 #include "ui.h"
 
 // 内部游戏时间：单位（ms）
@@ -26,6 +25,9 @@ static double UpdateDeltaTime(double currentFps);
 static double GetAverageDeltaTime();
 static void ShowAverageFps();
 
+// 渲染资源
+extern HBITMAP bmp_WhiteBackground;
+
 // 游戏初始化
 void GameInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
@@ -33,13 +35,11 @@ void GameInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
     lastFrameTimestamp = firstFrameTimestamp;
     // 初始化游戏资源
     GameResourceInit(hWnd, wParam, lParam);
-    // 初始化游戏内容    
-    InitGameObjects();
-    InitUi();
+    // 初始化游戏场景
     InitScene(StartScene);
 }
 
-// 游戏帧循环
+// 游戏循环
 void GameLoop(HWND hWnd)
 {
     // 游戏时间处理
@@ -63,6 +63,47 @@ void GameLoop(HWND hWnd)
     RECT rect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
     InvalidateRect(hWnd, &rect, FALSE);
 }
+
+void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    // 开始绘制
+    PAINTSTRUCT ps;
+    HDC hdc_window = BeginPaint(hWnd, &ps);
+
+    // 创建缓存
+    HDC hdc_memBuffer = CreateCompatibleDC(hdc_window);
+    HDC hdc_loadBmp = CreateCompatibleDC(hdc_window);
+
+    // 初始化缓存
+    HBITMAP blankBmp = CreateCompatibleBitmap(hdc_window, WINDOW_WIDTH, WINDOW_HEIGHT);
+    SelectObject(hdc_memBuffer, blankBmp);
+
+    // 清空背景
+    SelectObject(hdc_loadBmp, bmp_WhiteBackground);
+    BitBlt(hdc_memBuffer, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, hdc_loadBmp, 0, 0, SRCCOPY);
+
+    // 绘制场景
+    RenderScene(hdc_memBuffer, hdc_loadBmp);
+
+    // 最后将所有的信息绘制到屏幕上
+    BitBlt(hdc_window, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, hdc_memBuffer, 0, 0, SRCCOPY);
+
+    // 回收资源所占的内存（非常重要）
+    DeleteObject(blankBmp);
+    DeleteDC(hdc_loadBmp);
+    DeleteDC(hdc_memBuffer);
+
+    // 结束绘制
+    EndPaint(hWnd, &ps);
+}
+
+// 游戏更新逻辑
+void GameUpdate(double deltaTime)
+{
+    // 游戏场景中物体更新
+    UpdateScene(deltaTime);
+}
+
 
 // 获取当前游戏时间，单位（s）
 double GetGameTime()

@@ -158,7 +158,6 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="render.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -168,7 +167,6 @@
     </ClCompile>
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="ui.cpp" />
-    <ClCompile Include="update.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>

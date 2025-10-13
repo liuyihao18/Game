@@ -26,3 +26,7 @@ void InitScene(SceneId newSceneId);
 void ChangeScene(SceneId newSceneId);
 // 获取当前场景
 Scene *GetCurrentScene();
+// 更新场景
+void UpdateScene(double deltaTime);
+// 渲染场景
+void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp);

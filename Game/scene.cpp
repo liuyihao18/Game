@@ -22,6 +22,11 @@ static void UnloadScene(SceneId oldSceneId);
 void InitScene(SceneId newSceneId)
 {
     currentScene = new Scene();
+    // 初始化游戏对象
+    InitGameObjects();
+    // 初始化UI
+    InitUi();
+    // 加载场景
     LoadScene(newSceneId);
 }
 
@@ -36,6 +41,22 @@ void ChangeScene(SceneId newSceneId)
 Scene *GetCurrentScene()
 {
     return currentScene;
+}
+
+// 更新场景
+void UpdateScene(double deltaTime)
+{
+    // 更新游戏对象
+    UpdateGameObjects(deltaTime);
+}
+
+// 渲染场景
+void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
+{
+    // 绘制场景物体
+    RenderGameObjects(hdc_memBuffer, hdc_loadBmp);
+    // 绘制UI
+    RenderUi(hdc_memBuffer, hdc_loadBmp);
 }
 
 // 加载场景
