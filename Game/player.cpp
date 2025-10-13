@@ -9,8 +9,6 @@
 
 #include "player.h"
 
-#include "util.h"
-
 static Player *player;
 
 extern HBITMAP bmp_Player;
@@ -29,9 +27,9 @@ void CreatePlayer()
 {
     player = new Player();
     // 玩家初始位置
-    player->position = {550, 600};
-    player->width = 100;
-    player->height = 150;
+    player->position = {(GAME_WIDTH - PLAYER_WIDTH) / 2, GAME_HEIGHT - PLAYER_HEIGHT - 20};
+    player->width = PLAYER_WIDTH;
+    player->height = PLAYER_HEIGHT;
     // 玩家初始速度
     player->status.velocity = 500;
 }

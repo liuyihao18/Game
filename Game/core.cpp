@@ -31,6 +31,7 @@ void GameInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
     firstFrameTimestamp = GetCurrentTimestamp();
     lastFrameTimestamp = firstFrameTimestamp;
+    // 初始化游戏资源
     GameResourceInit(hWnd, wParam, lParam);
     // 初始化游戏内容    
     InitGameObjects();

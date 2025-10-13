@@ -93,7 +93,11 @@ void ProcessUiInput()
 void CreateUi_StartScene()
 {
 	// 创建按钮
-	CreateButton("StartButton", 450, 222, 300, 200, RenderStartButton, OnStartButtonClick);
+    const int width = 300;
+    const int height = 200;
+    const int x = (WINDOW_WIDTH - width) / 2 - 10; // what the f**k offset to center this?
+    const int y = 196;
+	CreateButton("StartButton", x, y, width, height, RenderStartButton, OnStartButtonClick);
     // TODO: 开始场景其他需要创建的UI组件
 }
 
@@ -140,9 +144,13 @@ void RenderUi_StartScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
     // 选择自定义字体到设备上下文
     HFONT hOldFont = (HFONT)SelectObject(hdc_memBuffer, hFont);
     // 设置字体区域
-    RECT rect = { 400, 500, 800, 800 };
+    const int width = 800;
+    const int height = 800;
+    const int x = (WINDOW_WIDTH - width) / 2 + 90;
+    const int y = 456;
+    RECT rect = { x, y, width, height };
     // 绘制
-    DrawText(hdc_memBuffer, TEXT("使用WASD控制方块移动~\n撞击消灭圆圈吧！\n\n请大家好好学习这个框架_(:зゝ∠)_"), -1, &rect, DT_CENTER);
+    DrawText(hdc_memBuffer, TEXT("使用WASD或方向键控制飞机移动\n使用空格发射子弹\n\n请大家好好学习这个框架_(:зゝ∠)_"), -1, &rect, DT_CENTER);
     // 恢复原来的字体
     SelectObject(hdc_memBuffer, hOldFont);
     // 删除自定义字体以释放资源
@@ -153,5 +161,22 @@ void RenderUi_StartScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
 
 void RenderUi_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
 {
+    // 绘制一个边框表示游戏区域
+    
+    // 选择画笔颜色（边框颜色）
+    HPEN hPen = CreatePen(PS_SOLID, GAME_BOARDER, RGB(0, 0, 0));
+    HGDIOBJ oldPen = SelectObject(hdc_memBuffer, hPen);
+
+    // 使用透明画刷防止填充
+    HGDIOBJ oldBrush = SelectObject(hdc_memBuffer, GetStockObject(NULL_BRUSH));
+
+    // 绘制矩形（仅边框）
+    Rectangle(hdc_memBuffer, GAME_X, GAME_Y, GAME_WIDTH, GAME_HEIGHT);
+
+    // 还原 GDI 对象
+    SelectObject(hdc_memBuffer, oldBrush);
+    SelectObject(hdc_memBuffer, oldPen);
+    DeleteObject(hPen);
+
     // TODO: 游戏场景其他需要绘制的UI组件
 }

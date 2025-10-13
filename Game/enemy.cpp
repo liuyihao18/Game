@@ -28,8 +28,8 @@ void CreateEnemy(double x, double y, int radius)
 void CreateRandomEnemy()
 {
     CreateEnemy(
-        120 + rand() * 0.8 / RAND_MAX * WINDOW_WIDTH,
-        80 + rand() * 0.8 / RAND_MAX * WINDOW_HEIGHT,
+        GetRandomDouble(50, GAME_WIDTH - 50),
+        GetRandomDouble(50, GAME_HEIGHT - 50),
         15);
 }
 

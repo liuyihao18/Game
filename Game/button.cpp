@@ -20,8 +20,9 @@ void CreateButton(const char *name, double x, double y, int width, int height, B
     button->position = {x, y};
     button->width = width;
     button->height = height;
-    button->render = render;
     button->isEnabled = true;
+
+    button->render = render;
     button->onClick = onClick;
 
     m[name] = button;

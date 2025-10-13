@@ -19,6 +19,7 @@
 #include <memory.h>
 #include <tchar.h>
 #include <math.h>
+#include <time.h>
 // C++运行库
 #include <string>
 #include <vector>
@@ -27,6 +28,8 @@
 #include <map>
 #include <algorithm>
 #include <numeric>
-// 配置与系统信息
+#include <random>
+// 配置与系统信息与工具函数
 #include "config.h"
 #include "info.h"
+#include "util.h"

@@ -6,7 +6,6 @@
 #include "stdafx.h"
 
 #include "resource.h"
-#include "util.h"
 
 #pragma region 静态图片资源
 
