@@ -7,12 +7,6 @@
 
 #include "type.h"
 
-// 按钮相关的定义
-enum ButtonId
-{
-    StartButton = 0
-};
-
 // 这真的是纯C语言的内容
 struct Button;
 typedef void (*ButtonRenderFunc)(HDC hdc_memBuffer, HDC hdc_loadBmp);
