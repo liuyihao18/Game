@@ -36,7 +36,7 @@ void GameInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
     // 初始化游戏内容    
     InitGameObjects();
     InitUi();
-    InitScene(GameScene);
+    InitScene(StartScene);
 }
 
 // 游戏帧循环

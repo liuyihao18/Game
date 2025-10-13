@@ -169,6 +169,9 @@ void RenderUi_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
 {
     /* 注意绘制顺序 */
 
+    // 绘制所有的按钮（虽然没有按钮）
+    RenderButtons(hdc_memBuffer, hdc_loadBmp);
+
     // 绘制一个边框表示游戏区域
     // 选择画笔颜色（边框颜色）
     HPEN hPen = CreatePen(PS_SOLID, GAME_BOARDER, RGB(0, 0, 0));
