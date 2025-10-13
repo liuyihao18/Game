@@ -10,11 +10,13 @@
 
 #include "player.h"
 #include "enemy.h"
+#include "bullet.h"
 
 // 检查角色和敌人的碰撞
 static void GameCheckCollision_StartScene();
 static void GameCheckCollision_GameScene();
 static void GameCheckCollision_GameScene_Player_Enemies();
+static void GameCheckCollision_GameScene_Enemies_Bullets();
 
 // 工具函数：矩形与圆碰撞检测
 static bool IsRectCircleCollision(Rect rect, Circle c);
@@ -49,7 +51,10 @@ void GameCheckCollision_StartScene()
 
 void GameCheckCollision_GameScene()
 {
+	// 玩家和敌人的碰撞
     GameCheckCollision_GameScene_Player_Enemies();
+	// 敌人和子弹的碰撞
+    GameCheckCollision_GameScene_Enemies_Bullets();
 
     // TODO: 更多的碰撞逻辑
 }
@@ -64,7 +69,7 @@ void GameCheckCollision_GameScene_Player_Enemies()
     rect1.right = player->position.x + player->width;
     rect1.top = player->position.y;
     rect1.bottom = player->position.y + player->height;
-    // 敌人用简单圆形表示
+    // 敌人用简单矩形表示
     std::vector<Enemy *> enemies = GetEnemies();
     Rect rect2{};
     for (Enemy *enemy : enemies)
@@ -79,7 +84,46 @@ void GameCheckCollision_GameScene_Player_Enemies()
             player->attributes.health--;
             player->attributes.score += enemy->attributes.score;
             DestroyEnemy(enemy);
+            if (player->attributes.health <= 0)
+            {
+                Log(1, TEXT("游戏结束！"));
+                ChangeScene(SceneId::StartScene);
+			}
         }
+    }
+}
+
+// 检查角色和敌人的碰撞
+void GameCheckCollision_GameScene_Enemies_Bullets()
+{
+    // 敌人用简单矩形表示
+	std::vector<Enemy*> enemies = GetEnemies();
+    Rect rect{};
+    // 子弹用简单圆形表示
+	std::vector<Bullet*> bullets = GetBullets();
+	Circle circle{};
+    for (Enemy* enemy : enemies)
+    {
+        rect.left = enemy->position.x;
+        rect.right = enemy->position.x + enemy->width;
+        rect.top = enemy->position.y;
+        rect.bottom = enemy->position.y + enemy->height;
+        for (Bullet* bullet : bullets)
+        {
+            circle.center = bullet->position;
+            circle.radius = bullet->radius;
+            if (IsRectCircleCollision(rect, circle))
+            {
+                // 碰撞后扣血、加分摧毁敌人和子弹
+                enemy->attributes.health -= bullet->damage;
+                if (enemy->attributes.health <= 0)
+                {
+                    GetPlayer()->attributes.score += enemy->attributes.score;
+                    DestroyEnemy(enemy);
+                }
+                DestroyBullet(bullet);
+            }
+		}
     }
 }
 

@@ -33,7 +33,7 @@ void CreateEnemy(double x, double y)
     enemy->width = ENEMY_WIDTH;
 	enemy->height = ENEMY_HEIGHT;
 	enemy->attributes.health = 3;
-    enemy->attributes.speed = 300;
+    enemy->attributes.speed = 200;
 	enemy->attributes.score = 1;
     enemies.insert(enemy);
 }
@@ -41,7 +41,7 @@ void CreateEnemy(double x, double y)
 void CreateRandomEnemy()
 {
     CreateEnemy(
-        GetRandomDouble(50, GAME_WIDTH - 50),
+        GetRandomDouble(30, GAME_WIDTH - ENEMY_WIDTH - 30),
 		-100 // 从上方稍微高一点的位置生成
     );
 }
@@ -79,8 +79,10 @@ void UpdateEnemies(double deltaTime)
     // TODO: 更多的敌人逻辑
     for (Enemy *enemy : GetEnemies())
     {
-        enemy->position.y += enemy->attributes.speed * deltaTime; // 敌人向下移动
-        if (enemy->position.y > GAME_HEIGHT + 50) // 超出屏幕后删除
+        // 敌人向下移动
+        enemy->position.y += enemy->attributes.speed * deltaTime; 
+        // 超出屏幕的敌人删除
+        if (enemy->position.y > GAME_HEIGHT + 50)
         {
             DestroyEnemy(enemy);
 		}
