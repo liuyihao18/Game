@@ -19,7 +19,7 @@ static void LoadScene(SceneId newSceneId);
 static void UnloadScene(SceneId oldSceneId);
 
 // 初始化场景
-void InitScene(SceneId newSceneId)
+void InitScene()
 {
     currentScene = new Scene();
     // 初始化游戏对象
