@@ -37,6 +37,8 @@ void GameInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
     GameResourceInit(hWnd, wParam, lParam);
     // 初始化游戏场景
     InitScene(StartScene);
+    // 切换到开始场景
+    ChangeScene(StartScene);
 }
 
 // 游戏循环

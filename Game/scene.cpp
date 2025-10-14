@@ -26,8 +26,6 @@ void InitScene(SceneId newSceneId)
     InitGameObjects();
     // 初始化UI
     InitUi();
-    // 加载场景
-    LoadScene(newSceneId);
 }
 
 // 修改场景
