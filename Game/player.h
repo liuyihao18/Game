@@ -6,15 +6,6 @@
 
 #include "type.h"
 
-// 玩家状态
-struct Status
-{
-    double health;
-    double velocity;
-
-    // TODO: 其他相关的状态数值
-};
-
 // 玩家
 struct Player
 {
@@ -22,7 +13,7 @@ struct Player
     int width;
     int height;
 
-    Status status;
+    Attributes attributes;
 };
 
 // 初始化角色
@@ -34,6 +25,6 @@ void DestroyPlayer();
 // 获取角色
 Player *GetPlayer();
 // 更新角色
-void UpdatePlayer(double DeltaTime);
+void UpdatePlayer(double deltaTime);
 // 渲染角色
 void RenderPlayer(HDC hdc_memBuffer, HDC hdc_loadBmp);

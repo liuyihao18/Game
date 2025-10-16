@@ -6,10 +6,8 @@
 #include "stdafx.h"
 
 #include "resource.h"
-#include "config.h"
 #include "timer.h"
 
-#include "info.h"
 #include "core.h"
 #include "mouse.h"
 #include "keyboard.h"
@@ -41,9 +39,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
-
-    // 初始化随机数种子
-    srand((unsigned)time(nullptr));
 
     // 初始化公共控件
     INITCOMMONCONTROLSEX icex;

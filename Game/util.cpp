@@ -5,9 +5,20 @@
 
 #include "stdafx.h"
 
-#include "config.h"
+static std::mt19937 rng((unsigned int)std::time(nullptr));
 
-#include "util.h"
+// 生成随机数
+int GetRandomInt(int min, int max)
+{
+    std::uniform_int_distribution<int> dist(min, max);
+    return dist(rng);
+}
+
+double GetRandomDouble(double min, double max)
+{
+    std::uniform_real_distribution<double> dist(min, max);
+    return dist(rng);
+}
 
 // 向量模长
 double Length(Vector2 in)

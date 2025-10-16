@@ -7,6 +7,10 @@
 
 #include "type.h"
 
+// 随机数
+int GetRandomInt(int min, int max);
+double GetRandomDouble(double min, double max);
+
 // 向量
 double Length(Vector2 in);
 Vector2 Normalize(Vector2 in);

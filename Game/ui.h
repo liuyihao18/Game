@@ -4,10 +4,14 @@
  */
 #pragma once
 
+// 初始化UI
+void InitUi();
 // 创建UI
 void CreateUi();
 // 销毁UI
 void DestroyUi();
+// 更新UI
+void UpdateUi(double deltaTime);
 // 渲染UI
 void RenderUi(HDC hdc_memBuffer, HDC hdc_loadBmp);
 

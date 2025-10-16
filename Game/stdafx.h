@@ -11,19 +11,24 @@
 #include <windows.h>
 #include <mmsystem.h>
 #pragma comment(lib, "comctl32.lib") // 解决报错：无法解析的外部符号 __imp_InitCommonControlsEx
-#pragma comment(lib, "Msimg32.lib") // 解决报错：无法解析的外部符号 __imp_TransparentBlt
-#pragma comment(lib, "Winmm.lib") // 解决报错：无法解析的外部符号 __imp_timeSetEvent
+#pragma comment(lib, "Msimg32.lib")  // 解决报错：无法解析的外部符号 __imp_TransparentBlt
+#pragma comment(lib, "Winmm.lib")    // 解决报错：无法解析的外部符号 __imp_timeSetEvent
 // C运行库
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
 #include <math.h>
+#include <time.h>
 // C++运行库
 #include <string>
 #include <vector>
 #include <deque>
 #include <set>
-#include <map>
 #include <algorithm>
 #include <numeric>
+#include <random>
+// 配置与系统信息与工具函数
+#include "config.h"
+#include "info.h"
+#include "util.h"

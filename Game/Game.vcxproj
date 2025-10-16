@@ -127,12 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bullet.h" />
     <ClInclude Include="core.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="info.h" />
     <ClInclude Include="mouse.h" />
+    <ClInclude Include="object.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="Resource.h" />
@@ -145,16 +147,17 @@
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="bullet.cpp" />
     <ClCompile Include="button.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="core.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="mouse.cpp" />
+    <ClCompile Include="object.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="render.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -164,7 +167,6 @@
     </ClCompile>
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="ui.cpp" />
-    <ClCompile Include="update.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +174,8 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Game.ico" />
+    <Image Include="res\enemy.bmp" />
+    <Image Include="res\plane.bmp" />
     <Image Include="res\Player.bmp" />
     <Image Include="res\Start.bmp" />
     <Image Include="small.ico" />

@@ -10,15 +10,17 @@
 struct Enemy
 {
     Vector2 position;
-    int radius;
+    int width;
+    int height;
 
+    Attributes attributes;
     // TODO: 加入更多的敌人信息
 };
 
 // 初始化敌人
 void InitEnemy();
 // 创建敌人
-void CreateEnemy(double x, double y, int radius);
+void CreateEnemy(double x, double y);
 void CreateRandomEnemy();
 // 摧毁敌人
 void DestroyEnemy(Enemy *enemy);
@@ -26,6 +28,6 @@ void DestroyEnemies();
 // 获取所有敌人
 std::vector<Enemy *> GetEnemies();
 // 更新所有敌人
-void UpdateEnemies(double DeltaTime);
+void UpdateEnemies(double deltaTime);
 // 渲染所有敌人
 void RenderEnemies(HDC hdc_memBuffer, HDC hdc_loadBmp);
