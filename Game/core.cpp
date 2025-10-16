@@ -21,7 +21,7 @@ static double GetCurrentTimestamp();
 // 帧率统计：单位（Hz）
 static std::deque<double> deltaTimeHistory;
 static size_t deltaTimeHistorySize = 120;
-static double UpdateDeltaTime(double currentFps);
+static double UpdateDeltaTime(double currentDeltaTime);
 static double GetAverageDeltaTime();
 static void ShowAverageFps();
 
@@ -122,9 +122,9 @@ double GetCurrentTimestamp()
 }
 
 // 工具函数：更新FPS
-double UpdateDeltaTime(double currentFps)
+double UpdateDeltaTime(double currentDeltaTime)
 {
-    deltaTimeHistory.push_back(currentFps);
+    deltaTimeHistory.push_back(currentDeltaTime);
     if (deltaTimeHistory.size() > deltaTimeHistorySize)
     {
         deltaTimeHistory.pop_front();
