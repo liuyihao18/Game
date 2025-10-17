@@ -1,14 +1,12 @@
 ﻿/**
  * 这个文件是游戏核心逻辑的源文件
- * 除非你想要修改游戏逻辑结构，不然不需要改这个文件
+ * 除非你想要修改游戏框架，否则不需要改这个文件
  */
 
 #include "stdafx.h"
 
 #include "core.h"
-
 #include "scene.h"
-#include "ui.h"
 
 // 内部游戏时间：单位（ms）
 static double gameTime = 0;
@@ -18,15 +16,12 @@ static double firstFrameTimestamp = 0;
 static double lastFrameTimestamp = 0;
 static double GetCurrentTimestamp();
 
-// 帧率统计：单位（Hz）
+// 帧耗时统计：单位（ms）
 static std::deque<double> deltaTimeHistory;
 static size_t deltaTimeHistorySize = 120;
-static double UpdateDeltaTime(double currentDeltaTime);
+static void UpdateDeltaTime(double currentDeltaTime);
 static double GetAverageDeltaTime();
 static void ShowAverageFps();
-
-// 渲染资源
-extern HBITMAP bmp_WhiteBackground;
 
 // 游戏初始化
 void GameInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
@@ -35,8 +30,6 @@ void GameInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
     lastFrameTimestamp = firstFrameTimestamp;
     // 初始化游戏资源
     GameResourceInit(hWnd, wParam, lParam);
-    // 初始化游戏场景
-    InitScene();
     // 切换到开始场景
     ChangeScene(StartScene);
 }
@@ -52,19 +45,16 @@ void GameLoop(HWND hWnd)
     UpdateDeltaTime(deltaTime);
     ShowAverageFps();
 
-    // 先处理UI输入
-    ProcessUiInput();
-
-    // 再计算碰撞
-    GameCheckCollision();
-
-    // 然后运行游戏逻辑
-    GameUpdate(deltaTime / 1000.0);
+    // 场景循环更新
+    SceneLoop(deltaTime / 1000.0);
 
     // 最后进行渲染，实际的渲染函数是GameRender，只重绘画面部分
     RECT rect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
     InvalidateRect(hWnd, &rect, FALSE);
 }
+
+// 渲染资源
+extern HBITMAP bmp_WhiteBackground;
 
 void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
@@ -99,20 +89,13 @@ void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
     EndPaint(hWnd, &ps);
 }
 
-// 游戏更新逻辑
-void GameUpdate(double deltaTime)
-{
-    // 游戏场景中物体更新
-    UpdateScene(deltaTime);
-}
-
-// 获取当前游戏时间，单位（s）
+// 获取当前游戏时间（单位：s）
 double GetGameTime()
 {
     return gameTime / 1000.0;
 }
 
-// 工具函数：获取当前时间戳
+// 工具函数：获取当前时间戳（单位：ms）
 double GetCurrentTimestamp()
 {
     LARGE_INTEGER freq, counter;
@@ -121,18 +104,17 @@ double GetCurrentTimestamp()
     return (double)counter.QuadPart * 1000.0 / freq.QuadPart;
 }
 
-// 工具函数：更新FPS
-double UpdateDeltaTime(double currentDeltaTime)
+// 工具函数：更新帧耗时统计（单位：ms）
+void UpdateDeltaTime(double currentDeltaTime)
 {
     deltaTimeHistory.push_back(currentDeltaTime);
     if (deltaTimeHistory.size() > deltaTimeHistorySize)
     {
         deltaTimeHistory.pop_front();
     }
-    return GetAverageDeltaTime();
 }
 
-// 工具函数：获取平均FPS
+// 工具函数：获取平均帧耗时（单位：ms）
 double GetAverageDeltaTime()
 {
     double sum = std::accumulate(deltaTimeHistory.begin(), deltaTimeHistory.end(), .0);

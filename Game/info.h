@@ -1,6 +1,5 @@
 ﻿/**
- * 这个文件是信息头文件
- * 用以获取一些游戏信息或打印日志
+ * 这个文件是获取游戏信息相关函数的头文件
  */
 
 #pragma once
@@ -9,5 +8,5 @@
 void Log(int pos, const char *format, ...);
 void Log(int pos, const TCHAR *format, ...);
 
-// 游戏时间函数
-double GetGameTime(); // 获取当前游戏时间，单位：秒
+// 游戏时间函数 - 获取当前游戏时间（单位：秒）
+double GetGameTime();

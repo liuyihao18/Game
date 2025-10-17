@@ -1,6 +1,6 @@
 ﻿/**
  * 这个文件是Windows应用程序的入口
- * 除非需要添加新的事件处理逻辑，不然基本不需要修改这个文件
+ * 除非需要添加新的事件处理逻辑，否则不需要修改这个文件
  */
 
 #include "stdafx.h"
@@ -199,7 +199,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_TIMER:
     {
         // 游戏主循环逻辑
-        if (wParam == MAIN_TIMER)
+        if (wParam == MAIN_TIMER_ID)
         {
             GameLoop(hWnd);
         }

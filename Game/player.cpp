@@ -1,6 +1,6 @@
 ﻿/**
- * 这个文件是游戏玩家的头文件
- * 玩家操作等逻辑实现在这
+ * 这个文件是玩家对象的源文件
+ * 玩家对象的逻辑实现在这
  */
 
 #include "stdafx.h"
@@ -12,17 +12,13 @@
 
 static Player *player;
 
+// 渲染资源
 extern HBITMAP bmp_Player;
 static int frameIndex = 0;
 static const int bmp_RowSize = 1;
 static const int bmp_ColSize = 4;
 static const int bmp_CellWidth = 200;
 static const int bmp_CellHeight = 300;
-
-void InitPlayer()
-{
-    // TODO: 角色管理中需要在初始化阶段做的事情
-}
 
 void CreatePlayer()
 {

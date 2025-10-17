@@ -1,6 +1,6 @@
 ﻿/**
  * 这个文件是工具库的源文件
- * 想要实现的和游戏无关的函数，都可以扔在这里
+ * 想要实现的工具函数，都可以放在这里
  */
 
 #include "stdafx.h"
@@ -69,4 +69,26 @@ HBITMAP CreateBackground(HWND hWnd, COLORREF color)
     EndPaint(hWnd, &ps);
 
     return bmp_output;
+}
+
+// 矩形与圆碰撞检测
+bool IsRectCircleCollision(Rect rect, Circle c)
+{
+    // clamp(cx, rect.left, rect.right)
+    double closestX = max(rect.left, min(c.center.x, rect.right));
+    double closestY = max(rect.top, min(c.center.y, rect.bottom));
+
+    double dx = c.center.x - closestX;
+    double dy = c.center.y - closestY;
+
+    return (dx * dx + dy * dy) <= (c.radius * c.radius);
+}
+
+// 矩形与矩形碰撞检测
+bool IsRectRectCollision(Rect r1, Rect r2)
+{
+    return !(r2.left > r1.right ||
+             r2.right < r1.left ||
+             r2.top > r1.bottom ||
+             r2.bottom < r1.top);
 }

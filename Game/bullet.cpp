@@ -1,6 +1,6 @@
 ﻿/**
- * 这个文件是子弹的源文件
- * 子弹逻辑实现在这
+ * 这个文件是子弹对象的源文件
+ * 子弹对象的逻辑实现在这
  */
 
 #include "stdafx.h"
@@ -8,11 +8,6 @@
 #include "bullet.h"
 
 static std::set<Bullet *> bullets;
-
-void InitBullet()
-{
-	// TODO: 子弹管理中需要在初始化阶段做的事情
-}
 
 void CreateBullet(double x, double y, int damage, double speed)
 {
@@ -42,6 +37,7 @@ void DestroyBullets()
 
 std::vector<Bullet *> GetBullets()
 {
+	// 返回的是子弹指针的副本列表 - 避免边遍历边删除时出错
 	return std::vector<Bullet *>(bullets.begin(), bullets.end());
 }
 

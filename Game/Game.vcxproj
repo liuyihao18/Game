@@ -134,31 +134,31 @@
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="info.h" />
     <ClInclude Include="mouse.h" />
-    <ClInclude Include="object.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="scene1.h" />
+    <ClInclude Include="scene2.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="type.h" />
-    <ClInclude Include="ui.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="button.cpp" />
-    <ClCompile Include="collision.cpp" />
     <ClCompile Include="core.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="mouse.cpp" />
-    <ClCompile Include="object.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scene.cpp" />
+    <ClCompile Include="scene1.cpp" />
+    <ClCompile Include="scene2.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -166,7 +166,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="timer.cpp" />
-    <ClCompile Include="ui.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>

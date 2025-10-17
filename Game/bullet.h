@@ -1,6 +1,6 @@
 ﻿/**
- * 这个文件是子弹的头文件
- * 子弹逻辑实现在这
+ * 这个文件是子弹对象的头文件
+ * 子弹对象的逻辑实现在这
  */
 
 #pragma once
@@ -13,8 +13,6 @@ struct Bullet
 	double speed;
 };
 
-// 初始化子弹
-void InitBullet();
 // 创建子弹
 void CreateBullet(double x, double y, int damage, double speed);
 // 摧毁子弹

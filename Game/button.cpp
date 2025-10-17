@@ -1,40 +1,31 @@
 ﻿/**
- * 这个文件是游戏按钮的源文件
- * 如果要添加新的按钮，添加在这里
+ * 这个文件是按钮的源文件
+ * 按钮的管理实现这，按钮的逻辑实现在对应的场景文件中
  */
 
 #include "stdafx.h"
 
 #include "button.h"
 
-#include "scene.h"
-
-#pragma region 按钮核心代码
-
 static std::set<Button *> buttons;
 
-void InitButton()
-{
-    // TODO: 按钮管理中需要在初始化阶段做的事情
-}
-
-void CreateButton(ButtonId buttonId, double x, double y, int width, int height, RenderButtonFunc render, OnButtonClickFunc onClick)
+ButtonId CreateButton(double x, double y, int width, int height, RenderButtonFunc render, OnButtonClickFunc onClick)
 {
     Button *button = new Button();
-
-    button->buttonId = buttonId;
 
     button->position.x = x;
     button->position.y = y;
     button->width = width;
     button->height = height;
 
-    button->isEnabled = true;
+    button->isEnabled = false;
 
     button->render = render;
     button->onClick = onClick;
 
     buttons.insert(button);
+
+    return reinterpret_cast<ButtonId>(button);
 }
 
 void DestroyButton(ButtonId buttonId)
@@ -57,20 +48,14 @@ void DestroyButtons()
 
 std::vector<Button *> GetButtons()
 {
+    // 返回的是按钮指针的副本列表 - 避免边遍历边删除时出错
     return std::vector<Button *>(buttons.begin(), buttons.end());
 }
 
 Button *GetButton(ButtonId buttonId)
 {
-    for (Button *button : buttons)
-    {
-        if (button->buttonId == buttonId)
-        {
-            return button;
-        }
-    }
-
-    return nullptr;
+    Button *button = reinterpret_cast<Button *>(buttonId);
+    return buttons.count(button) ? button : nullptr;
 }
 
 void EnableButton(ButtonId buttonId)
@@ -110,7 +95,7 @@ void PressButtons(int mouseX, int mouseY)
     }
     if (pressedButton)
     {
-        pressedButton->onClick();
+        pressedButton->onClick(pressedButton);
     }
 }
 
@@ -125,24 +110,3 @@ void RenderButtons(HDC hdc_memBuffer, HDC hdc_loadBmp)
         button->render(button, hdc_memBuffer, hdc_loadBmp);
     }
 }
-#pragma endregion
-
-extern HBITMAP bmp_StartButton;
-
-void RenderStartButton(Button *button, HDC hdc_memBuffer, HDC hdc_loadBmp)
-{
-    SelectObject(hdc_loadBmp, bmp_StartButton);
-    TransparentBlt(
-        hdc_memBuffer, (int)button->position.x, (int)button->position.y,
-        button->width, button->height,
-        hdc_loadBmp, 0, 0, button->width, button->height,
-        RGB(255, 255, 255));
-}
-
-void OnStartButtonClick()
-{
-    Log(1, TEXT("游戏开始！"));
-    ChangeScene(SceneId::GameScene);
-}
-
-// TODO: 加入更多的按钮逻辑

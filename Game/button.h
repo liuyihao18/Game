@@ -1,25 +1,20 @@
 ﻿/**
- * 这个文件是游戏按钮的头文件
- * 如果要添加新的按钮，添加在这里
+ * 这个文件是按钮的头文件
+ * 按钮的管理实现这，按钮的逻辑实现在对应的场景文件中
  */
+
 #pragma once
 
 #include "type.h"
 
-enum ButtonId
-{
-    StartButton = 0,
-};
-
 // 这真的是纯C语言的内容
 struct Button;
+typedef size_t ButtonId;
 typedef void (*RenderButtonFunc)(Button *button, HDC hdc_memBuffer, HDC hdc_loadBmp);
-typedef void (*OnButtonClickFunc)(void);
+typedef void (*OnButtonClickFunc)(Button *button);
 
 struct Button
 {
-    ButtonId buttonId; // 按钮编号
-
     Vector2 position; // 坐标 (x, y)
     int width;        // 宽度
     int height;       // 高度
@@ -30,10 +25,8 @@ struct Button
     OnButtonClickFunc onClick;
 };
 
-// 初始化按钮
-void InitButton();
-// 创建按钮
-void CreateButton(ButtonId buttonId, double x, double y, int width, int height, RenderButtonFunc render, OnButtonClickFunc onClick);
+// 创建按钮（注意：按钮创建时处于禁用状态）
+ButtonId CreateButton(double x, double y, int width, int height, RenderButtonFunc render, OnButtonClickFunc onClick);
 // 销毁按钮
 void DestroyButton(ButtonId buttonId);
 void DestroyButtons();
@@ -48,9 +41,3 @@ void DisableButton(ButtonId buttonId); // 如果禁用按钮，就相当于按�
 void PressButtons(int mouseX, int mouseY);
 // 渲染按钮
 void RenderButtons(HDC hdc_memBuffer, HDC hdc_loadBmp);
-
-// 实现每一个按钮的逻辑
-void RenderStartButton(Button *button, HDC hdc_memBuffer, HDC hdc_loadBmp);
-void OnStartButtonClick();
-
-// TODO: 加入更多的按钮逻辑

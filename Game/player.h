@@ -1,7 +1,8 @@
 ﻿/**
- * 这个文件是游戏玩家的头文件
- * 玩家操作等逻辑实现在这
+ * 这个文件是玩家对象的头文件
+ * 玩家对象的逻辑实现在这
  */
+
 #pragma once
 
 #include "type.h"
@@ -16,8 +17,6 @@ struct Player
     Attributes attributes;
 };
 
-// 初始化角色
-void InitPlayer();
 // 创建角色
 void CreatePlayer();
 // 删除角色
