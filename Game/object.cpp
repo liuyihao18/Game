@@ -28,18 +28,6 @@ static void UpdateGameObjects_GameScene(double deltaTime);
 static void RenderGameObjects_StartScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
 static void RenderGameObjects_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
 
-void InitGameObjects()
-{
-    // 初始化玩家对象
-    InitPlayer();
-    // 初始化敌人对象
-    InitEnemy();
-    // 初始化子弹对象
-    InitBullet();
-
-    // TODO: 游戏对象管理中需要在初始化阶段做的事情
-}
-
 void CreateGameObjects()
 {
     switch (GetCurrentScene()->sceneId)

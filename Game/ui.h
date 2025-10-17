@@ -4,8 +4,6 @@
  */
 #pragma once
 
-// 初始化UI
-void InitUi();
 // 创建UI
 void CreateUi();
 // 销毁UI

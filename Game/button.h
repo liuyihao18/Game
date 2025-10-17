@@ -30,8 +30,6 @@ struct Button
     OnButtonClickFunc onClick;
 };
 
-// 初始化按钮
-void InitButton();
 // 创建按钮
 void CreateButton(ButtonId buttonId, double x, double y, int width, int height, RenderButtonFunc render, OnButtonClickFunc onClick);
 // 销毁按钮

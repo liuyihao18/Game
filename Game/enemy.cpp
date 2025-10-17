@@ -21,11 +21,6 @@ static const int bmp_CellHeight = 200;
 static double lastGenerateTime = 0;
 static double deltaGenerateTime = 2;
 
-void InitEnemy()
-{
-    // TODO: 敌人管理中需要在初始化阶段做的事情
-}
-
 void CreateEnemy(double x, double y)
 {
     Enemy *enemy = new Enemy();

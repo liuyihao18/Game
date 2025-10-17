@@ -13,8 +13,6 @@ struct Bullet
 	double speed;
 };
 
-// 初始化子弹
-void InitBullet();
 // 创建子弹
 void CreateBullet(double x, double y, int damage, double speed);
 // 摧毁子弹

@@ -19,11 +19,6 @@ static const int bmp_ColSize = 4;
 static const int bmp_CellWidth = 200;
 static const int bmp_CellHeight = 300;
 
-void InitPlayer()
-{
-    // TODO: 角色管理中需要在初始化阶段做的事情
-}
-
 void CreatePlayer()
 {
     player = new Player();

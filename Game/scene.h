@@ -20,8 +20,6 @@ struct Scene
     // TODO: 如果需要更多的场景信息，添加在这里
 };
 
-// 初始化场景
-void InitScene();
 // 切换场景
 void ChangeScene(SceneId newSceneId);
 // 获取当前场景

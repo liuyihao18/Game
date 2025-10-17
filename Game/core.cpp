@@ -35,8 +35,6 @@ void GameInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
     lastFrameTimestamp = firstFrameTimestamp;
     // 初始化游戏资源
     GameResourceInit(hWnd, wParam, lParam);
-    // 初始化游戏场景
-    InitScene();
     // 切换到开始场景
     ChangeScene(StartScene);
 }

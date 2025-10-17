@@ -29,13 +29,6 @@ static void UpdateUi_GameScene(double deltaTime);
 static void RenderUi_StartScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
 static void RenderUi_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
 
-void InitUi()
-{
-    InitButton();
-
-    // TODO: UI中需要在初始化阶段做的事情
-}
-
 void CreateUi()
 {
     switch (GetCurrentScene()->sceneId)

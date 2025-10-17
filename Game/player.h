@@ -16,8 +16,6 @@ struct Player
     Attributes attributes;
 };
 
-// 初始化角色
-void InitPlayer();
 // 创建角色
 void CreatePlayer();
 // 删除角色

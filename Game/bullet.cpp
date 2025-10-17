@@ -9,11 +9,6 @@
 
 static std::set<Bullet *> bullets;
 
-void InitBullet()
-{
-	// TODO: 子弹管理中需要在初始化阶段做的事情
-}
-
 void CreateBullet(double x, double y, int damage, double speed)
 {
 	Bullet *bullet = new Bullet();

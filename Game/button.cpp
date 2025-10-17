@@ -13,11 +13,6 @@
 
 static std::set<Button *> buttons;
 
-void InitButton()
-{
-    // TODO: 按钮管理中需要在初始化阶段做的事情
-}
-
 void CreateButton(ButtonId buttonId, double x, double y, int width, int height, RenderButtonFunc render, OnButtonClickFunc onClick)
 {
     Button *button = new Button();

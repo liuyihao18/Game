@@ -5,8 +5,6 @@
 
 #pragma once
 
-// 初始化游戏物体管理系统
-void InitGameObjects();
 // 创建游戏物体
 void CreateGameObjects();
 // 摧毁游戏物体

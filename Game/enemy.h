@@ -17,8 +17,6 @@ struct Enemy
     // TODO: 加入更多的敌人信息
 };
 
-// 初始化敌人
-void InitEnemy();
 // 创建敌人
 void CreateEnemy(double x, double y);
 void CreateRandomEnemy();

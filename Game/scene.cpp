@@ -10,23 +10,14 @@
 #include "ui.h"
 
 // 当前游戏场景
-static Scene *currentScene;
+static Scene sceneInstance = { None };
+static Scene *currentScene = &sceneInstance;
 
 // 加载场景 - 请务必保证场景中的对象都正确创建了
 static void LoadScene(SceneId newSceneId);
 
 // 卸载场景 - 请务必保证场景中的对象都正确销毁了
 static void UnloadScene(SceneId oldSceneId);
-
-// 初始化场景
-void InitScene()
-{
-    currentScene = new Scene();
-    // 初始化游戏对象
-    InitGameObjects();
-    // 初始化UI
-    InitUi();
-}
 
 // 修改场景
 void ChangeScene(SceneId newSceneId)
