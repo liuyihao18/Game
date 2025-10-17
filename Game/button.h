@@ -7,20 +7,14 @@
 
 #include "type.h"
 
-enum ButtonId
-{
-    StartButton = 0,
-};
-
 // 这真的是纯C语言的内容
 struct Button;
+typedef size_t ButtonId;
 typedef void (*RenderButtonFunc)(Button *button, HDC hdc_memBuffer, HDC hdc_loadBmp);
 typedef void (*OnButtonClickFunc)(Button *button);
 
 struct Button
 {
-    ButtonId buttonId; // 按钮编号
-
     Vector2 position; // 坐标 (x, y)
     int width;        // 宽度
     int height;       // 高度
@@ -31,8 +25,8 @@ struct Button
     OnButtonClickFunc onClick;
 };
 
-// 创建按钮
-void CreateButton(ButtonId buttonId, double x, double y, int width, int height, RenderButtonFunc render, OnButtonClickFunc onClick);
+// 创建按钮（注意：按钮创建时处于禁用状态）
+ButtonId CreateButton(double x, double y, int width, int height, RenderButtonFunc render, OnButtonClickFunc onClick);
 // 销毁按钮
 void DestroyButton(ButtonId buttonId);
 void DestroyButtons();

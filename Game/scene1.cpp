@@ -28,7 +28,8 @@ void LoadScene_StartScene()
     const int height = 200;
     const int x = (WINDOW_WIDTH - width) / 2 - 10; // what the f**k offset to center this?
     const int y = 196;
-    CreateButton(StartButton, x, y, width, height, RenderStartButton, OnStartButtonClick);
+    ButtonId startButtonId = CreateButton(x, y, width, height, RenderStartButton, OnStartButtonClick);
+    EnableButton(startButtonId);
 
     /* 游戏对象创建 */
     // 开始场景暂时没有游戏对象需要创建

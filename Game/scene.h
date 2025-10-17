@@ -26,12 +26,14 @@ void SceneLoop(double deltaTime);
 // 渲染场景
 void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
 
+Scene *GetCurrentScene();
+
 // 切换场景
 void ChangeScene(SceneId newSceneId);
 
 // 宏函数 - 路由场景函数调用，如果有新的场景需要添加，在这里添加对应的 case 分支
 #define ROUTE_SCENE_FUNCTION(FUNCTION_NAME) \
-    switch (currentScene->sceneId)          \
+    switch (GetCurrentScene()->sceneId)     \
     {                                       \
     case None:                              \
         break;                              \
@@ -46,7 +48,7 @@ void ChangeScene(SceneId newSceneId);
     }
 
 #define ROUTE_SCENE_FUNCTION_OneParam(FUNCTION_NAME, param1) \
-    switch (currentScene->sceneId)                           \
+    switch (GetCurrentScene()->sceneId)                      \
     {                                                        \
     case None:                                               \
         break;                                               \
@@ -61,7 +63,7 @@ void ChangeScene(SceneId newSceneId);
     }
 
 #define ROUTE_SCENE_FUNCTION_TwoParam(FUNCTION_NAME, param1, param2) \
-    switch (currentScene->sceneId)                                   \
+    switch (GetCurrentScene()->sceneId)                              \
     {                                                                \
     case None:                                                       \
         break;                                                       \

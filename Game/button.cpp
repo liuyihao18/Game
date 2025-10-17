@@ -9,29 +9,23 @@
 
 static std::set<Button *> buttons;
 
-void CreateButton(ButtonId buttonId, double x, double y, int width, int height, RenderButtonFunc render, OnButtonClickFunc onClick)
+ButtonId CreateButton(double x, double y, int width, int height, RenderButtonFunc render, OnButtonClickFunc onClick)
 {
-    // 已经存在同样ID的按钮，不能创建
-    if (GetButton(buttonId))
-    {
-        return;
-    }
-
     Button *button = new Button();
-
-    button->buttonId = buttonId;
 
     button->position.x = x;
     button->position.y = y;
     button->width = width;
     button->height = height;
 
-    button->isEnabled = true;
+    button->isEnabled = false;
 
     button->render = render;
     button->onClick = onClick;
 
     buttons.insert(button);
+
+    return reinterpret_cast<ButtonId>(button);
 }
 
 void DestroyButton(ButtonId buttonId)
@@ -60,15 +54,8 @@ std::vector<Button *> GetButtons()
 
 Button *GetButton(ButtonId buttonId)
 {
-    for (Button *button : buttons)
-    {
-        if (button->buttonId == buttonId)
-        {
-            return button;
-        }
-    }
-
-    return nullptr;
+    Button *button = reinterpret_cast<Button *>(buttonId);
+    return buttons.count(button) ? button : nullptr;
 }
 
 void EnableButton(ButtonId buttonId)
