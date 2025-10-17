@@ -1,6 +1,6 @@
 ﻿/**
- * 这个文件是敌人的头文件
- * 敌人逻辑实现在这
+ * 这个文件是敌人对象的头文件
+ * 敌人对象的逻辑实现在这
  */
 
 #pragma once
@@ -14,7 +14,7 @@ struct Enemy
     int height;
 
     Attributes attributes;
-    // TODO: 加入更多的敌人信息
+    // TODO: 加入更多的敌人信息（类型等）
 };
 
 // 创建敌人

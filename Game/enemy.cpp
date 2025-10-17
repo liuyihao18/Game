@@ -1,6 +1,6 @@
 ﻿/**
- * 这个文件是敌人的源文件
- * 敌人AI等逻辑实现在这
+ * 这个文件是敌人对象的源文件
+ * 敌人对象的逻辑实现在这
  */
 
 #include "stdafx.h"
@@ -9,7 +9,7 @@
 
 static std::set<Enemy *> enemies;
 
-// 渲染信息
+// 渲染资源
 extern HBITMAP bmp_Enemy;
 static int frameIndex = 0;
 static const int bmp_RowSize = 1;
@@ -17,7 +17,7 @@ static const int bmp_ColSize = 1;
 static const int bmp_CellWidth = 200;
 static const int bmp_CellHeight = 200;
 
-// 上次产生时间
+// 刷新时间
 static double lastGenerateTime = 0;
 static double deltaGenerateTime = 2;
 
@@ -59,6 +59,7 @@ void DestroyEnemies()
 
 std::vector<Enemy *> GetEnemies()
 {
+    // 返回的是敌人指针的副本列表 - 避免边遍历边删除时出错
     return std::vector<Enemy *>(enemies.begin(), enemies.end());
 }
 

@@ -1,4 +1,10 @@
-﻿#include "stdafx.h"
+﻿/**
+ * 这个文件是场景1-开始场景的源文件
+ * 场景的逻辑实现在这里
+ * 务必定义并实现所有的场景核心函数
+ */
+
+#include "stdafx.h"
 
 #include "scene.h"
 #include "scene1.h"
@@ -7,8 +13,8 @@
 #include "button.h"
 
 #pragma region 按钮逻辑
-static void RenderStartButton(Button* button, HDC hdc_memBuffer, HDC hdc_loadBmp);
-static void OnStartButtonClick(Button* button);
+static void RenderStartButton(Button *button, HDC hdc_memBuffer, HDC hdc_loadBmp);
+static void OnStartButtonClick(Button *button);
 #pragma endregion
 
 #pragma region 碰撞检测
@@ -25,7 +31,7 @@ void LoadScene_StartScene()
     CreateButton(StartButton, x, y, width, height, RenderStartButton, OnStartButtonClick);
 
     /* 游戏对象创建 */
-    // 开始场景暂时没有游戏对象
+    // 开始场景暂时没有游戏对象需要创建
 }
 
 void UnloadScene_StartScene()
@@ -35,7 +41,7 @@ void UnloadScene_StartScene()
     DestroyButtons();
 
     /* 游戏对象销毁 */
-    // 开始场景暂时没有游戏对象
+    // 开始场景暂时没有游戏对象需要销毁
 }
 
 void ProcessUiInput_StartScene()
@@ -44,12 +50,12 @@ void ProcessUiInput_StartScene()
     {
         PressButtons(GetMouseX(), GetMouseY());
     }
-	// 开始场景暂时没有其他UI输入
+    // 开始场景暂时没有其他UI输入需要处理
 }
 
 void CheckCollision_StartScene()
 {
-	// 开始场景暂时没有碰撞检测
+    // 开始场景暂时没有游戏对象需要碰撞检测
 }
 
 void UpdateScene_StartScene(double deltaTime)
@@ -58,18 +64,18 @@ void UpdateScene_StartScene(double deltaTime)
     // 开始场景暂时没有UI组件需要更新
 
     /* 游戏对象更新 */
-    // 开始场景暂时没有游戏对象
+    // 开始场景暂时没有游戏对象需要更新
 }
 
 void RenderScene_StartScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
 {
     /*
      * 注意绘制顺序，后绘制的会覆盖先绘制的
-	 * 所以先绘制游戏对象，再绘制UI组件
+     * 所以先绘制游戏对象，再绘制UI组件
      */
 
     /* 游戏对象绘制 */
-	// 开始场景暂时没有游戏对象
+    // 开始场景暂时没有游戏对象需要绘制
 
     /* UI组件绘制 */
     // 绘制所有的按钮
@@ -102,7 +108,7 @@ void RenderScene_StartScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
     const int top = 456;
     const int right = left + width;
     const int bottom = top + height;
-    RECT rect = { left, top, right, bottom };
+    RECT rect = {left, top, right, bottom};
     // 绘制
     DrawText(hdc_memBuffer, TEXT("使用WASD或方向键控制飞机移动\n使用空格发射子弹\n\n请大家好好学习这个框架_(:зゝ∠)_"), -1, &rect, DT_CENTER);
     // 恢复原来的字体
@@ -114,9 +120,10 @@ void RenderScene_StartScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
 }
 
 #pragma region 按钮逻辑
+
 extern HBITMAP bmp_StartButton;
 
-void RenderStartButton(Button* button, HDC hdc_memBuffer, HDC hdc_loadBmp)
+void RenderStartButton(Button *button, HDC hdc_memBuffer, HDC hdc_loadBmp)
 {
     SelectObject(hdc_loadBmp, bmp_StartButton);
     TransparentBlt(
@@ -126,11 +133,12 @@ void RenderStartButton(Button* button, HDC hdc_memBuffer, HDC hdc_loadBmp)
         RGB(255, 255, 255));
 }
 
-void OnStartButtonClick(Button* button)
+void OnStartButtonClick(Button *button)
 {
     Log(1, TEXT("游戏开始！"));
     ChangeScene(SceneId::GameScene);
 }
+
 #pragma endregion
 
 #pragma region 碰撞检测

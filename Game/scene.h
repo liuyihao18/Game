@@ -1,6 +1,6 @@
 ﻿/**
- * 这个文件是游戏场景的头文件
- * 如果要添加新的游戏场景或者修改游戏场景相关的逻辑，修改在这里
+ * 这个文件是场景管理的头文件
+ * 需要添加新的游戏场景时，修改这个文件，请同时修改宏函数部分
  */
 
 #pragma once
@@ -8,7 +8,7 @@
 // 游戏场景
 enum SceneId
 {
-    None = 0,       // 空场景
+    None = 0,       // 没有场景
     StartScene = 1, // 开始场景
     GameScene = 2   // 游戏场景
 };
@@ -31,46 +31,46 @@ void ChangeScene(SceneId newSceneId);
 
 // 宏函数 - 路由场景函数调用，如果有新的场景需要添加，在这里添加对应的 case 分支
 #define ROUTE_SCENE_FUNCTION(FUNCTION_NAME) \
-    switch (currentScene->sceneId) \
-    { \
-    case None: \
-        break; \
-    case StartScene: \
-        FUNCTION_NAME##_StartScene(); \
-        break; \
-    case GameScene: \
-        FUNCTION_NAME##_GameScene(); \
-        break; \
-    default: \
-        break; \
+    switch (currentScene->sceneId)          \
+    {                                       \
+    case None:                              \
+        break;                              \
+    case StartScene:                        \
+        FUNCTION_NAME##_StartScene();       \
+        break;                              \
+    case GameScene:                         \
+        FUNCTION_NAME##_GameScene();        \
+        break;                              \
+    default:                                \
+        break;                              \
     }
 
 #define ROUTE_SCENE_FUNCTION_OneParam(FUNCTION_NAME, param1) \
-    switch (currentScene->sceneId) \
-    { \
-    case None: \
-        break; \
-    case StartScene: \
-        FUNCTION_NAME##_StartScene(param1); \
-        break; \
-    case GameScene: \
-        FUNCTION_NAME##_GameScene(param1); \
-        break; \
-    default: \
-        break; \
+    switch (currentScene->sceneId)                           \
+    {                                                        \
+    case None:                                               \
+        break;                                               \
+    case StartScene:                                         \
+        FUNCTION_NAME##_StartScene(param1);                  \
+        break;                                               \
+    case GameScene:                                          \
+        FUNCTION_NAME##_GameScene(param1);                   \
+        break;                                               \
+    default:                                                 \
+        break;                                               \
     }
 
 #define ROUTE_SCENE_FUNCTION_TwoParam(FUNCTION_NAME, param1, param2) \
-    switch (currentScene->sceneId) \
-    { \
-    case None: \
-        break; \
-    case StartScene: \
-        FUNCTION_NAME##_StartScene(param1, param2); \
-        break; \
-    case GameScene: \
-        FUNCTION_NAME##_GameScene(param1, param2); \
-        break; \
-    default: \
-        break; \
+    switch (currentScene->sceneId)                                   \
+    {                                                                \
+    case None:                                                       \
+        break;                                                       \
+    case StartScene:                                                 \
+        FUNCTION_NAME##_StartScene(param1, param2);                  \
+        break;                                                       \
+    case GameScene:                                                  \
+        FUNCTION_NAME##_GameScene(param1, param2);                   \
+        break;                                                       \
+    default:                                                         \
+        break;                                                       \
     }

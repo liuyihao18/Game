@@ -1,7 +1,8 @@
 ﻿/**
- * 这个文件是游戏按钮的头文件
- * 如果要添加新的按钮，添加在这里
+ * 这个文件是按钮的头文件
+ * 按钮的管理实现这，按钮的逻辑实现在对应的场景文件中
  */
+
 #pragma once
 
 #include "type.h"
@@ -14,7 +15,7 @@ enum ButtonId
 // 这真的是纯C语言的内容
 struct Button;
 typedef void (*RenderButtonFunc)(Button *button, HDC hdc_memBuffer, HDC hdc_loadBmp);
-typedef void (*OnButtonClickFunc)(Button* button);
+typedef void (*OnButtonClickFunc)(Button *button);
 
 struct Button
 {

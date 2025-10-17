@@ -1,6 +1,6 @@
 ﻿/**
  * 这个文件是工具库的源文件
- * 想要实现的和游戏无关的函数，都可以扔在这里
+ * 想要实现的工具函数，都可以放在这里
  */
 
 #include "stdafx.h"
@@ -88,7 +88,7 @@ bool IsRectCircleCollision(Rect rect, Circle c)
 bool IsRectRectCollision(Rect r1, Rect r2)
 {
     return !(r2.left > r1.right ||
-        r2.right < r1.left ||
-        r2.top > r1.bottom ||
-        r2.bottom < r1.top);
+             r2.right < r1.left ||
+             r2.top > r1.bottom ||
+             r2.bottom < r1.top);
 }

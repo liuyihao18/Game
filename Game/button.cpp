@@ -1,20 +1,22 @@
 ﻿/**
- * 这个文件是游戏按钮的源文件
- * 如果要添加新的按钮，添加在这里
+ * 这个文件是按钮的源文件
+ * 按钮的管理实现这，按钮的逻辑实现在对应的场景文件中
  */
 
 #include "stdafx.h"
 
 #include "button.h"
 
-#include "scene.h"
-
-#pragma region 按钮核心代码
-
 static std::set<Button *> buttons;
 
 void CreateButton(ButtonId buttonId, double x, double y, int width, int height, RenderButtonFunc render, OnButtonClickFunc onClick)
 {
+    // 已经存在同样ID的按钮，不能创建
+    if (GetButton(buttonId))
+    {
+        return;
+    }
+
     Button *button = new Button();
 
     button->buttonId = buttonId;
@@ -52,6 +54,7 @@ void DestroyButtons()
 
 std::vector<Button *> GetButtons()
 {
+    // 返回的是按钮指针的副本列表 - 避免边遍历边删除时出错
     return std::vector<Button *>(buttons.begin(), buttons.end());
 }
 
@@ -120,4 +123,3 @@ void RenderButtons(HDC hdc_memBuffer, HDC hdc_loadBmp)
         button->render(button, hdc_memBuffer, hdc_loadBmp);
     }
 }
-#pragma endregion

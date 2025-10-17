@@ -1,6 +1,7 @@
 ﻿/**
- * 场景2 - 游戏场景
- * 源文件定义游戏逻辑部分
+ * 这个文件是场景2-游戏场景的源文件
+ * 场景的逻辑实现在这里
+ * 务必定义并实现所有的场景核心函数
  */
 
 #include "stdafx.h"
@@ -13,7 +14,7 @@
 #include "bullet.h"
 
 #pragma region 碰撞检测
- // 检查角色和敌人的碰撞
+// 检查角色和敌人的碰撞
 static void CheckCollision_GameScene_Player_Enemies();
 // 检查敌人和子弹的碰撞
 static void CheckCollision_GameScene_Enemies_Bullets();
@@ -21,21 +22,21 @@ static void CheckCollision_GameScene_Enemies_Bullets();
 
 void LoadScene_GameScene()
 {
-	/* UI组件创建 */
-	// 游戏场景暂时没有UI组件
+    /* UI组件创建 */
+    // 游戏场景暂时没有UI组件需要创建
 
-	/* 游戏对象创建 */
-	// 初始化玩家对象
-	CreatePlayer();
-	// 敌人将在游戏过程中动态创建
-	// 子弹将在游戏过程中动态创建
-	// TODO: 游戏场景中需要创建的游戏对象
+    /* 游戏对象创建 */
+    // 初始化玩家对象
+    CreatePlayer();
+    // 敌人将在游戏过程中动态创建
+    // 子弹将在游戏过程中动态创建
+    // TODO: 游戏场景中需要创建的游戏对象
 }
 
 void UnloadScene_GameScene()
 {
-	/* UI组件销毁 */
-	// 游戏场景暂时没有UI组件
+    /* UI组件销毁 */
+    // 游戏场景暂时没有UI组件需要销毁
 
     /* 游戏对象销毁 */
     // 清空角色对象
@@ -49,23 +50,23 @@ void UnloadScene_GameScene()
 
 void ProcessUiInput_GameScene()
 {
-	// 游戏场景暂时没有UI输入
+    // 游戏场景暂时没有UI输入需要处理
 }
 
 void CheckCollision_GameScene()
 {
-	// 玩家和敌人的碰撞
-	CheckCollision_GameScene_Player_Enemies();
-	// 敌人和子弹的碰撞
-	CheckCollision_GameScene_Enemies_Bullets();
+    // 玩家和敌人的碰撞
+    CheckCollision_GameScene_Player_Enemies();
+    // 敌人和子弹的碰撞
+    CheckCollision_GameScene_Enemies_Bullets();
 
-	// TODO: 更多的碰撞逻辑
+    // TODO: 更多的碰撞逻辑
 }
 
 void UpdateScene_GameScene(double deltaTime)
 {
     /* UI组件更新 */
-    // 开始场景暂时没有UI组件需要更新
+    // 游戏场景暂时没有UI组件需要更新
 
     /* 游戏对象更新 */
     // 更新角色对象
@@ -84,7 +85,7 @@ void RenderScene_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
      * 所以先绘制游戏对象，再绘制UI组件
      */
 
-	/* 游戏对象绘制 */
+    /* 游戏对象绘制 */
     // 绘制角色对象
     RenderPlayer(hdc_memBuffer, hdc_loadBmp);
     // 绘制敌人对象
@@ -93,7 +94,7 @@ void RenderScene_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
     RenderBullets(hdc_memBuffer, hdc_loadBmp);
     // TODO: 游戏场景中需要渲染的游戏对象
 
-    /* UI组件绘制 */  
+    /* UI组件绘制 */
     // 绘制一个边框表示游戏区域
     // 选择画笔颜色（边框颜色）
     HPEN hPen = CreatePen(PS_SOLID, GAME_BOARDER, RGB(0, 0, 0));
@@ -136,13 +137,13 @@ void RenderScene_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
     const int top = 80;
     const int right = left + width;
     const int bottom = top + height;
-    RECT rect = { left, top, right, bottom };
+    RECT rect = {left, top, right, bottom};
     // 绘制
     TCHAR buffer[128];
     swprintf_s(buffer, sizeof(buffer) / sizeof(TCHAR),
-        TEXT("第一关\n\n\n生命值: %d\n\n积分: %d"),
-        GetPlayer()->attributes.health,
-        GetPlayer()->attributes.score);
+               TEXT("第一关\n\n\n生命值: %d\n\n积分: %d"),
+               GetPlayer()->attributes.health,
+               GetPlayer()->attributes.score);
     DrawText(hdc_memBuffer, buffer, -1, &rect, DT_CENTER);
     // 恢复原来的字体
     SelectObject(hdc_memBuffer, hOldFont);
@@ -153,20 +154,21 @@ void RenderScene_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
 }
 
 #pragma region 碰撞检测
+
 // 检查角色和敌人的碰撞
 void CheckCollision_GameScene_Player_Enemies()
 {
     // 玩家用简单矩形表示
-    Player* player = GetPlayer();
+    Player *player = GetPlayer();
     Rect rect1{};
     rect1.left = player->position.x;
     rect1.right = player->position.x + player->width;
     rect1.top = player->position.y;
     rect1.bottom = player->position.y + player->height;
     // 敌人用简单矩形表示
-    std::vector<Enemy*> enemies = GetEnemies();
+    std::vector<Enemy *> enemies = GetEnemies();
     Rect rect2{};
-    for (Enemy* enemy : enemies)
+    for (Enemy *enemy : enemies)
     {
         rect2.left = enemy->position.x;
         rect2.right = enemy->position.x + enemy->width;
@@ -191,18 +193,18 @@ void CheckCollision_GameScene_Player_Enemies()
 void CheckCollision_GameScene_Enemies_Bullets()
 {
     // 敌人用简单矩形表示
-    std::vector<Enemy*> enemies = GetEnemies();
+    std::vector<Enemy *> enemies = GetEnemies();
     Rect rect{};
     // 子弹用简单圆形表示
-    std::vector<Bullet*> bullets = GetBullets();
+    std::vector<Bullet *> bullets = GetBullets();
     Circle circle{};
-    for (Enemy* enemy : enemies)
+    for (Enemy *enemy : enemies)
     {
         rect.left = enemy->position.x;
         rect.right = enemy->position.x + enemy->width;
         rect.top = enemy->position.y;
         rect.bottom = enemy->position.y + enemy->height;
-        for (Bullet* bullet : bullets)
+        for (Bullet *bullet : bullets)
         {
             circle.center = bullet->position;
             circle.radius = bullet->radius;
@@ -220,4 +222,5 @@ void CheckCollision_GameScene_Enemies_Bullets()
         }
     }
 }
+
 #pragma endregion
