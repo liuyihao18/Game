@@ -14,8 +14,6 @@ void GameResourceInit(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
 /* 游戏主循环函数 */
 void GameLoop(HWND hWnd);
-void GameCheckCollision();         // 游戏碰撞检测
-void GameUpdate(double deltaTime); // 游戏更新 - 相邻两帧的时间间隔，单位：秒
 
 /* 游戏渲染函数 */
 void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam);

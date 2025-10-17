@@ -8,7 +8,6 @@
 #include "core.h"
 
 #include "scene.h"
-#include "ui.h"
 
 // 内部游戏时间：单位（ms）
 static double gameTime = 0;
@@ -50,14 +49,8 @@ void GameLoop(HWND hWnd)
     UpdateDeltaTime(deltaTime);
     ShowAverageFps();
 
-    // 先处理UI输入
-    ProcessUiInput();
-
-    // 再计算碰撞
-    GameCheckCollision();
-
-    // 然后运行游戏逻辑
-    GameUpdate(deltaTime / 1000.0);
+    // 场景循环更新
+    SceneLoop(deltaTime / 1000.0);
 
     // 最后进行渲染，实际的渲染函数是GameRender，只重绘画面部分
     RECT rect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
@@ -95,13 +88,6 @@ void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
     // 结束绘制
     EndPaint(hWnd, &ps);
-}
-
-// 游戏更新逻辑
-void GameUpdate(double deltaTime)
-{
-    // 游戏场景中物体更新
-    UpdateScene(deltaTime);
 }
 
 // 获取当前游戏时间，单位（s）

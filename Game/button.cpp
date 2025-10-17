@@ -105,7 +105,7 @@ void PressButtons(int mouseX, int mouseY)
     }
     if (pressedButton)
     {
-        pressedButton->onClick();
+        pressedButton->onClick(pressedButton);
     }
 }
 
@@ -121,23 +121,3 @@ void RenderButtons(HDC hdc_memBuffer, HDC hdc_loadBmp)
     }
 }
 #pragma endregion
-
-extern HBITMAP bmp_StartButton;
-
-void RenderStartButton(Button *button, HDC hdc_memBuffer, HDC hdc_loadBmp)
-{
-    SelectObject(hdc_loadBmp, bmp_StartButton);
-    TransparentBlt(
-        hdc_memBuffer, (int)button->position.x, (int)button->position.y,
-        button->width, button->height,
-        hdc_loadBmp, 0, 0, button->width, button->height,
-        RGB(255, 255, 255));
-}
-
-void OnStartButtonClick()
-{
-    Log(1, TEXT("游戏开始！"));
-    ChangeScene(SceneId::GameScene);
-}
-
-// TODO: 加入更多的按钮逻辑

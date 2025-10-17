@@ -28,9 +28,6 @@
     <Filter Include="源文件\资源">
       <UniqueIdentifier>{28862b99-0266-4ea0-a288-e83c0dbc2a48}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\逻辑">
-      <UniqueIdentifier>{c911b685-9381-4bd6-87f3-426e6250c665}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\输入">
       <UniqueIdentifier>{fc1d1c01-3e53-4226-9ebb-b06607f874b8}</UniqueIdentifier>
     </Filter>
@@ -46,17 +43,14 @@
     <Filter Include="源文件\工具">
       <UniqueIdentifier>{27b77889-6471-40f8-89f3-9c0c10a618da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\UI">
-      <UniqueIdentifier>{e90b416f-a728-4dde-be3a-c748bdc8cc44}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\对象">
       <UniqueIdentifier>{94590b44-3909-45fa-88e0-0b3604680d6a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\UI">
-      <UniqueIdentifier>{446ea15d-2a0c-40b9-84ff-d2a7b4f3b934}</UniqueIdentifier>
+    <Filter Include="头文件\场景">
+      <UniqueIdentifier>{e90b416f-a728-4dde-be3a-c748bdc8cc44}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\逻辑">
-      <UniqueIdentifier>{4ccb627e-1f33-4d5b-ab29-c5c90066a2d0}</UniqueIdentifier>
+    <Filter Include="源文件\场景">
+      <UniqueIdentifier>{446ea15d-2a0c-40b9-84ff-d2a7b4f3b934}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -90,22 +84,10 @@
     <ClInclude Include="type.h">
       <Filter>头文件\框架</Filter>
     </ClInclude>
-    <ClInclude Include="scene.h">
-      <Filter>头文件\逻辑</Filter>
-    </ClInclude>
     <ClInclude Include="enemy.h">
       <Filter>头文件\对象</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
-      <Filter>头文件\对象</Filter>
-    </ClInclude>
-    <ClInclude Include="ui.h">
-      <Filter>头文件\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="button.h">
-      <Filter>头文件\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="object.h">
       <Filter>头文件\对象</Filter>
     </ClInclude>
     <ClInclude Include="info.h">
@@ -113,6 +95,18 @@
     </ClInclude>
     <ClInclude Include="bullet.h">
       <Filter>头文件\对象</Filter>
+    </ClInclude>
+    <ClInclude Include="button.h">
+      <Filter>头文件\对象</Filter>
+    </ClInclude>
+    <ClInclude Include="scene1.h">
+      <Filter>头文件\场景</Filter>
+    </ClInclude>
+    <ClInclude Include="scene2.h">
+      <Filter>头文件\场景</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
+      <Filter>头文件\框架</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -134,9 +128,6 @@
     <ClCompile Include="player.cpp">
       <Filter>源文件\对象</Filter>
     </ClCompile>
-    <ClCompile Include="collision.cpp">
-      <Filter>源文件\逻辑</Filter>
-    </ClCompile>
     <ClCompile Include="keyboard.cpp">
       <Filter>源文件\输入</Filter>
     </ClCompile>
@@ -146,23 +137,23 @@
     <ClCompile Include="resource.cpp">
       <Filter>源文件\资源</Filter>
     </ClCompile>
-    <ClCompile Include="scene.cpp">
-      <Filter>源文件\逻辑</Filter>
-    </ClCompile>
     <ClCompile Include="util.cpp">
       <Filter>源文件\工具</Filter>
     </ClCompile>
-    <ClCompile Include="ui.cpp">
-      <Filter>源文件\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="button.cpp">
-      <Filter>源文件\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="object.cpp">
-      <Filter>源文件\对象</Filter>
-    </ClCompile>
     <ClCompile Include="bullet.cpp">
       <Filter>源文件\对象</Filter>
+    </ClCompile>
+    <ClCompile Include="button.cpp">
+      <Filter>源文件\对象</Filter>
+    </ClCompile>
+    <ClCompile Include="scene1.cpp">
+      <Filter>源文件\场景</Filter>
+    </ClCompile>
+    <ClCompile Include="scene2.cpp">
+      <Filter>源文件\场景</Filter>
+    </ClCompile>
+    <ClCompile Include="scene.cpp">
+      <Filter>源文件\框架</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

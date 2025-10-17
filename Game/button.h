@@ -14,7 +14,7 @@ enum ButtonId
 // 这真的是纯C语言的内容
 struct Button;
 typedef void (*RenderButtonFunc)(Button *button, HDC hdc_memBuffer, HDC hdc_loadBmp);
-typedef void (*OnButtonClickFunc)(void);
+typedef void (*OnButtonClickFunc)(Button* button);
 
 struct Button
 {
@@ -46,9 +46,3 @@ void DisableButton(ButtonId buttonId); // 如果禁用按钮，就相当于按�
 void PressButtons(int mouseX, int mouseY);
 // 渲染按钮
 void RenderButtons(HDC hdc_memBuffer, HDC hdc_loadBmp);
-
-// 实现每一个按钮的逻辑
-void RenderStartButton(Button *button, HDC hdc_memBuffer, HDC hdc_loadBmp);
-void OnStartButtonClick();
-
-// TODO: 加入更多的按钮逻辑

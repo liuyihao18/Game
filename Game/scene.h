@@ -20,11 +20,57 @@ struct Scene
     // TODO: 如果需要更多的场景信息，添加在这里
 };
 
-// 切换场景
-void ChangeScene(SceneId newSceneId);
-// 获取当前场景
-Scene *GetCurrentScene();
-// 更新场景
-void UpdateScene(double deltaTime);
+// 场景循环
+void SceneLoop(double deltaTime);
+
 // 渲染场景
 void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
+
+// 切换场景
+void ChangeScene(SceneId newSceneId);
+
+// 宏函数 - 路由场景函数调用，如果有新的场景需要添加，在这里添加对应的 case 分支
+#define ROUTE_SCENE_FUNCTION(FUNCTION_NAME) \
+    switch (currentScene->sceneId) \
+    { \
+    case None: \
+        break; \
+    case StartScene: \
+        FUNCTION_NAME##_StartScene(); \
+        break; \
+    case GameScene: \
+        FUNCTION_NAME##_GameScene(); \
+        break; \
+    default: \
+        break; \
+    }
+
+#define ROUTE_SCENE_FUNCTION_OneParam(FUNCTION_NAME, param1) \
+    switch (currentScene->sceneId) \
+    { \
+    case None: \
+        break; \
+    case StartScene: \
+        FUNCTION_NAME##_StartScene(param1); \
+        break; \
+    case GameScene: \
+        FUNCTION_NAME##_GameScene(param1); \
+        break; \
+    default: \
+        break; \
+    }
+
+#define ROUTE_SCENE_FUNCTION_TwoParam(FUNCTION_NAME, param1, param2) \
+    switch (currentScene->sceneId) \
+    { \
+    case None: \
+        break; \
+    case StartScene: \
+        FUNCTION_NAME##_StartScene(param1, param2); \
+        break; \
+    case GameScene: \
+        FUNCTION_NAME##_GameScene(param1, param2); \
+        break; \
+    default: \
+        break; \
+    }
