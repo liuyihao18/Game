@@ -39,3 +39,8 @@ const int statusBarParts[2] = {100, -1}; // 状态栏分栏，第一个分区宽
 #define TIMER_TQ_TIMER 1
 #define TIMER_MM_TIMER 2
 #define TIMER_USE TIMER_MM_TIMER
+
+/* 使用的渲染方式 */
+#define RENDERER_GDI 0
+#define RENDERER_OPENGL 1
+#define RENDERER_USE RENDERER_OPENGL
