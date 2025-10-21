@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "type.h"
-
 struct Enemy
 {
     Vector2 position;

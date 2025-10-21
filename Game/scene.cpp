@@ -17,7 +17,7 @@ static Scene *currentScene = &sceneInstance;
 static SceneId _newSceneId = None;
 
 // 场景循环
-void SceneLoop(double deltaTime)
+void SceneLoop()
 {
 	if (_newSceneId != None)
 	{
@@ -37,7 +37,7 @@ void SceneLoop(double deltaTime)
 	ROUTE_SCENE_FUNCTION(CheckCollision);
 
 	// 然后运行游戏逻辑
-	ROUTE_SCENE_FUNCTION_OneParam(UpdateScene, deltaTime);
+	ROUTE_SCENE_FUNCTION_OneParam(UpdateScene, GetDeltaTime());
 }
 
 // 渲染场景
@@ -46,6 +46,7 @@ void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
 	ROUTE_SCENE_FUNCTION_TwoParam(RenderScene, hdc_memBuffer, hdc_loadBmp);
 }
 
+// 获取当前场景
 Scene *GetCurrentScene()
 {
 	return currentScene;

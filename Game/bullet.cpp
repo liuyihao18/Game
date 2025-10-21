@@ -38,7 +38,7 @@ void DestroyBullets()
 std::vector<Bullet *> GetBullets()
 {
 	// 返回的是子弹指针的副本列表 - 避免边遍历边删除时出错
-	return std::vector<Bullet *>(bullets.begin(), bullets.end());
+	return CopyFromSet(bullets);
 }
 
 void UpdateBullets(double deltaTime)
