@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "type.h"
-
 // 这真的是纯C语言的内容
 struct Button;
 typedef size_t ButtonId;

@@ -10,6 +10,7 @@
 
 // 内部游戏时间：单位（ms）
 static double gameTime = 0;
+static double deltaTime = 0;
 
 // 时间戳：单位（ms）
 static double firstFrameTimestamp = 0;
@@ -40,13 +41,13 @@ void GameLoop(HWND hWnd)
     // 游戏时间处理
     double currentFrameTimestamp = GetCurrentTimestamp();
     gameTime = currentFrameTimestamp - firstFrameTimestamp;
-    double deltaTime = (currentFrameTimestamp - lastFrameTimestamp);
+    deltaTime = (currentFrameTimestamp - lastFrameTimestamp);
     lastFrameTimestamp = currentFrameTimestamp;
     UpdateDeltaTime(deltaTime);
     ShowAverageFps();
 
     // 场景循环更新
-    SceneLoop(deltaTime / 1000.0);
+    SceneLoop();
 
     // 最后进行渲染，实际的渲染函数是GameRender，只重绘画面部分
     RECT rect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
@@ -93,6 +94,12 @@ void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
 double GetGameTime()
 {
     return gameTime / 1000.0;
+}
+
+// 获取两帧之间的时间差（单位：s）
+double GetDeltaTime()
+{
+    return deltaTime / 1000.0;
 }
 
 // 工具函数：获取当前时间戳（单位：ms）

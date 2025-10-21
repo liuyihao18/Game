@@ -60,7 +60,7 @@ void DestroyEnemies()
 std::vector<Enemy *> GetEnemies()
 {
     // 返回的是敌人指针的副本列表 - 避免边遍历边删除时出错
-    return std::vector<Enemy *>(enemies.begin(), enemies.end());
+    return CopyFromSet(enemies);
 }
 
 void UpdateEnemies(double deltaTime)

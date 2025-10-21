@@ -49,7 +49,7 @@ void DestroyButtons()
 std::vector<Button *> GetButtons()
 {
     // 返回的是按钮指针的副本列表 - 避免边遍历边删除时出错
-    return std::vector<Button *>(buttons.begin(), buttons.end());
+    return CopyFromSet(buttons);
 }
 
 Button *GetButton(ButtonId buttonId)

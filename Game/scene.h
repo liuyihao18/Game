@@ -21,7 +21,7 @@ struct Scene
 };
 
 // 场景循环
-void SceneLoop(double deltaTime);
+void SceneLoop();
 
 // 渲染场景
 void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
