@@ -157,7 +157,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         GameInit(hWnd, wParam, lParam);
         // 游戏主循环开始
 #if TIMER_USE == TIMER_WM_TIMER
-        SetTimer(hWnd, MAIN_TIMER, 1000 / FPS, NULL);
+        SetTimer(hWnd, MAIN_TIMER_ID, 1000 / FPS, NULL);
 #elif TIMER_USE == TIMER_TQ_TIMER
         InitTQTimer(hWnd);
 #elif TIMER_USE == TIMER_MM_TIMER
@@ -231,7 +231,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
     case WM_DESTROY:
 #if TIMER_USE == TIMER_WM_TIMER
-        KillTimer(hWnd, MAIN_TIMER);
+        KillTimer(hWnd, MAIN_TIMER_ID);
 #elif TIMER_USE == TIMER_TQ_TIMER
         DeleteTQTimer();
 #elif TIMER_USE == TIMER_MM_TIMER
