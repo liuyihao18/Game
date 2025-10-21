@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "type.h"
-
 /* 随机数 */
 int GetRandomInt(int min, int max);
 double GetRandomDouble(double min, double max);
@@ -23,3 +21,19 @@ HBITMAP CreateBackground(HWND hWnd, COLORREF color);
 bool IsRectCircleCollision(Rect rect, Circle c);
 // 矩形与矩形碰撞检测
 bool IsRectRectCollision(Rect r1, Rect r2);
+
+/* 数组 */
+template <typename T>
+std::vector<T> CopyFromSet(const std::set<T> &inputSet)
+{
+	/*
+	// 遍历方法
+	std::vector<T> outputVector;
+	for (const T &item : inputSet)
+	{
+		outputVector.push_back(item);
+	}
+	return outputVector;
+	*/
+	return std::vector<T>(inputSet.begin(), inputSet.end());
+}

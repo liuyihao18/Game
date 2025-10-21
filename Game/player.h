@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "type.h"
-
 // 玩家
 struct Player
 {

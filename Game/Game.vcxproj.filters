@@ -19,9 +19,6 @@
     <Filter Include="源文件\框架">
       <UniqueIdentifier>{b92337af-92fb-4b3f-b336-69ee4ce94062}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\配置">
-      <UniqueIdentifier>{4e432841-b12d-4a5d-86bb-444003d9a06e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\资源">
       <UniqueIdentifier>{089b097e-0734-43e7-b659-d4245ed720ee}</UniqueIdentifier>
     </Filter>
@@ -52,6 +49,9 @@
     <Filter Include="源文件\场景">
       <UniqueIdentifier>{446ea15d-2a0c-40b9-84ff-d2a7b4f3b934}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\通用">
+      <UniqueIdentifier>{4e432841-b12d-4a5d-86bb-444003d9a06e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h">
@@ -67,7 +67,7 @@
       <Filter>头文件\输入</Filter>
     </ClInclude>
     <ClInclude Include="config.h">
-      <Filter>头文件\配置</Filter>
+      <Filter>头文件\通用</Filter>
     </ClInclude>
     <ClInclude Include="core.h">
       <Filter>头文件\框架</Filter>
@@ -79,9 +79,6 @@
       <Filter>头文件\框架</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>头文件\框架</Filter>
-    </ClInclude>
-    <ClInclude Include="type.h">
       <Filter>头文件\框架</Filter>
     </ClInclude>
     <ClInclude Include="enemy.h">
@@ -107,6 +104,9 @@
     </ClInclude>
     <ClInclude Include="scene.h">
       <Filter>头文件\场景</Filter>
+    </ClInclude>
+    <ClInclude Include="type.h">
+      <Filter>头文件\通用</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
