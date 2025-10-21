@@ -17,7 +17,7 @@ struct Scene
 {
     SceneId sceneId; // 游戏场景的编号
 
-    // TODO: 如果需要更多的场景信息，添加在这里
+    // TODO: 如果场景需要保存更多信息，添加在这里
 };
 
 // 场景循环
@@ -26,6 +26,7 @@ void SceneLoop();
 // 渲染场景
 void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
 
+// 获取当前场景
 Scene *GetCurrentScene();
 
 // 切换场景

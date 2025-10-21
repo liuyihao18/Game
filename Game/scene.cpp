@@ -46,6 +46,7 @@ void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
 	ROUTE_SCENE_FUNCTION_TwoParam(RenderScene, hdc_memBuffer, hdc_loadBmp);
 }
 
+// 获取当前场景
 Scene *GetCurrentScene()
 {
 	return currentScene;
