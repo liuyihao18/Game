@@ -28,8 +28,7 @@ void LoadScene_StartScene()
     const int height = 200;
     const int x = (WINDOW_WIDTH - width) / 2 - 10; // what the f**k offset to center this?
     const int y = 196;
-    ButtonId startButtonId = CreateButton(x, y, width, height, RenderStartButton, OnStartButtonClick);
-    EnableButton(startButtonId);
+    // TODO: 创建一个在这个位置的按钮
 
     /* 游戏对象创建 */
     // 开始场景暂时没有游戏对象需要创建
@@ -38,8 +37,7 @@ void LoadScene_StartScene()
 void UnloadScene_StartScene()
 {
     /* UI组件销毁 */
-    // 清空按钮
-    DestroyButtons();
+    // TODO: 销毁所有按钮
 
     /* 游戏对象销毁 */
     // 开始场景暂时没有游戏对象需要销毁
@@ -47,11 +45,7 @@ void UnloadScene_StartScene()
 
 void ProcessUiInput_StartScene()
 {
-    if (IsMouseLButtonDown())
-    {
-        PressButtons(GetMouseX(), GetMouseY());
-    }
-    // 开始场景暂时没有其他UI输入需要处理
+    // TODO: 处理鼠标点击按钮
 }
 
 void CheckCollision_StartScene()
@@ -126,18 +120,12 @@ extern HBITMAP bmp_StartButton;
 
 void RenderStartButton(Button *button, HDC hdc_memBuffer, HDC hdc_loadBmp)
 {
-    SelectObject(hdc_loadBmp, bmp_StartButton);
-    TransparentBlt(
-        hdc_memBuffer, (int)button->position.x, (int)button->position.y,
-        button->width, button->height,
-        hdc_loadBmp, 0, 0, button->width, button->height,
-        RGB(255, 255, 255));
+    // TODO: 绘制开始按钮
 }
 
 void OnStartButtonClick(Button *button)
 {
-    Log(1, TEXT("游戏开始！"));
-    ChangeScene(SceneId::GameScene);
+	// TODO: 开始按钮点击事件处理
 }
 
 #pragma endregion

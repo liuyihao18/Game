@@ -65,39 +65,12 @@ std::vector<Enemy *> GetEnemies()
 
 void UpdateEnemies(double deltaTime)
 {
-    // 每隔一定时间在随机位置创建一个敌人
-    double gameTime = GetGameTime();
-    if (gameTime - lastGenerateTime > deltaGenerateTime)
-    {
-        CreateRandomEnemy();
-        lastGenerateTime = gameTime;
-    }
+    // TODO: 每隔一定时间在随机位置创建一个敌人
 
-    // TODO: 更多的敌人逻辑
-    for (Enemy *enemy : GetEnemies())
-    {
-        // 敌人向下移动
-        enemy->position.y += enemy->attributes.speed * deltaTime;
-        // 超出屏幕的敌人删除
-        if (enemy->position.y > GAME_HEIGHT + 50)
-        {
-            DestroyEnemy(enemy);
-        }
-    }
+    // TODO: 敌人的移动逻辑
 }
 
 void RenderEnemies(HDC hdc_memBuffer, HDC hdc_loadBmp)
 {
-    // 画出敌人
-    const int frameRowIndex = frameIndex / bmp_ColSize;
-    const int frameColIndex = frameIndex % bmp_ColSize;
-    for (Enemy *enemy : enemies)
-    {
-        SelectObject(hdc_loadBmp, bmp_Enemy);
-        TransparentBlt(
-            hdc_memBuffer, (int)enemy->position.x, (int)enemy->position.y,
-            enemy->width, enemy->height,
-            hdc_loadBmp, frameColIndex * bmp_CellWidth, frameRowIndex * bmp_CellHeight, bmp_CellWidth, bmp_CellHeight,
-            RGB(255, 255, 255));
-    }
+    // TODO: 画出敌人
 }

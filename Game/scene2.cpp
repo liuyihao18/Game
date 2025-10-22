@@ -26,8 +26,7 @@ void LoadScene_GameScene()
     // 游戏场景暂时没有UI组件需要创建
 
     /* 游戏对象创建 */
-    // 初始化玩家对象
-    CreatePlayer();
+    // TODO: 创建玩家对象
     // 敌人将在游戏过程中动态创建
     // 子弹将在游戏过程中动态创建
     // TODO: 游戏场景中需要创建的游戏对象
@@ -39,12 +38,9 @@ void UnloadScene_GameScene()
     // 游戏场景暂时没有UI组件需要销毁
 
     /* 游戏对象销毁 */
-    // 清空角色对象
-    DestroyPlayer();
-    // 清空敌人对象
-    DestroyEnemies();
-    // 清空子弹对象
-    DestroyBullets();
+    // TODO: 清空角色对象
+    // TODO: 清空敌人对象
+    // TODO: 清空子弹对象
     // TODO: 游戏场景卸载时需要销毁的游戏对象
 }
 
@@ -142,8 +138,8 @@ void RenderScene_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
     TCHAR buffer[128];
     swprintf_s(buffer, sizeof(buffer) / sizeof(TCHAR),
                TEXT("第一关\n\n\n生命值: %d\n\n积分: %d"),
-               GetPlayer()->attributes.health,
-               GetPlayer()->attributes.score);
+               0,
+               0);
     DrawText(hdc_memBuffer, buffer, -1, &rect, DT_CENTER);
     // 恢复原来的字体
     SelectObject(hdc_memBuffer, hOldFont);
@@ -161,32 +157,10 @@ void CheckCollision_GameScene_Player_Enemies()
     // 玩家用简单矩形表示
     Player *player = GetPlayer();
     Rect rect1{};
-    rect1.left = player->position.x;
-    rect1.right = player->position.x + player->width;
-    rect1.top = player->position.y;
-    rect1.bottom = player->position.y + player->height;
     // 敌人用简单矩形表示
     std::vector<Enemy *> enemies = GetEnemies();
     Rect rect2{};
-    for (Enemy *enemy : enemies)
-    {
-        rect2.left = enemy->position.x;
-        rect2.right = enemy->position.x + enemy->width;
-        rect2.top = enemy->position.y;
-        rect2.bottom = enemy->position.y + enemy->height;
-        if (IsRectRectCollision(rect1, rect2))
-        {
-            // 碰撞后扣血、加分摧毁敌人
-            player->attributes.health--;
-            player->attributes.score += enemy->attributes.score;
-            DestroyEnemy(enemy);
-            if (player->attributes.health <= 0)
-            {
-                Log(1, TEXT("游戏结束！"));
-                ChangeScene(SceneId::StartScene);
-            }
-        }
-    }
+    // TODO: 实现玩家和敌人的碰撞检测
 }
 
 // 检查敌人和子弹的碰撞
@@ -198,29 +172,7 @@ void CheckCollision_GameScene_Enemies_Bullets()
     // 子弹用简单圆形表示
     std::vector<Bullet *> bullets = GetBullets();
     Circle circle{};
-    for (Enemy *enemy : enemies)
-    {
-        rect.left = enemy->position.x;
-        rect.right = enemy->position.x + enemy->width;
-        rect.top = enemy->position.y;
-        rect.bottom = enemy->position.y + enemy->height;
-        for (Bullet *bullet : bullets)
-        {
-            circle.center = bullet->position;
-            circle.radius = bullet->radius;
-            if (IsRectCircleCollision(rect, circle))
-            {
-                // 碰撞后扣血、加分摧毁敌人和子弹
-                enemy->attributes.health -= bullet->damage;
-                if (enemy->attributes.health <= 0)
-                {
-                    GetPlayer()->attributes.score += enemy->attributes.score;
-                    DestroyEnemy(enemy);
-                }
-                DestroyBullet(bullet);
-            }
-        }
-    }
+	// TODO: 实现敌人和子弹的碰撞检测
 }
 
 #pragma endregion
