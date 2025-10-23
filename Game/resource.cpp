@@ -20,9 +20,6 @@ void GameResourceInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
     bmp_WhiteBackground = CreateBackground(hWnd, RGB(255, 255, 255));
     bmp_BlackBackground = CreateBackground(hWnd, RGB(0, 0, 0));
-    bmp_StartButton = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance, MAKEINTRESOURCE(IDB_BITMAP_START_BUTTON));
-    bmp_Player = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance, MAKEINTRESOURCE(IDB_BITMAP_PLANE));
-    bmp_Enemy = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance, MAKEINTRESOURCE(IDB_BITMAP_ENEMY));
 
     // TODO: 引入其他的静态资源
 }
