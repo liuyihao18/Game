@@ -657,5 +657,187 @@ void UpdateScene_GameScene(double deltaTime)
 
 ## 附一、Win32 绘图
 
+我们再回顾框架示意图，关注其中的`WM_PAINT`部分。
+
+![框架](images/framework.png)
+
+可以发现，绘图也是众多「事件」中的一种事件——它同样依靠操作系统事件循环一次次地触发。这个触发频率可能很高，例如达到每秒平均60次（注意这60次并不一定匀速触发），那么我们就说这个游戏的刷新帧率达到「60fps」。
+
+也正是在整个`WM_PAINT`链条中，我们把一个个抽象的变量变成画布上一个个鲜活的画面。
+
+```cpp
+// main.cpp
+// WndProc()函数
+case WM_PAINT:
+{
+    // 游戏渲染逻辑
+    GameRender(hWnd, wParam, lParam);
+}
+```
+
+### `GameRender()`：一切绘制，从这里开始
+
+在`GameRender()`中，我们使用了Win32中最原始，也是最直接的绘制方式「GDI」，但麻雀虽小，五脏俱全。
+
+```cpp
+void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    PAINTSTRUCT ps;
+    HDC hdc_window = BeginPaint(hWnd, &ps);
+  
+  	// 具体绘制逻辑
+  
+  	EndPaint(hWnd, &ps);
+}
+```
+
+这段逻辑的意思是，我们在`hWnd`这个窗口上开始绘制，而绘制通过`hdc_window`进行。（`HDC`是绘制中所有操作的上下文所在，所有对主窗口的绘制，都是对其`HDC`，即`hdc_window`调用函数来实现的）
+
+#### 画个矩形
+
+例如，我们可以在`// 具体绘制逻辑`部分加上绘制矩形的代码：
+
+```cpp
+void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    PAINTSTRUCT ps;
+    HDC hdc_window = BeginPaint(hWnd, &ps);
+  
+    Rectangle(hdc_window, 50, 50, 200, 100);
+  
+  	EndPaint(hWnd, &ps);
+}
+```
+
+这样，就可以画出一个左上角坐标`(50,50)`，右下角坐标`(200,100)`的矩形。
+
+如果我们想把矩形变成实心的，或者换个颜色，也是可以实现的，需要用到`FillRect()`、`PEN`和`BRUSH`，具体用法请参考GDI的文档：https://learn.microsoft.com/en-us/windows/win32/gdi/windows-gdi，但我们在此不多赘述。
+
+如果你想画其他的基本图元，例如圆、椭圆、线段等，也可以在文档中找到相应的方法。
+
+绘制文字也是类似，使用`DrawText`或`TextOut`等函数，同样可以参考文档：https://learn.microsoft.com/en-us/windows/win32/gdi/fonts-and-text。
+
+### 位图
+
+在我们的大作业中，这些基本图元难以组成精美的画面，相反，我们会用到的绝大多数资源都是**图片**，因此，我们将在这部分详细讲解图片的绘制。
+
+我们日常所见的`jpg`、`png`等格式的文件都是压缩的图片，**无法**被GDI直接使用；而只有**位图**格式，通常后缀为`bmp`，这样格式的文件才能被直接使用。
+
+#### 感受位图
+
+位图是完全没有压缩的图片，最直观反映在其文件大小上：我们知道，计算机上每一个像素是由红、绿、蓝三种颜色按比例混合而来的，例如，可以用每3个字节分别表示一个像素红、绿、蓝的亮度值（范围分别是`0~255`），比如`(255, 0,0)`代表纯红、`(255,255,255)`代表纯白、`(128,128,128)`代表一种灰色、`(0,0,0)`代表纯黑。
+
+对于一张图片，我们把代表所有像素的3个字节全部堆叠在一起（像数组一样）写入文件，就构成了一幅位图文件（此外，在文件开头需要一些信息注明其分辨率等信息）。
+
+例如，下图是一幅来自互联网的`png`格式压缩的图片，如果用「画图」打开，并且「另存为」`bmp`格式后，可以发现其文件大小显著增加了。
+
+![](images/Peking_University_seal.svg.png)
+
+![](images/mspaint.png)
+
+![](images\bmp_size.png)
+
+我们还可以做一个小计算：
+
+> 图片尺寸：$330 \times 330$像素
+>
+> 每个像素：$3$字节
+>
+> 一共大小：$330\times 330 \times 3=326,700$字节
+
+与上图显示的接近（因为文件开头还需要保存一些文件有关的信息，所以会大一些）。
+
+由此可见，位图格式的存储空间有极大的浪费，所以通常并不会直接存储或传输位图；然而，当一个程序需要将图像加载到内存之中时，图像都是以**位图**的形式存在的（即上面说的像素数组）。
+
+由于加载`jpg`、`png`需要引入额外的解码库，为了方便，我们推荐大家将所有的图像转为位图的形式进行调用。
+
+#### 使用位图
+
+##### 加载位图到`Game.rc`
+
+找到项目中`Game.rc`文件，双击打开后进入`Bitmap`文件夹，可以看到目前所有的位图；选中每一个位图后，可以在「属性」窗格中更改其`ID`。
+
+在`Game.rc`上右键「添加资源」，可以将找到的其他资源加入进来。
+
+##### 在`GameResourceInit()`中加载位图
+
+找到`资源\resource.cpp`文件，在`GameResourceInit`中使用`LoadBitmap`函数将位图加载到程序中。
+
+你可以仿照已有的代码加载更多位图。
+
+##### 把它画到`hdc_window`上
+
+还记得刚才我们用的画布`hdc_window`吗？
+
+我们使用`BitBlt()`和`TransparentBlt()`函数来绘制位图，但与刚才不一样的是，这里操作多了一步：
+
+```cpp
+void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    PAINTSTRUCT ps;
+    HDC hdc_window = BeginPaint(hWnd, &ps);
+  
+  	HDC hdc_loadBmp = CreateCompatibleDC(hdc_window);
+		SelectObject(hdc_loadBmp, bmp_Player);
+  	BitBlt(hdc_window, 0, 0, 200, 300, hdc_loadBmp, 0, 0, SRC_COPY);
+  
+  	EndPaint(hWnd, &ps);
+}
+```
+
+我们先不管`BitBlt`的调用参数（都是些和坐标变换有关的），先关注那个多出来的`hdc_loadBmp`。
+
+原来，`BitBlt`要求我们不能直接把位图画到`hdc_window`上，而需要通过一个中间层`hdc_loadBmp`来帮忙。
+
+这个`hdc_loadBmp`的类型同样是`HDC`，只不过它并没有和一个实际的窗口相关联，相反，它是一张仅存在于内存中的“虚拟画布”，我们先用`SelectObject`将位图加载到这张虚拟画布`hdc_loadBmp`上，再将这张虚拟画布画到窗口上。
+
+> `SelectObject`这个函数功能非常多，在这里作用是将位图加载到`hdc_loadBmp`上，在绘制图元的时候也用来选择画笔和画刷的颜色。
+
+在实际代码中（请参考`player.cpp`、`enemy.cpp`等对象的`Render`部分），我们会将框架`core.cpp`内创建好的一个`hdc_loadBmp`通过函数参数不断地传递下去，这是因为频繁地创建`hdc_loadBmp`会导致严重的性能问题，我们复用这样一个虚拟画布以优化性能。
+
+### 双缓冲绘图
+
+你可能会想，`BitBlt()`不能直接画位图，而要通过一个内存中的虚拟画布`HDC hdc_loadBmp`来中转这样的设计是多此一举，但事实是，位图绘制只是`BitBlt()`的功能之一，它更重要的是借此设计实现了双缓冲绘图。
+
+#### 双缓冲绘图：抵抗画面撕裂
+
+计算机的指令是一条条执行的，而当我们的图元太多的时候，绘制的过程就需要一定的时间；对于用户来说，它看到的画面就是一点一点地画出来的，就像「大屁股」电视一样，画面是一行一行扫描出来的，十分影响观感。
+
+「双缓冲绘图」思想便应运而生：既然最终显示在显示器上的画面**本质上就是一幅由很多像素组成的位图**，我们于是可以先在内存中创建一幅位图，把全部要绘制的内容绘制到它上面之后，再一次性将这张代表着这一帧内容的位图显示出去，于是就可以解决画面撕裂的问题了。
+
+#### 实现：`hdc_memBuffer`
+
+而实现这张「虚拟位图」的，就是刚刚提到的虚拟画布，只不过我们重新创建一个并另取名字：
+
+```cpp
+void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    PAINTSTRUCT ps;
+    HDC hdc_window = BeginPaint(hWnd, &ps);
+  
+  	// 创建虚拟画布，并初始化缓存
+  	HDC hdc_memBuffer = CreateCompatibleDC(hdc_window);
+    HBITMAP blankBmp = CreateCompatibleBitmap(hdc_window, WINDOW_WIDTH, WINDOW_HEIGHT);
+    SelectObject(hdc_memBuffer, blankBmp);
+  
+  	/* 绘制部分
+  	HDC hdc_loadBmp = CreateCompatibleDC(hdc_window);
+		SelectObject(hdc_loadBmp, bmp_Player);
+  	BitBlt(hdc_memBuffer, 0, 0, 200, 300, hdc_loadBmp, 0, 0, SRC_COPY);
+  	*/
+  
+  	// 把虚拟画布画到窗口上
+  	BitBlt(hdc_window, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, hdc_memBuffer, 0, 0, SRCCOPY);
+  	
+  	EndPaint(hWnd, &ps);
+}
+```
+
+这里的`HDC hdc_memBuffer = CreateCompatibleDC(hdc_window);`，就是我们用来画图的虚拟画布。
+
+如果你去翻阅后续的所有渲染部分，会发现所有的绘制都是通过各种函数绘制在`hdc_memBuffer`上，然后当一些绘制结束，程序回到`core.cpp`时，通过`BitBlt`会知道窗口`hdc_window`上。
+
+由此，我们的绘制过程就全部完成了。
+
 
 
