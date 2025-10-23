@@ -729,6 +729,8 @@ void UnloadScene_StartScene()
 
 ```cpp
 // resource.cpp
+HBITMAP bmp_StartButton;     // 开始按钮图片
+
 void GameResourceInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
     bmp_StartButton = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance, MAKEINTRESOURCE(IDB_BITMAP_START_BUTTON));
@@ -762,6 +764,8 @@ void RenderStartButton(Button *button, HDC hdc_memBuffer, HDC hdc_loadBmp)
 现在运行程序你就可以看到开始按钮了，但是显然，因为我们没有实现任何按钮点击逻辑，因此点击按钮是没有用的。
 
 ![](images/start2.png)
+
+注意一下，这里之所以不需要在`RenderScene`调用该函数，是因为`RenderScene`当中已经调用了`RenderButtons`，其中会自动调用我们实现的`RenderStartButton`；在大多数情况下，你需要手动在`RenderScene`当中去绘制每一个物体。
 
 #### 点击按钮
 
@@ -799,7 +803,225 @@ void ProcessUiInput_StartScene()
 
 ![](images/game1.png)
 
+### 2）加上玩家
 
+让我们加上玩家，同样地，从创建、销毁和绘制开始。
+
+#### 创建玩家
+
+创建玩家同样在`scene2`加载场景`LoadScene`当中。
+
+因为`player`中定义了创建玩家函数`CreatePlayer`，直接调用即可。
+
+```cpp
+// scene2.cpp
+void LoadScene_GameScene()
+{
+    /* 游戏对象创建 */
+    // 创建玩家对象
+    CreatePlayer();
+}
+```
+
+至于究竟怎么创建呢，那就需要看`CreatePlayer`的实现，很简单，`new`一个新对象就行。可以在`player`头文件中查看玩家结构体的具体定义，这里我们需要给玩家对象设置一些初始值：
+
+```cpp
+// player.cpp
+void CreatePlayer()
+{
+    player = new Player();
+    // 玩家初始位置
+    player->position.x = (GAME_WIDTH - PLAYER_WIDTH) / 2;
+    player->position.y = GAME_HEIGHT - PLAYER_HEIGHT - 20;
+    player->width = PLAYER_WIDTH;
+    player->height = PLAYER_HEIGHT;
+    // 玩家初始属性
+    player->attributes.health = 3;
+    player->attributes.score = 0;
+    player->attributes.speed = 500;
+    player->attributes.maxBulletCd = 0.1;
+    player->attributes.bulletCd = 0.0;
+}
+```
+
+> 出生点等具体的参数涉及到窗口大小，需要计算，或者以宏方式定义了，参看`config.h`。
+>
+> Attribute定义在了`type.h`中，因为会被多个地方使用。
+
+这些属性的理解就顾名思义吧。
+
+#### 销毁玩家
+
+同样创建后就记得销毁，在`UnloadScene`当中销毁玩家。
+
+```cpp
+// scene2.cpp
+void UnloadScene_GameScene()
+{
+    /* 游戏对象销毁 */
+    // 销毁角色对象
+    DestroyPlayer();
+}
+```
+
+`DestroyPlayer`同样定义在`player`中，查看该函数定义会发现只是删除了之前`new`出来的玩家对象，并设置成空指针。
+
+#### 渲染玩家
+
+与渲染按钮类似，导入位图资源`plane.bmp`（不是`player.bmp`），在`GameResourceInit`函数中加载，然后在绘制玩家时使用。
+
+```cpp
+// resource.cpp
+HBITMAP bmp_Player;          // 角色图片
+void GameResourceInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    // 其他的
+    bmp_Player = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance, MAKEINTRESOURCE(IDB_BITMAP_PLANE));
+
+    // TODO: 引入其他的静态资源
+}
+```
+
+在`RenderScene.cpp`中，调用`player`中定义的`RenderPlayer`。
+
+```cpp
+// scene2.cpp
+void RenderScene_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
+{
+    /* 游戏对象绘制 */
+    // 绘制角色对象
+    RenderPlayer(hdc_memBuffer, hdc_loadBmp);
+}
+```
+
+然后在`RenderPlayer`中实际去绘制角色。
+
+```cpp
+// player.cpp
+// 渲染资源
+extern HBITMAP bmp_Player;
+static int frameIndex = 0;
+static const int bmp_RowSize = 1;
+static const int bmp_ColSize = 4;
+static const int bmp_CellWidth = 200;
+static const int bmp_CellHeight = 300;
+
+void RenderPlayer(HDC hdc_memBuffer, HDC hdc_loadBmp)
+{
+    // 绘制玩家
+    SelectObject(hdc_loadBmp, bmp_Player);
+    const int frameRowIndex = frameIndex / bmp_ColSize;
+    const int frameColIndex = frameIndex % bmp_ColSize;
+    TransparentBlt(
+        hdc_memBuffer, (int)player->position.x, (int)player->position.y,
+        player->width, player->height,
+        hdc_loadBmp, frameColIndex * bmp_CellWidth, frameRowIndex * bmp_CellHeight, bmp_CellWidth, bmp_CellHeight,
+        RGB(255, 255, 255));
+}
+```
+
+注意下，这里和绘制按钮不同，更复杂一些，这是因为玩家是一张**可以动起来**的序列图片，只要轮播就会动起来。
+
+![](../Game/res/plane.bmp)
+
+`frameIndex`指示当前播放到第几张图片单元，`bmp`相关的参数表示这张图片是1行4列，每个单元格宽200高300。
+
+现在运行程序并点击开始按钮，就可以看到玩家飞机出现在了画面当中。
+
+![](images/game2.png)
+
+让我们让它动起来，也就是改变`frameIndex`。这个参数该在什么地方改呢？终于到了游戏的核心逻辑部分，游戏更新`UpdateScene`。这个函数游戏每帧都会执行，你应该在这个函数中改变游戏对象与时间相关的变量。
+
+在`scene2`中添加角色更新：
+
+```cpp
+// scene2.cpp
+
+void UpdateScene_GameScene(double deltaTime)
+{
+    /* 游戏对象更新 */
+    // 更新角色对象
+    UpdatePlayer(deltaTime);
+}
+```
+
+于是，你可以在`UpdatePlayer`中开始更新玩家角色：
+
+```cpp
+void UpdatePlayer(double deltaTime)
+{
+    // 更新角色帧动画（假设1s播放完全部的动画）
+    frameIndex = (int)(GetGameTime() * bmp_RowSize * bmp_ColSize) % (bmp_RowSize * bmp_ColSize);
+}
+```
+
+计算方式多种多样，这里随便写了一种。注意这里用到了`GetGameTime()`，这个函数返回游戏开始到现在的时间（单位：s），可以在任何地方调用。
+
+现在在运行程序，你将得到一个动起来的玩家飞机。
+
+#### 让玩家动起来
+
+现在真的该让玩家动起来了！让我们用WASD或者上下左右方向键控制玩家移动！这显然也是在更新玩家对象，在`UpdatePlayer`当中实现即可。判断按钮是否按下，然后根据按钮按下的结果移动玩家就可以了！
+
+```cpp
+// scene2.cpp
+void UpdatePlayer(double deltaTime)
+{
+    // 读取键盘输入，然后控制角色位置
+    Vector2 direction = { 0, 0 };
+    if (GetKeyDown(VK_W) || GetKeyDown(VK_UP))
+    {
+        direction.y -= 1;
+    }
+    if (GetKeyDown(VK_S) || GetKeyDown(VK_DOWN))
+    {
+        direction.y += 1;
+    }
+    if (GetKeyDown(VK_A) || GetKeyDown(VK_LEFT))
+    {
+        direction.x -= 1;
+    }
+    if (GetKeyDown(VK_D) || GetKeyDown(VK_RIGHT))
+    {
+        direction.x += 1;
+    }
+    // 归一化方向向量，保证所有方向移动速度一致
+    direction = Normalize(direction);
+    player->position.x += direction.x * player->attributes.speed * deltaTime;
+    player->position.y += direction.y * player->attributes.speed * deltaTime;
+}
+```
+
+请同学们理解这个地方的代码！这里用了一些技巧让玩家运动所有方向移动速度保持一致，并且用了`deltaTime`变量保证运动是均匀的。`delteTime`是相邻两帧的时间，使用这个变量就会在相邻两帧间隔较短时移动较短的距离，相邻两帧间隔较长时移动较长距离，从而保证运动是均匀的。
+
+现在运行程序，玩家飞机便可以正常运动，但是此时仍然有一个问题，就是飞机可以飞到它不该飞到的地方，因此我们需要限制玩家的运动范围，当玩家超出应用范围时掰回来。
+
+```cpp
+// scene2.cpp
+
+void UpdatePlayer(double deltaTime)
+{
+    // 限制角色在屏幕内
+    if (player->position.x < 0)
+    {
+        player->position.x = 0;
+    }
+    if (player->position.x > GAME_WIDTH - player->width)
+    {
+        player->position.x = GAME_WIDTH - player->width;
+    }
+    if (player->position.y < 0)
+    {
+        player->position.y = 0;
+    }
+    if (player->position.y > GAME_HEIGHT - player->height)
+    {
+        player->position.y = GAME_HEIGHT - player->height;
+    }
+}
+```
+
+至此，你将得到一个符合预期的玩家运动逻辑。
 
 ## 附一、Win32 绘图
 
