@@ -294,8 +294,6 @@ int main() {
 
 同学们下载完框架代码后，可以双击`Game.sln`打开解决方案。
 
-首先尝试编译运行，理应可以成功运行。
-
 ### 1）框架结构
 
 ![](images/framework.png)
@@ -346,11 +344,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 以下是Win32应用程序层的其他相关文件：
 
 - `info.h`和`main.cpp`中其他的一些额外函数处理了状态栏和日志输出的内容，有兴趣的同学可以自行学习了解。
-
 - `timer`中配置了定时器相关的内容，有兴趣的同学可以自行学习了解。
-
 - `stdafx`是预编译加速文件，把一些公共的头文件都放在了里面，`targetver.h`是Visual Studio自动生成的文件。
 - `config.h`是配置文件，会定义一些程序的属性，比如窗口大小等
+
+顺便强调一下，因为涉及中文，游戏中所有用到的字符串类型并非`char`而是`TCHAR`，所有字符串字面量都需要用`TEXT`宏包围起来，例如`TEXT("游戏开始")`。
 
 在`WndProc`函数中，我们调用了游戏框架层对应的函数，接下来我们移步到游戏框架层。
 
@@ -494,7 +492,7 @@ int GetMouseY();
 
 场景层的函数定义在`scene`中，而实际每个场景的函数实现在`scene1`、`scene2`中。
 
-场景有一个结构体用来保存当前场景的信息，可以通过`GetCurrentScene()`来获取。
+场景有一个结构体用来保存当前场景的信息，可以通过`GetCurrentScene()`来获取。其中，`SceneId`枚举类型定义了游戏中的各种场景。
 
 ```cpp
 // scene.h
@@ -657,6 +655,150 @@ void UpdateScene_GameScene(double deltaTime)
 
 ## 二、上手游戏
 
+先试着编译当前的项目吧，这应该会成功，如果不成功你可能得安抚下你的电脑了。
+
+此时运行程序，你将看到以下画面。
+
+![](images/start1.png)
+
+### 1）加上开始按钮
+
+这个场景是开始场景`scene1`，当游戏在`GameInit`中初始化资源完成后，就切换到了这个场景`StartScene`。
+
+关注`scene1.cpp`中的六个函数，现在场景中有一段文字，这是在`RenderScene_StartScene`函数中画出来。
+
+现在让我们添加一个开始按钮，先思考按钮应该在什么时候添加？我们可以在加载开始场景`LoadScene_StartScene`中创建一个按钮。
+
+#### 创建按钮
+
+按钮的创建可以直接使用`CreateButton`函数，这定义在`button`中，你需要在该文件中`#include "button.h"`来提供这些按钮函数的声明，然后你就可以创建一个按钮。框架里已经设置了按钮的位置，创建在这个位置即可。
+
+```cpp
+// scene1.cpp
+void LoadScene_StartScene()
+{
+    // 创建按钮
+    const int width = 300;
+    const int height = 200;
+    const int x = (WINDOW_WIDTH - width) / 2 - 10;
+    const int y = 196;
+    ButtonId startButtonId = CreateButton(x, y, width, height, RenderStartButton, OnStartButtonClick);
+    EnableButton(startButtonId);
+}
+```
+
+`CreateButton`函数需要传入六个参数：
+
+- `x`：`x`坐标
+- `y`：`y`坐标
+- `width`：宽度
+- `height`：高度
+- `renderButtonFunc`：渲染函数（函数指针）
+- `onClickButtonFunc`：点击函数（函数指针）
+
+`RenderStartButton`和`OnStartButtonClick`定义在了同文件的`#pragma region 按钮逻辑`中，这个预编译指令只是方便折叠代码用的。这两个函数分别实现该按钮如何绘制与点击之后如何响应，现在这两个函数都是空的，我们会在后面再介绍如何实现这两个函数。需要注意的是，创建每个按钮都需要定义渲染函数和点击函数，来针对性处理。
+
+`CreateButton`函数会返回一个`ButtonId`，如果其他地方需要用到的话，你可以用一个全局变量把它保存下来。现在只需要在接下来的启用按钮中使用这个ID，因此用局部变量保存即可。至此，我们创建了一个按钮并启用了它。
+
+#### 销毁按钮
+
+有创建就有销毁，必须时刻牢记，关注对象的生命周期。在加载场景时创建，就立刻在卸载场景`UnloadScene`时把销毁。这里`button`提供了一个`DestroyButtons`函数来销毁创建的所有按钮，调用即可。
+
+```cpp
+// scene1.cpp
+void UnloadScene_StartScene()
+{
+    // 销毁按钮
+    DestroyButtons();
+}
+```
+
+#### 渲染按钮
+
+现在按钮确实已经被创建了出来，但是你运行程序仍然看不到。这是当然的，因为你还没有把它在画面中画出来。接下来，让我们把它画出来。渲染按钮需要我们实现按钮的渲染函数`RenderStartButton`，在`scene1`中找到这个函数，然后实现绘制按钮的逻辑。
+
+在绘制按钮之前，建议先了解学习一下附一部分。
+
+首先双击`Game.rc`打开资源管理器，然后右击最上面的`Game.rc`添加资源，选择Bitmap，导入按钮图片的位图资源`Start.bmp`，在`res`文件夹下面。然后在Bitmap筛选器下选中刚才添加的位图，在下方的属性栏内把ID改为`IDB_BITMAP_START_BUTTON`。
+
+![](images/resource.png)
+
+> 其实改ID并非必要，但是更好找到自己想要的图片。
+
+这样，就导入了开始按钮的图片资源。接下来，需要在程序中加载该图片资源，转到`resource.cpp`文件中的初始化资源函数`GameResourceInit`函数，把资源加载并赋值到已经准备好的变量`bmp_StartButton`中：
+
+```cpp
+// resource.cpp
+void GameResourceInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    bmp_StartButton = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance, MAKEINTRESOURCE(IDB_BITMAP_START_BUTTON));
+
+    // TODO: 引入其他的静态资源
+}
+```
+
+至此，该图片资源便可以在程序中调用了。现在让我们实现开始按钮的渲染函数`RenderStartButton`，这个函数有两个参数，分别是`hdc_memBuffer`和`hdc_loadBmp`，表示我们要绘制到的缓冲区和用来加载位图的缓冲区。注意到在这个函数前面我们使用`extern`关键字声明了在`resource.cpp`中定义的位图资源变量，这使得我们可以使用该位图。绘制函数如下：
+
+```cpp
+// scene1.cpp
+extern HBITMAP bmp_StartButton;
+
+void RenderStartButton(Button *button, HDC hdc_memBuffer, HDC hdc_loadBmp)
+{
+    // TODO: 绘制开始按钮
+    SelectObject(hdc_loadBmp, bmp_StartButton);
+    TransparentBlt(
+        hdc_memBuffer, (int)button->position.x, (int)button->position.y,
+        button->width, button->height,
+        hdc_loadBmp, 0, 0, button->width, button->height,
+        RGB(255, 255, 255));
+}
+```
+
+我们用`hdc_loadBmp`加载位图，然后绘制到`hdc_memBuffer`上，具体的位置和大小在创建按钮的时候给出了。
+
+> 注意这里的按钮大小和位图大小刚好一致，若不一致需要处理，详情请看`TransparentBlt`函数的文档。
+
+现在运行程序你就可以看到开始按钮了，但是显然，因为我们没有实现任何按钮点击逻辑，因此点击按钮是没有用的。
+
+![](images/start2.png)
+
+#### 点击按钮
+
+接下来让我们实现按钮的点击逻辑，我们希望点击按钮后能够跳转到游戏场景，在框架中是`GameScene`，即`scene2`，这就需要我们实现`OnStartButtonClick`。这个函数很简单，只是切换场景，直接`#include "scene.h"`然后调用`ChangeScene`即可。当然，如果我们想的话，也可以打印一条日志，使用`Log`函数。
+
+```cpp
+// scene1.cpp
+void OnStartButtonClick(Button *button)
+{
+	// TODO: 开始按钮点击事件处理
+    Log(1, TEXT("游戏开始！"));
+    ChangeScene(GameScene);
+}
+```
+
+> `Log`函数用法和`printf`一致，第一个参数是状态栏的位置，现在0栏用来显示`FPS`了，所以用1栏。当然你也可以修改`config.h`中的相关配置增加新的栏。第二个参数是格式化字符串，记得用`TEXT`宏包起来。用法可以是：`Log(1, TEXT("我的分数：%d"), score)`。
+
+现在编译运行会发现按钮仍然没有响应点击，因为我们还没有处理UI输入。让我们看向六个函数中的`processUiInput`，在这里我们应该实现按钮点击：
+
+```cpp
+// scene1.cpp
+void ProcessUiInput_StartScene()
+{
+    // TODO: 处理鼠标点击按钮
+    if (IsMouseLButtonDown())
+    {
+        PressButtons(GetMouseX(), GetMouseY());
+    }
+}
+```
+
+这里需要`#include "mouse.h"`来获取处理鼠标输入函数声明。字面解释是，如果鼠标左键按下了，然后就尝试按鼠标位置的按钮。这些函数框架已经实现，可以Ctrl + 鼠标左键点击查看这些函数的实现方法了解学习，记住如果多个按钮重叠在一起，行为是不确定了。
+
+至此，我们成功通过点击按钮切换到了游戏场景，但是现在游戏场景是完全空着的，我们将逐个添加游戏对象。
+
+![](images/game1.png)
+
 
 
 ## 附一、Win32 绘图
@@ -797,7 +939,7 @@ void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 > `SelectObject`这个函数功能非常多，在这里作用是将位图加载到`hdc_loadBmp`上，在绘制图元的时候也用来选择画笔和画刷的颜色。
 
-在实际代码中（请参考`player.cpp`、`enemy.cpp`等对象的`Render`部分），我们会将框架`core.cpp`内创建好的一个`hdc_loadBmp`通过函数参数不断地传递下去，这是因为频繁地创建`hdc_loadBmp`会导致严重的性能问题，我们复用这样一个虚拟画布以优化性能。
+在实际代码中（请参考`scene1.cpp`、`player.cpp`、`enemy.cpp`等对象的`Render`部分），我们会将框架`core.cpp`内创建好的一个`hdc_loadBmp`通过函数参数不断地传递下去，这是因为频繁地创建`hdc_loadBmp`会导致严重的性能问题，我们复用这样一个虚拟画布以优化性能。
 
 ### 双缓冲绘图
 
