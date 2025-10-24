@@ -1398,7 +1398,175 @@ void UpdatePlayer(double deltaTime)
 
 ### 5）加上碰撞
 
-现在游戏仍然没有完全成形，因为玩家、敌人和子弹都各玩各的，需要把他们联系起来。
+现在游戏仍然没有完全成形，因为玩家、敌人和子弹都各干各的，需要把他们联系起来。
+
+碰撞相关的函数`CheckCollision`实现在对应的场景中，可以拆成不同的函数用以区分不同的作用。
+
+#### 玩家与敌人
+
+首先是玩家与敌人，如果这两者碰撞，我们可以认为玩家撞碎了敌人，获得了分数，但是会损失血量。
+
+```cpp
+// scene2.cpp
+void CheckCollision_GameScene()
+{
+    // 玩家和敌人的碰撞
+    CheckCollision_GameScene_Player_Enemies();
+}
+```
+
+再求解碰撞的时候，我们可以把玩家和敌人都抽象成简单的矩形，简化计算。一些求解碰撞的函数定义在了`util.cpp`当中。
+
+```cpp
+// scene2.cpp
+
+// 检查角色和敌人的碰撞
+void CheckCollision_GameScene_Player_Enemies()
+{
+    // 玩家用简单矩形表示
+    Player* player = GetPlayer();
+    Rect rect1{};
+    rect1.left = player->position.x;
+    rect1.right = player->position.x + player->width;
+    rect1.top = player->position.y;
+    rect1.bottom = player->position.y + player->height;
+    // 敌人用简单矩形表示
+    std::vector<Enemy*> enemies = GetEnemies();
+    Rect rect2{};
+    for (Enemy* enemy : enemies)
+    {
+        rect2.left = enemy->position.x;
+        rect2.right = enemy->position.x + enemy->width;
+        rect2.top = enemy->position.y;
+        rect2.bottom = enemy->position.y + enemy->height;
+        if (IsRectRectCollision(rect1, rect2))
+        {
+            // 碰撞后扣血、加分摧毁敌人
+            player->attributes.health--;
+            player->attributes.score += enemy->attributes.score;
+            DestroyEnemy(enemy);
+            if (player->attributes.health <= 0)
+            {
+                Log(1, TEXT("游戏结束！"));
+                ChangeScene(SceneId::StartScene);
+            }
+        }
+    }
+}
+```
+
+创建两个矩形，填入信息，然后调用矩形碰撞函数`IsRectRectCollision`，如果碰撞了，就扣血加分，并且摧毁敌人。这里还额外做了一件事情，就是如果玩家的血量归零，结束游戏并返回开始界面。
+
+现在运行程序，和敌人碰撞3次之后，游戏就会结束。
+
+#### 敌人和子弹
+
+既然玩家可以发射子弹，那么子弹应该可以命中敌人。如果子弹命中敌人，我们就对敌人进行扣血，销毁子弹；当敌人血量削减为0，就销毁它，并加分给玩家。
+
+```cpp
+// scene2.cpp
+void CheckCollision_GameScene()
+{
+    // 玩家和敌人的碰撞
+    CheckCollision_GameScene_Player_Enemies();
+    // 敌人和子弹的碰撞
+    CheckCollision_GameScene_Enemies_Bullets();
+}
+```
+
+```cpp
+// scene2.cpp
+void CheckCollision_GameScene_Enemies_Bullets()
+{
+    // 敌人用简单矩形表示
+    std::vector<Enemy *> enemies = GetEnemies();
+    Rect rect{};
+    // 子弹用简单圆形表示
+    std::vector<Bullet *> bullets = GetBullets();
+    Circle circle{};
+	for (Enemy *enemy : enemies)
+    {
+        rect.left = enemy->position.x;
+        rect.right = enemy->position.x + enemy->width;
+        rect.top = enemy->position.y;
+        rect.bottom = enemy->position.y + enemy->height;
+        for (Bullet *bullet : bullets)
+        {
+            circle.center = bullet->position;
+            circle.radius = bullet->radius;
+            if (IsRectCircleCollision(rect, circle))
+            {
+                // 碰撞后扣血、加分摧毁敌人和子弹
+                enemy->attributes.health -= bullet->damage;
+                if (enemy->attributes.health <= 0)
+                {
+                    GetPlayer()->attributes.score += enemy->attributes.score;
+                    DestroyEnemy(enemy);
+                }
+                DestroyBullet(bullet);
+            }
+        }
+    }
+}
+```
+
+这里是把敌人抽象成一个矩形，子弹抽象成一个圆形，然后计算碰撞。这里需要双层循环，要计算每一个敌人和每一个子弹的碰撞。
+
+> 双重循环是很慢的！所以如果子弹和敌人太多，就有可能出现卡顿问题。有其他的算法可以加速求解碰撞的过程，感兴趣的同学可以自行了解。不过大作业里直接用双重循环应该会不会遇到效率问题。
+
+现在运行程序，就可以用子弹击毁敌机了。
+
+### 6）加上UI
+
+细心的同学应该已经注意到右边应该要显示玩家的分数和玩家的血量，但是并没有显示。这是因为现在UI上默认显示的是0。
+
+同学可以在`RenderScene`中找到绘制该段文字的地方，或者Ctrl + F搜索这段话，然后把对应的信息改成玩家的信息。
+
+```cpp
+// scene2.cpp
+void RenderScene_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
+{
+    // 绘制
+    TCHAR buffer[128];
+    swprintf_s(buffer, sizeof(buffer) / sizeof(TCHAR),
+               TEXT("第一关\n\n\n生命值: %d\n\n积分: %d"),
+               GetPlayer()->attributes.health,
+               GetPlayer()->attributes.score);
+    DrawText(hdc_memBuffer, buffer, -1, &rect, DT_CENTER);
+}
+```
+
+这里其实相当重要——如何在界面上显示变量的值。首先是创建一个缓冲区`buffer`，然后使用`swprintf_s`把变量打印到缓冲区里，格式化输出和`printf`函数一样。
+
+恭喜同学们，现在同学们再运行程序，将得到一个完整的、可以游玩的简单飞机大战了！可以开始游戏，有玩家和敌机，可以发射子弹，可以击毁敌人，能够显示生命值和分数，还有结束游戏。
+
+![](images/game.png)
+
+## 三、接下来的事情
+
+同学们接下来就可以按照我们给出的Excel得分表选择实现某些功能了，下面再写一些提示。
+
+### 1）把绘制文字单独拎出来
+
+能不能把绘制文字单独拎出来？现在`scene1`和`scene2`里面绘制场景时，会有很长的代码是为了绘制文字，是否可以写成函数甚至放到新的`cpp`文件里面来减少重复的代码？
+
+### 2）添加新的场景
+
+添加新的场景，你需要创建一个`scene3.h`和`scene3.cpp`，在`scene.h`的枚举类`SceneId`里添加新的场景名字，在路由宏函数里加上新的`case`，在`scene.cpp`中`#include "scene3.h"`，在`scene3.h`中声明上面讲的六个函数，在`scene3.cpp`中实现上面讲的六个函数。总之，模仿`scene1`和`scene2`中做的事情。
+
+### 3）添加新的对象
+
+添加新的对象，你需要创建一个对应对象的头文件和源文件，至于具体这个对象要实现哪些功能取决于你。单个对象可以模仿`player`，多个对象可以模仿`enemy`。时刻谨记对象的创建、销毁、渲染与逻辑更新这些相关的内容。
+
+### 4）绘制新的东西
+
+绘制相关的内容也已经讲了，同学们可以自己找一些资源甚至让GPT生成都可以，来让你的游戏画面更加好看。框架里的所有图片资源都不强制要求使用，你可以换成自己喜欢的东西。界面设计同学们也可以自己进行，不必被框架限制，这里的原则就是，想清楚要画什么、怎么画，并稍微注意一下绘制顺序。
+
+### 5）背景音乐和音效
+
+给游戏加上背景音乐和音效可以极大地提高游戏的体验，这一部分同学们可以自己去网络上找找该怎么实现，想想相关的音乐播放应该放在游戏初始化或游戏循环中的什么地方。
+
+最后，期待同学们完成的大作业。
 
 ## 附一、Win32 绘图	
 
