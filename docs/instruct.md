@@ -459,6 +459,8 @@ void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 在期间，调用`RenderScene`把控制权交给场景层。
 
+关于绘制画面的更多内容请参考附一，这里同学们记住一点，在绘制画面时，坐标原点位于左上角，`x`轴朝右，`y`轴朝下。
+
 #### 键盘、鼠标
 
 键盘相关函数定义在`keyboard`中、鼠标相关函数定义在`mouse`中，比较简单，同学自行了解即可。
@@ -882,7 +884,7 @@ void GameResourceInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
 }
 ```
 
-在`RenderScene.cpp`中，调用`player`中定义的`RenderPlayer`。
+在`scene2`的`RenderScene`中，调用`player`中定义的`RenderPlayer`。
 
 ```cpp
 // scene2.cpp
@@ -905,6 +907,8 @@ static const int bmp_RowSize = 1;
 static const int bmp_ColSize = 4;
 static const int bmp_CellWidth = 200;
 static const int bmp_CellHeight = 300;
+
+// 中间是其他函数
 
 void RenderPlayer(HDC hdc_memBuffer, HDC hdc_loadBmp)
 {
@@ -994,6 +998,8 @@ void UpdatePlayer(double deltaTime)
 
 请同学们理解这个地方的代码！这里用了一些技巧让玩家运动所有方向移动速度保持一致，并且用了`deltaTime`变量保证运动是均匀的。`delteTime`是相邻两帧的时间，使用这个变量就会在相邻两帧间隔较短时移动较短的距离，相邻两帧间隔较长时移动较长距离，从而保证运动是均匀的。
 
+> 速度×时间=路程
+
 现在运行程序，玩家飞机便可以正常运动，但是此时仍然有一个问题，就是飞机可以飞到它不该飞到的地方，因此我们需要限制玩家的运动范围，当玩家超出应用范围时掰回来。
 
 ```cpp
@@ -1023,7 +1029,378 @@ void UpdatePlayer(double deltaTime)
 
 至此，你将得到一个符合预期的玩家运动逻辑。
 
-## 附一、Win32 绘图
+### 3）加上敌人
+
+接下来让我们在场景中加上敌人，老样子，从创建、销毁和绘制开始。
+
+先在`scene2.cpp`中`#include "enemy.h"`吧。你可以随时在这里查看`Enemy`结构体的定义。
+
+#### 创建敌人
+
+创建敌人与之前略有不同，想想《飞机大战》，场景中并不是一开始就有敌人的，而是随时间随机出现在画面的上方并向下移动。
+
+因此我们无需在`LoadScene`中创建敌人：
+
+```cpp
+// scene2.cpp
+void LoadScene_GameScene()
+{
+    /* 游戏对象创建 */
+    // 敌人将在游戏过程中动态创建
+}
+```
+
+转而在`UpdateScene`时动态创建敌人：
+
+```cpp
+// scene2.cpp
+void UpdateScene_GameScene(double deltaTime)
+{
+    // 更新敌人对象
+    UpdateEnemies(deltaTime);
+}
+```
+
+```cpp
+// enemy.cpp
+void UpdateEnemies(double deltaTime)
+{
+    // 每隔一定时间在随机位置创建一个敌人
+    double gameTime = GetGameTime();
+    if (gameTime - lastGenerateTime > deltaGenerateTime)
+    {
+        CreateRandomEnemy();
+        lastGenerateTime = gameTime;
+    }
+}
+```
+
+这个函数的意思是每隔一段时间在随机位置创建敌人，当然，不使用游戏时间`GetGameTime`而直接用传入的间隔时间`DeltaTime`也可以达成相同的目标。`CreateRandomEnemy`这个函数已经实现，其实就是在随机位置生成了一个敌人。注意我们让这个敌人飞机在稍高的地方生成。
+
+#### 销毁敌人
+
+同样创建后就记得销毁，这个都必须在`UnloadScene`当中做。
+
+```cpp
+// scene2.cpp
+void UnloadScene_GameScene()
+{
+    /* 游戏对象销毁 */
+    // 清空敌人对象
+    DestroyEnemies();
+}
+```
+
+`DestroyEnemies`定义在`enemies`中，查看该函数定义会发现它会清空当前所有的敌人对象。其实在游戏过程中，我们既然会动态创建敌人，也肯定会动态清空敌人，所以这里在卸载场景清空的是剩余的敌人飞机，以防出现内存泄漏。
+
+#### 渲染敌人
+
+与之前类似，打开`Game.rc`导入位图资源`enemy.bmp`，在`GameResourceInit`函数中加载，然后在绘制敌人时使用。
+
+```cpp
+// resource.cpp
+HBITMAP bmp_Enemy;          // 角色图片
+void GameResourceInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    // 其他的
+    bmp_Enemy = LoadBitmap(((LPCREATESTRUCT)lParam)->hInstance, MAKEINTRESOURCE(IDB_BITMAP_ENEMY));
+
+    // TODO: 引入其他的静态资源
+}
+```
+
+在`scene2`的`RenderScene`中，调用`enemy`中定义的`RenderEnemy`。
+
+```cpp
+// scene2.cpp
+void RenderScene_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
+{
+    /* 游戏对象绘制 */
+    // 绘制敌人对象
+    RenderEnemy(hdc_memBuffer, hdc_loadBmp);
+}
+```
+
+然后在`RenderEnemy`中实际去绘制角色。
+
+```cpp
+// enemy.cpp
+// 渲染资源
+extern HBITMAP bmp_Enemy;
+static int frameIndex = 0;
+static const int bmp_RowSize = 1;
+static const int bmp_ColSize = 1;
+static const int bmp_CellWidth = 200;
+static const int bmp_CellHeight = 200;
+
+// 中间是其他函数
+
+void RenderEnemies(HDC hdc_memBuffer, HDC hdc_loadBmp)
+{
+    // 画出敌人
+    const int frameRowIndex = frameIndex / bmp_ColSize;
+    const int frameColIndex = frameIndex % bmp_ColSize;
+    for (Enemy* enemy : enemies)
+    {
+        SelectObject(hdc_loadBmp, bmp_Enemy);
+        TransparentBlt(
+            hdc_memBuffer, (int)enemy->position.x, (int)enemy->position.y,
+            enemy->width, enemy->height,
+            hdc_loadBmp, frameColIndex * bmp_CellWidth, frameRowIndex * bmp_CellHeight, bmp_CellWidth, bmp_CellHeight,
+            RGB(255, 255, 255));
+    }
+}
+```
+
+这里复用了绘制玩家的代码，不过因为敌机只有一张图片，所以参数设置固定就好，1行1列，`frameIndex`是0即可。
+
+现在运行程序并点击开始按钮，但是仍然看不到敌人飞机出现在了画面当中。为什么呢，因为我们把敌机创建在了屏幕外面。
+
+```cpp
+// enemy.cpp
+void CreateRandomEnemy()
+{
+    CreateEnemy(
+        GetRandomDouble(30, GAME_WIDTH - ENEMY_WIDTH - 30),
+        -100 // 从上方稍微高一点的位置生成
+    );
+}
+```
+
+把这个-100改成100，你就可以看到飞机生成在画面当中了！
+
+![](images/game3.png)
+
+> 记得改回去。
+
+#### 让敌机动起来
+
+让飞机动起来的逻辑相比大家应该能猜到到在什么地方实现了，就是`UpdateEnemy`中。通常在飞机大战中，敌机就是从上方往下方匀速飞行，我们就先这样实现吧。
+
+```cpp
+// enemy.cpp
+void UpdateEnemies(double deltaTime)
+{
+    // 每隔一定时间在随机位置创建一个敌人
+    // ......
+    
+    // 敌人的移动逻辑
+    for (Enemy* enemy : GetEnemies())
+    {
+        // 敌人向下移动
+        enemy->position.y += enemy->attributes.speed * deltaTime;
+        // 超出屏幕的敌人删除
+        if (enemy->position.y > GAME_HEIGHT + 50)
+        {
+            DestroyEnemy(enemy);
+        }
+    }
+}
+```
+
+因为场景中有很多敌机，所以我们需要遍历所有的敌机并更新他们的位置，向下移动只要增加他们的`y`值即可。当然，我们这里还做了动态删除，如果敌机位置超出了屏幕一定距离，就把它删除。
+
+现在运行程序，你可以看到敌人从屏幕上方一直往下移动直到屏幕下方了。
+
+![](images/game4.png)
+
+### 4）加上子弹
+
+激动人心的《飞机大战》怎么可以没有子弹呢？让我们加上子弹！
+
+记得加上`#include "bullet.h"`。你可以随时在这里查看子弹结构体`Bullet`的定义。
+
+#### 创建子弹
+
+第一个问题是什么时候创建子弹？显然不是在场景加载的时候`LoadScene`创建，这里提供过一种创建方式，在玩家按空格键的时候发射子弹。
+
+```cpp
+// scene2.cpp
+void LoadScene_GameScene()
+{
+    /* 游戏对象创建 */
+    // 初始化玩家对象
+    CreatePlayer();
+    // 敌人将在游戏过程中动态创建
+    // 子弹将在游戏过程中动态创建
+    // TODO: 游戏场景中需要创建的游戏对象
+}
+```
+
+```cpp
+// player.cpp
+void UpdatePlayer(double deltaTime)
+{
+    // 发射子弹
+    if (GetKeyDown(VK_SPACE))
+    {
+        // 创建子弹，子弹从飞机顶部中央位置发射
+        CreateBullet(
+            player->position.x + player->width / 2.0,
+            player->position.y,
+            1,    // 伤害
+            800.0 // 速度
+        );
+    }
+}
+```
+
+子弹的位置计算请同学们理解。同样，有动态创建通常会有动态销毁，后面会看到。
+
+#### 销毁子弹
+
+静态销毁仍然很重要，这是防止内存泄漏的重要方式！
+
+总之调用`DestroyBullets`就可以，这个实现方式和`DestroyButtons`或者`DestroyEnemies`都是一样的。
+
+```cpp
+// scene2.cpp
+void UnloadScene_GameScene()
+{
+    /* 游戏对象销毁 */
+    // 清空子弹对象
+    DestroyBullets();
+}
+```
+
+#### 渲染子弹
+
+子弹渲染就不那么麻烦了，直接当作红色的圆形绘制即可。
+
+在`RenderScene`中加上`RenderBullets`，然后在`RenderBullets`中写好具体的逻辑。
+
+```cpp
+// scene2.cpp
+void RenderScene_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
+{
+    // 绘制子弹对象
+    RenderBullets(hdc_memBuffer, hdc_loadBmp);
+}
+```
+
+```cpp
+// bullet.cpp
+void RenderBullets(HDC hdc_memBuffer, HDC hdc_loadBmp)
+{
+	// 创建红色实心画刷
+	HBRUSH hBrush = CreateSolidBrush(RGB(255, 0, 0));
+	HBRUSH oldBrush = (HBRUSH)SelectObject(hdc_memBuffer, hBrush);
+
+	// 设置画笔为空，避免边框影响
+	HPEN hPen = (HPEN)SelectObject(hdc_memBuffer, GetStockObject(NULL_PEN));
+
+	// 绘制子弹
+	for (Bullet* bullet : bullets)
+	{
+		Ellipse(
+			hdc_memBuffer,
+			(int)(bullet->position.x - bullet->radius),
+			(int)(bullet->position.y - bullet->radius),
+			(int)(bullet->position.x + bullet->radius),
+			(int)(bullet->position.y + bullet->radius));
+	}
+
+	// 恢复 GDI 对象
+	SelectObject(hdc_memBuffer, oldBrush);
+	SelectObject(hdc_memBuffer, hPen);
+	DeleteObject(hBrush);
+}
+```
+
+为什么这么画就请看官方文档吧！
+
+现在运行，按空格键你将能看到子弹
+
+![](images/game5.png)
+
+但是子弹堆积在了同一个地方，那就让它们动起来！
+
+#### 让子弹动起来
+
+敌机向下移动，子弹向上移动，是这样的。
+
+在`UpdateScene`里面加上`UpdateBullets`，然后在`UpdateBullets`中实现这个逻辑。
+
+```cpp
+void UpdateScene_GameScene(double deltaTime)
+{
+    /* 游戏对象更新 */
+    // 更新角色对象
+    UpdatePlayer(deltaTime);
+    // 更新敌人对象
+    UpdateEnemies(deltaTime);
+    // 更新子弹对象
+    UpdateBullets(deltaTime);
+    // TODO: 游戏场景中需要更新的游戏对象
+}
+```
+
+```cpp
+// bullet.cpp
+void UpdateBullets(double deltaTime)
+{
+	for (Bullet* bullet : GetBullets())
+	{
+		// 子弹向上移动
+		bullet->position.y -= bullet->speed * deltaTime;
+		// 超出屏幕的子弹删除
+		if (bullet->position.y + bullet->radius < 0)
+		{
+			DestroyBullet(bullet);
+		}
+	}
+}
+```
+
+和敌机移动类似，因为有很多子弹，需要遍历修改；向上移动就是`y`值减小，用`deltaTime`保证速度均匀；当子弹超出屏幕，将它销毁。
+
+现在你终于可以发射子弹了。
+
+![](images/game6.png)
+
+当好像哪里不太对，因为子弹发射速度太快了，那就在发射时加点限制。`Attribute`里面其实提前加了这个`CD`属性值噢。
+
+```cpp
+// player.cpp
+// 发射子弹
+// player.cpp
+void UpdatePlayer(double deltaTime)
+{
+    // 发射子弹
+    if (GetKeyDown(VK_SPACE))
+    {
+        // 控制子弹发射间隔
+        if (player->attributes.bulletCd <= 0.0)
+        {
+            // 创建子弹，子弹从飞机顶部中央位置发射
+            CreateBullet(
+                player->position.x + player->width / 2.0,
+                player->position.y,
+                1,    // 伤害
+                800.0 // 速度
+            );
+            // 0.3秒发射一次
+            player->attributes.bulletCd = player->attributes.maxBulletCd;
+        }
+        else
+        {
+            player->attributes.bulletCd -= deltaTime;
+        }
+    }
+}
+```
+
+这个控制CD的例子请同学们好好理解，**定时**是游戏中很重要的一部分！
+
+现在子弹的发射正常多了。
+
+![](images/game7.png)
+
+### 5）加上碰撞
+
+现在游戏仍然没有完全成形，因为玩家、敌人和子弹都各玩各的，需要把他们联系起来。
+
+## 附一、Win32 绘图	
 
 我们再回顾框架示意图，关注其中的`WM_PAINT`部分。
 
