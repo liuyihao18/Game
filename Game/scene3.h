@@ -1,22 +1,22 @@
-#pragma once
+ï»¿#pragma once
 
-// ¼ÓÔØ³¡¾°
+// åŠ è½½åœºæ™¯
 void LoadScene_TestScene();
 
-// Ğ¶ÔØ³¡¾°
+// å¸è½½åœºæ™¯
 void UnloadScene_TestScene();
 
-// ´¦ÀíUIÊäÈë
+// å¤„ç†UIè¾“å…¥
 void ProcessUiInput_TestScene();
 
-// Åö×²¼ì²â
+// ç¢°æ’æ£€æµ‹
 void CheckCollision_TestScene();
 
-// ¸üĞÂ³¡¾°
+// æ›´æ–°åœºæ™¯
 void UpdateScene_TestScene(double deltaTime);
 
-// äÖÈ¾³¡¾°£¬Õ¼Î»·û
+// æ¸²æŸ“åœºæ™¯ï¼Œå ä½ç¬¦
 void RenderScene_TestScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
 
-// äÖÈ¾³¡¾°£ºDirect2D
+// æ¸²æŸ“åœºæ™¯ï¼šDirect2D
 void D2DRenderScene_TestScene(ID2D1HwndRenderTarget* pRT);

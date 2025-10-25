@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "direct2d.h"
 
 #include "scene.h"
@@ -28,13 +28,13 @@ static std::shared_mutex ball_mutex;
 static ID2D1SolidColorBrush* pBrush = nullptr;
 static const double g = 1000.0;
 
-// ¼ÓÔØ³¡¾°
+// åŠ è½½åœºæ™¯
 void LoadScene_TestScene() {}
 
-// Ğ¶ÔØ³¡¾°
+// å¸è½½åœºæ™¯
 void UnloadScene_TestScene() {}
 
-// ´¦ÀíUIÊäÈë
+// å¤„ç†UIè¾“å…¥
 void ProcessUiInput_TestScene() {
 	if (IsMouseLButtonDown()) {
 		std::unique_lock<std::shared_mutex> lock(ball_mutex);
@@ -48,10 +48,10 @@ void ProcessUiInput_TestScene() {
 	}
 }
 
-// Åö×²¼ì²â
+// ç¢°æ’æ£€æµ‹
 void CheckCollision_TestScene() {}
 
-// ¸üĞÂ³¡¾°
+// æ›´æ–°åœºæ™¯
 void UpdateScene_TestScene(const double deltaTime) {
 	std::unique_lock<std::shared_mutex> lock(ball_mutex);
 	for (const auto& ptr : balls) {
@@ -75,7 +75,7 @@ void UpdateScene_TestScene(const double deltaTime) {
 	}
 }
 
-// äÖÈ¾³¡¾°£¬ÓÃÓÚ¶Ô±ÈGDIĞÔÄÜ
+// æ¸²æŸ“åœºæ™¯ï¼Œç”¨äºå¯¹æ¯”GDIæ€§èƒ½
 void RenderScene_TestScene(HDC hdc_memBuffer, HDC hdc_loadBmp) {
 	std::shared_lock<std::shared_mutex> lock(ball_mutex);
 	for (const auto pball : balls) {
@@ -89,7 +89,7 @@ void RenderScene_TestScene(HDC hdc_memBuffer, HDC hdc_loadBmp) {
 	}
 }
 
-// äÖÈ¾³¡¾°£ºDirect2D
+// æ¸²æŸ“åœºæ™¯ï¼šDirect2D
 void D2DRenderScene_TestScene(ID2D1HwndRenderTarget* pRT) {
 	if (pBrush == nullptr) {
 		auto hr = pRT->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &pBrush);
