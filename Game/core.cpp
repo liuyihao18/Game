@@ -15,14 +15,17 @@ static double deltaTime = 0;
 // 时间戳：单位（ms）
 static double firstFrameTimestamp = 0;
 static double lastFrameTimestamp = 0;
+static double lastRenderTimestamp = 0;
 static double GetCurrentTimestamp();
 
 // 帧耗时统计：单位（ms）
 static std::deque<double> deltaTimeHistory;
+static std::deque<double> renderDeltaTimeHistory;
 static size_t deltaTimeHistorySize = 120;
-static void UpdateDeltaTime(double currentDeltaTime);
-static double GetAverageDeltaTime();
+static void UpdateDeltaTime(std::deque<double>& history, double currentDeltaTime);
+static double GetAverageDeltaTime(const std::deque<double>& history);
 static void ShowAverageFps();
+static void ShowAverageRenderFps();
 
 // 游戏初始化
 void GameInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
@@ -43,7 +46,7 @@ void GameLoop(HWND hWnd)
     gameTime = currentFrameTimestamp - firstFrameTimestamp;
     deltaTime = (currentFrameTimestamp - lastFrameTimestamp);
     lastFrameTimestamp = currentFrameTimestamp;
-    UpdateDeltaTime(deltaTime);
+    UpdateDeltaTime(deltaTimeHistory, deltaTime);
     ShowAverageFps();
 
     // 场景循环更新
@@ -91,6 +94,12 @@ void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
     // 结束绘制
     EndPaint(hWnd, &ps);
+    // 渲染时间处理
+    double currentTimestamp = GetCurrentTimestamp();
+    double renderDeltaTime = (currentTimestamp - lastRenderTimestamp);
+    lastRenderTimestamp = currentTimestamp;
+    UpdateDeltaTime(renderDeltaTimeHistory, renderDeltaTime);
+    ShowAverageRenderFps();
 }
 
 // 获取当前游戏时间（单位：s）
@@ -115,20 +124,20 @@ double GetCurrentTimestamp()
 }
 
 // 工具函数：更新帧耗时统计（单位：ms）
-void UpdateDeltaTime(double currentDeltaTime)
+void UpdateDeltaTime(std::deque<double>& history, double currentDeltaTime)
 {
-    deltaTimeHistory.push_back(currentDeltaTime);
-    if (deltaTimeHistory.size() > deltaTimeHistorySize)
+    history.push_back(currentDeltaTime);
+    if (history.size() > deltaTimeHistorySize)
     {
-        deltaTimeHistory.pop_front();
+        history.pop_front();
     }
 }
 
 // 工具函数：获取平均帧耗时（单位：ms）
-double GetAverageDeltaTime()
+double GetAverageDeltaTime(const std::deque<double>& history)
 {
-    double sum = std::accumulate(deltaTimeHistory.begin(), deltaTimeHistory.end(), .0);
-    return sum / deltaTimeHistory.size();
+    double sum = std::accumulate(history.begin(), history.end(), .0);
+    return sum / history.size();
 }
 
 // 工具函数：显示FPS
@@ -141,7 +150,22 @@ void ShowAverageFps()
         return;
     }
     lastShowTime = GetGameTime();
-    double averageFps = 1000.0 / GetAverageDeltaTime();
+    double averageFps = 1000.0 / GetAverageDeltaTime(deltaTimeHistory);
     // 在状态栏位置0显示FPS
-    Log(0, "FPS: %.1f", averageFps);
+    Log(0, "Update FPS: %.1f", averageFps);
+}
+
+// 工具函数：显示渲染FPS
+void ShowAverageRenderFps()
+{
+    static double lastShowTime = -1;
+    // 控制刷新间隔
+    if (GetGameTime() - lastShowTime < 1)
+    {
+        return;
+    }
+    lastShowTime = GetGameTime();
+    double averageFps = 1000.0 / GetAverageDeltaTime(renderDeltaTimeHistory);
+    // 在状态栏位置1显示FPS
+    Log(1, "Render FPS: %.1f", averageFps);
 }
