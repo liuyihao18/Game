@@ -22,6 +22,7 @@
 HINSTANCE hInst;                     // 当前实例
 WCHAR szTitle[MAX_LOADSTRING];       // 标题栏文本
 WCHAR szWindowClass[MAX_LOADSTRING]; // 主窗口类名
+static WCHAR LogMessage[3][256];
 HWND hWnd;                           // 主窗口
 HWND hStatus;                        // 状态栏
 
@@ -308,10 +309,9 @@ void Log(int pos, const char *format, ...)
 
     va_end(args);
 
-    TCHAR wMessage[256];
-    MultiByteToWideChar(CP_ACP, 0, message, -1, wMessage, 256);
+    MultiByteToWideChar(CP_ACP, 0, message, -1, LogMessage[pos], 256);
 
-    SendMessage(hStatus, SB_SETTEXT, pos, (LPARAM)wMessage);
+    PostMessage(hStatus, SB_SETTEXT, pos, (LPARAM)LogMessage[pos]);
 }
 
 // 状态栏打印日志
@@ -320,10 +320,9 @@ void Log(int pos, const TCHAR *format, ...)
     va_list args;
     va_start(args, format);
 
-    TCHAR wMessage[256];
-    wsprintf(wMessage, format, args);
+    wsprintf(LogMessage[pos], format, args);
 
     va_end(args);
 
-    SendMessage(hStatus, SB_SETTEXT, pos, (LPARAM)wMessage);
+    PostMessage(hStatus, SB_SETTEXT, pos, (LPARAM)LogMessage[pos]);
 }
