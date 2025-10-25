@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "direct2d.h"
 
 #include "scene.h"
@@ -19,7 +19,7 @@ template <class T> void SafeRelease(T** ppT)
     }
 }
 
-#pragma region ¹³×Óº¯Êı
+#pragma region é’©å­å‡½æ•°
 
 int D2DInit(HWND _hWnd) {
     if (FAILED(D2D1CreateFactory(
@@ -85,7 +85,7 @@ int D2DResize(HWND _hWnd, UINT width, UINT height) {
 
 #pragma endregion
 
-#pragma region ÄÚ²¿º¯Êı
+#pragma region å†…éƒ¨å‡½æ•°
 
 void DiscardGraphicsResources()
 {
