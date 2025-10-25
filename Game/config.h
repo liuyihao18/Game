@@ -10,7 +10,6 @@
 #define WINDOW_Y 80            // 游戏窗口位置Y坐标
 #define WINDOW_WIDTH 1000      // 游戏窗口宽度
 #define WINDOW_HEIGHT 800      // 游戏窗口高度
-#define WINDOW_OTHER_HEIGHT 85 // 其他栏高度
 
 /* UI参数 */
 #define GAME_BOARDER 10                                        // 游戏场景左边区域的边框宽度
