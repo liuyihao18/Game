@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 int D2DInit(HWND hWnd);
 
