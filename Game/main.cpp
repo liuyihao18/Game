@@ -7,6 +7,9 @@
 
 #include "resource.h"
 #include "timer.h"
+#if RENDER_PIPELINE == RENDER_PIPELINE_D2D
+#include "direct2d.h"
+#endif
 
 #include "core.h"
 #include "mouse.h"
@@ -161,16 +164,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         CreateStatusBar(hWnd, wParam, lParam);
         // 游戏初始化
         GameInit(hWnd, wParam, lParam);
+#if RENDER_PIPELINE == RENDER_PIPELINE_D2D
+        D2DInit(hWnd);
+#endif
         // 游戏主循环开始
 #if TIMER_USE == TIMER_WM_TIMER
         SetTimer(hWnd, MAIN_TIMER_ID, 1000 / FPS, NULL);
 #elif TIMER_USE == TIMER_TQ_TIMER
         timer_thread = std::thread([=] {
-        InitTQTimer(hWnd);
+            InitTQTimer(hWnd);
             });
 #elif TIMER_USE == TIMER_MM_TIMER
         timer_thread = std::thread([=] {
-        InitMMTimer(hWnd);
+            InitMMTimer(hWnd);
             });
 #endif
     }
@@ -241,6 +247,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
     case WM_DESTROY:
     {
+#if RENDER_PIPELINE == RENDER_PIPELINE_D2D
+        D2DDestroy(hWnd);
+#endif
 #if TIMER_USE == TIMER_WM_TIMER
         KillTimer(hWnd, MAIN_TIMER_ID);
 #elif TIMER_USE == TIMER_TQ_TIMER
@@ -252,7 +261,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 #endif
         PostQuitMessage(0);
     }
-        break;
+    break;
+#if RENDER_PIPELINE == RENDER_PIPELINE_D2D
+    case WM_SIZE:
+    {
+        UINT width = LOWORD(lParam);
+        UINT height = HIWORD(lParam);
+        D2DResize(hWnd, width, height);
+    }
+    break;
+    // I don't know why, but it works:-)
+    // https://stackoverflow.com/questions/41533886/direct2d-moving-window-turns-gray
+    case WM_ERASEBKGND:
+    break;
+#endif
 #if TIMER_USE != TIMER_WM_TIMER
     case WM_USER_PAINT:
     {

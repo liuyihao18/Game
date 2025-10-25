@@ -39,3 +39,9 @@ const int statusBarParts[3] = {150, 300, -1}; // 状态栏分栏，第一个分�
 #define TIMER_MM_TIMER 2
 #define TIMER_USE TIMER_MM_TIMER
 #define WM_USER_PAINT (WM_USER+1)
+
+/* 渲染方式 */
+#define RENDER_PIPELINE_GDI 0
+#define RENDER_PIPELINE_OPENGL 1
+#define RENDER_PIPELINE_D2D 2
+#define RENDER_PIPELINE RENDER_PIPELINE_GDI

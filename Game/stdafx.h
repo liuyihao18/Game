@@ -10,8 +10,10 @@
 // Windows 头文件
 #include <windows.h>
 #include <mmsystem.h>
+#include <d2d1.h>
 #pragma comment(lib, "comctl32.lib") // 解决报错：无法解析的外部符号 __imp_InitCommonControlsEx
 #pragma comment(lib, "Msimg32.lib")  // 解决报错：无法解析的外部符号 __imp_TransparentBlt
+#pragma comment(lib, "d2d1.lib")
 // C运行库
 #include <stdlib.h>
 #include <malloc.h>

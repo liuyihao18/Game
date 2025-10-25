@@ -7,6 +7,7 @@
 
 #include "core.h"
 #include "scene.h"
+#include "direct2d.h"
 
 // 内部游戏时间：单位（ms）
 static double gameTime = 0;
@@ -65,6 +66,7 @@ extern HBITMAP bmp_WhiteBackground;
 
 void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
+#if RENDER_PIPELINE == RENDER_PIPELINE_GDI
     // 开始绘制
     PAINTSTRUCT ps;
     HDC hdc_window = BeginPaint(hWnd, &ps);
@@ -94,6 +96,9 @@ void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
     // 结束绘制
     EndPaint(hWnd, &ps);
+#else RENDER_PIPELINE == RENDER_PIPELINE_D2D
+    D2DRender(hWnd);
+#endif
     // 渲染时间处理
     double currentTimestamp = GetCurrentTimestamp();
     double renderDeltaTime = (currentTimestamp - lastRenderTimestamp);

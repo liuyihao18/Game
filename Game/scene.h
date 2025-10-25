@@ -25,6 +25,7 @@ void SceneLoop();
 
 // 渲染场景
 void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
+void D2DRenderScene(ID2D1HwndRenderTarget* pRT);
 
 // 获取当前场景
 Scene *GetCurrentScene();

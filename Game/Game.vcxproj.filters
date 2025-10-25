@@ -108,6 +108,9 @@
     <ClInclude Include="type.h">
       <Filter>头文件\通用</Filter>
     </ClInclude>
+    <ClInclude Include="direct2d.h">
+      <Filter>头文件\框架</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core.cpp">
@@ -154,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="scene.cpp">
       <Filter>源文件\场景</Filter>
+    </ClCompile>
+    <ClCompile Include="direct2d.cpp">
+      <Filter>源文件\框架</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
