@@ -10,7 +10,8 @@ enum SceneId
 {
     None = 0,       // 没有场景
     StartScene = 1, // 开始场景
-    GameScene = 2   // 游戏场景
+    GameScene = 2,   // 游戏场景
+    TestScene = 3,
 };
 
 struct Scene
@@ -45,6 +46,9 @@ void ChangeScene(SceneId newSceneId);
     case GameScene:                         \
         FUNCTION_NAME##_GameScene();        \
         break;                              \
+    case TestScene:                         \
+        FUNCTION_NAME##_TestScene();        \
+        break;                              \
     default:                                \
         break;                              \
     }
@@ -60,6 +64,9 @@ void ChangeScene(SceneId newSceneId);
     case GameScene:                                          \
         FUNCTION_NAME##_GameScene(param1);                   \
         break;                                               \
+    case TestScene:                                          \
+        FUNCTION_NAME##_TestScene(param1);                   \
+        break;                                               \
     default:                                                 \
         break;                                               \
     }
@@ -74,6 +81,9 @@ void ChangeScene(SceneId newSceneId);
         break;                                                       \
     case GameScene:                                                  \
         FUNCTION_NAME##_GameScene(param1, param2);                   \
+        break;                                                       \
+    case TestScene:                                                  \
+        FUNCTION_NAME##_TestScene(param1, param2);                   \
         break;                                                       \
     default:                                                         \
         break;                                                       \

@@ -9,6 +9,7 @@
 #include "scene.h"
 #include "scene1.h"
 #include "scene2.h"
+#include "scene3.h"
 
 // 当前游戏场景
 static Scene sceneInstance = {None};
@@ -47,6 +48,7 @@ void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
 }
 
 void D2DRenderScene(ID2D1HwndRenderTarget* pRT) {
+	D2DRenderScene_TestScene(pRT);
 }
 
 // 获取当前场景
