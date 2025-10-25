@@ -50,7 +50,11 @@ void GameLoop(HWND hWnd)
     SceneLoop();
 
     // 最后进行渲染，实际的渲染函数是GameRender，只重绘画面部分
+#if TIMER_USE == WM_TIMER
     InvalidateRect(hWnd, nullptr, FALSE);
+#else
+    PostMessage(hWnd, WM_USER_PAINT, 0, 0);
+#endif
 }
 
 // 渲染资源

@@ -15,6 +15,7 @@
 #include <atlconv.h>
 #include <commctrl.h>
 #include <time.h>
+#include <thread>
 
 #define MAX_LOADSTRING 100
 
@@ -22,9 +23,10 @@
 HINSTANCE hInst;                     // 当前实例
 WCHAR szTitle[MAX_LOADSTRING];       // 标题栏文本
 WCHAR szWindowClass[MAX_LOADSTRING]; // 主窗口类名
-static WCHAR LogMessage[3][256];
+static WCHAR LogMessage[3][256];     // 异步Log信息
 HWND hWnd;                           // 主窗口
 HWND hStatus;                        // 状态栏
+static std::thread timer_thread;     // 非WM_TIMER时的定时器线程
 
 // 此代码模块中包含的函数的前向声明:
 ATOM MyRegisterClass(HINSTANCE hInstance);
@@ -163,9 +165,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 #if TIMER_USE == TIMER_WM_TIMER
         SetTimer(hWnd, MAIN_TIMER_ID, 1000 / FPS, NULL);
 #elif TIMER_USE == TIMER_TQ_TIMER
+        timer_thread = std::thread([=] {
         InitTQTimer(hWnd);
+            });
 #elif TIMER_USE == TIMER_MM_TIMER
+        timer_thread = std::thread([=] {
         InitMMTimer(hWnd);
+            });
 #endif
     }
     break;
@@ -234,15 +240,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     break;
     case WM_DESTROY:
+    {
 #if TIMER_USE == TIMER_WM_TIMER
         KillTimer(hWnd, MAIN_TIMER_ID);
 #elif TIMER_USE == TIMER_TQ_TIMER
         DeleteTQTimer();
+        timer_thread.join();
 #elif TIMER_USE == TIMER_MM_TIMER
         DeleteMMTimer();
+        timer_thread.join();
 #endif
         PostQuitMessage(0);
+    }
         break;
+#if TIMER_USE != TIMER_WM_TIMER
+    case WM_USER_PAINT:
+    {
+        InvalidateRect(hWnd, nullptr, FALSE);
+    }
+    break;
+#endif
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }

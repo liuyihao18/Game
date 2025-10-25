@@ -12,6 +12,7 @@
 #include "core.h"
 
 #pragma region TQTIMER
+#if TIMER_USE == TIMER_TQ_TIMER
 
 static HANDLE hTimer = NULL;
 static HANDLE hTimerQueue = NULL;
@@ -48,9 +49,11 @@ void DeleteTQTimer()
     }
 }
 
+#endif
 #pragma endregion
 
 #pragma region MMTIMER
+#if TIMER_USE == TIMER_MM_TIMER
 
 static UINT mmTimerID;
 static UINT wTimerRes;
@@ -87,4 +90,5 @@ void DeleteMMTimer()
     timeEndPeriod(wTimerRes);
 }
 
+#endif
 #pragma endregion
