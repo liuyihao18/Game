@@ -19,19 +19,21 @@
 #define MAX_LOADSTRING 100
 
 // 全局变量:
-HINSTANCE hInst;                     // 当前实例
-WCHAR szTitle[MAX_LOADSTRING];       // 标题栏文本
-WCHAR szWindowClass[MAX_LOADSTRING]; // 主窗口类名
-static WCHAR LogMessage[3][256];
-HWND hWnd;                           // 主窗口
-HWND hStatus;                        // 状态栏
+static HINSTANCE hInst;                     // 当前实例
+static WCHAR szTitle[MAX_LOADSTRING];       // 标题栏文本
+static WCHAR szWindowClass[MAX_LOADSTRING]; // 主窗口类名
+static HWND hWnd;                           // 主窗口
+static HWND hStatus;                        // 状态栏
+
+// 状态栏日志缓冲区
+static WCHAR LogMessage[sizeof(statusBarParts) / sizeof(decltype(*statusBarParts))][256];
 
 // 此代码模块中包含的函数的前向声明:
-ATOM MyRegisterClass(HINSTANCE hInstance);
-BOOL InitInstance(HINSTANCE, int);
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
-BOOL CreateStatusBar(HWND hWnd, WPARAM wParam, LPARAM lParam);
+static ATOM MyRegisterClass(HINSTANCE hInstance);
+static BOOL InitInstance(HINSTANCE, int);
+static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+static INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
+static BOOL CreateStatusBar(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                       _In_opt_ HINSTANCE hPrevInstance,
@@ -115,7 +117,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     hInst = hInstance; // 将实例句柄存储在全局变量中
 
-    RECT rc{ 0,0,WINDOW_WIDTH,WINDOW_HEIGHT };
+    RECT rc{0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
     AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX | WS_CLIPCHILDREN, TRUE);
 
     hWnd = CreateWindow(
@@ -123,8 +125,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
         WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX | WS_CLIPCHILDREN,
         WINDOW_X,
         WINDOW_Y,
-        rc.right-rc.left,
-        rc.bottom-rc.top,
+        rc.right - rc.left,
+        rc.bottom - rc.top,
         nullptr, nullptr, hInstance, nullptr);
 
     if (!hWnd)
@@ -284,9 +286,9 @@ BOOL CreateStatusBar(HWND hWnd, WPARAM wParam, LPARAM lParam)
         return FALSE;
     }
 
-    RECT rc_sb;
-    GetWindowRect(hStatus, &rc_sb);
-    RECT rc{ 0,0,WINDOW_WIDTH,WINDOW_HEIGHT + rc_sb.bottom - rc_sb.top };
+    RECT rcStatus;
+    GetWindowRect(hStatus, &rcStatus);
+    RECT rc{0, 0, WINDOW_WIDTH, WINDOW_HEIGHT + rcStatus.bottom - rcStatus.top};
     AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX | WS_CLIPCHILDREN, TRUE);
     SetWindowPos(hWnd, nullptr, 0, 0, rc.right - rc.left, rc.bottom - rc.top, SWP_NOMOVE);
     SendMessage(hStatus, WM_SIZE, 0, 0);
