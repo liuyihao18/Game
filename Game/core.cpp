@@ -50,8 +50,7 @@ void GameLoop(HWND hWnd)
     SceneLoop();
 
     // 最后进行渲染，实际的渲染函数是GameRender，只重绘画面部分
-    RECT rect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-    InvalidateRect(hWnd, &rect, FALSE);
+    InvalidateRect(hWnd, nullptr, FALSE);
 }
 
 // 渲染资源

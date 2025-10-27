@@ -114,13 +114,16 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     hInst = hInstance; // 将实例句柄存储在全局变量中
 
+    RECT rc{ 0,0,WINDOW_WIDTH,WINDOW_HEIGHT };
+    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX | WS_CLIPCHILDREN, TRUE);
+
     hWnd = CreateWindow(
         szWindowClass, szTitle,
-        WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX,
+        WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX | WS_CLIPCHILDREN,
         WINDOW_X,
         WINDOW_Y,
-        WINDOW_WIDTH,
-        WINDOW_HEIGHT + WINDOW_OTHER_HEIGHT,
+        rc.right-rc.left,
+        rc.bottom-rc.top,
         nullptr, nullptr, hInstance, nullptr);
 
     if (!hWnd)
@@ -279,6 +282,13 @@ BOOL CreateStatusBar(HWND hWnd, WPARAM wParam, LPARAM lParam)
         MessageBox(hWnd, TEXT("状态栏创建失败"), TEXT("错误"), MB_OK);
         return FALSE;
     }
+
+    RECT rc_sb;
+    GetWindowRect(hStatus, &rc_sb);
+    RECT rc{ 0,0,WINDOW_WIDTH,WINDOW_HEIGHT + rc_sb.bottom - rc_sb.top };
+    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX | WS_CLIPCHILDREN, TRUE);
+    SetWindowPos(hWnd, nullptr, 0, 0, rc.right - rc.left, rc.bottom - rc.top, SWP_NOMOVE);
+    SendMessage(hStatus, WM_SIZE, 0, 0);
 
     SendMessage(hStatus, SB_SETPARTS, sizeof(statusBarParts) / sizeof(int), (LPARAM)statusBarParts);
 
