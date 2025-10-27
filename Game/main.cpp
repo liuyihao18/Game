@@ -201,7 +201,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         LButtonUp(hWnd, wParam, lParam);
     }
     break;
-#if TIMER_USE == TIMER_WM_TIMER
     case WM_TIMER:
     {
         // 游戏主循环逻辑
@@ -211,7 +210,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
     }
     break;
-#endif
     case WM_COMMAND:
     {
         int wmId = LOWORD(wParam);
