@@ -24,13 +24,13 @@
 
 预编译做的只有一件事——字符串替换！牢记这件事，看下面的例子。
 
-> `##`可以在预编译时进行字符串拼接。
->
 > `#include`就是把头文件原封不动地粘贴到这里。
 >
 > 库文件`#include`用尖括号：`#include <math.h>`
 >
 > 自己写的头文件用引号：`#include "util.h"`
+>
+> `##`可以在预编译时进行字符串拼接。
 
 ```cpp
 #define ID 1
@@ -45,7 +45,7 @@ int m = 2;
 // 预编译之后就是 int m = 1;
 
 #define ADD(a, b) a + b
-int x = add(1, 2);  // 预编译之后就是 int x = 1 + 2;
+int x = ADD(1, 2);  // 预编译之后就是 int x = 1 + 2;
 
 #define CONCATENATE(STR1, STR2)  STR1##STR2
 const char* str = CONCATENATE("Hello, ", "World!");
@@ -63,6 +63,7 @@ Funf(print)("%d", 1);
 程序编译是自上而下的，函数应该先声明再调用，否则在调用时，并不知道函数长什么样。
 
 ```cpp
+// main.cpp
 int fun(int param);  // 声明一个函数
 
 int main() {
@@ -70,8 +71,10 @@ int main() {
     return 0;
 }
 
+// 任何.cpp
 // 函数定义可以在任何地方
 int fun(int param) {
+	printf("%d", param);
     return 0;
 }
 ```
@@ -120,7 +123,9 @@ int main() {
 
 #### `static`关键字
 
-`static`关键字在不同地方起到的作用不一样，如果在函数里，将声明一个静态变量，只在函数第一次运行的时候执行变量初始化，后面变量将不再初始化，可以用这个特性，在多次调用函数时共享某个值。
+`static`关键字在不同地方起到的作用不一样：
+
+`static`关键字如果在函数里，将声明一个静态变量，只在函数第一次运行的时候执行变量初始化，后面变量将不再初始化，可以用这个特性，在多次调用函数时共享某个值。
 
 > 实质上类似全局变量，但只能在函数内部访问。
 
@@ -206,7 +211,7 @@ delete[] arr;
 
 开始执行（不调试）- Ctrl + F5
 
-开始调试 - F5
+开始调试 - F5（**建议使用这个，如果出错能得到更多信息**）
 
 断点 - F9 或者 点击代码行最左边
 
@@ -586,6 +591,62 @@ void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
 ```
 
 > 记住宏函数是字符串替换。
+
+比如上面`SceneLoop`中的片段：
+
+```
+if (_newSceneId != None)
+{
+    // 卸载当前场景
+    ROUTE_SCENE_FUNCTION(UnloadScene);
+    // 切换场景ID
+    currentScene->sceneId = _newSceneId;
+    _newSceneId = None;
+    // 加载新场景
+    ROUTE_SCENE_FUNCTION(LoadScene);
+}
+```
+
+在经过宏展开后等价于：
+
+```cpp
+ if (_newSceneId != None)
+ {
+   // 卸载当前场景
+-  ROUTE_SCENE_FUNCTION(UnloadScene);
++  switch (GetCurrentScene()->sceneId)
++  {
++    case None:
++      break;
++    case StartScene:
++      UnloadScene_StartScene();
++      break;
++    case GameScene:
++      UnloadScene_GameScene();
++      break;
++    default:
++      break;
++  }
+   // 切换场景ID
+   currentScene->sceneId = _newSceneId;
+   _newSceneId = None;
+   // 加载新场景
+-  ROUTE_SCENE_FUNCTION(LoadScene);
++  switch (GetCurrentScene()->sceneId)
++  {
++    case None:
++      break;
++    case StartScene:
++      LoadScene_StartScene();
++      break;
++    case GameScene:
++      LoadScene_GameScene();
++      break;
++    default:
++      break;
++  }
+ }
+```
 
 然后实际调用的函数就是`scene1`、`scene2`里面对应名称的函数。
 
