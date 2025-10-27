@@ -27,7 +27,7 @@
 #define BULLET_RADIUS 8
 
 /* 状态栏 */
-const int statusBarParts[2] = {100, -1}; // 状态栏分栏，第一个分区宽度100，第二个占满剩余
+const int statusBarParts[3] = {150, 300, -1}; // 状态栏分栏，第一个分区宽度100，第二个占满剩余
 
 /* 游戏内参数 */
 #define FPS 165 // 游戏运行帧率
