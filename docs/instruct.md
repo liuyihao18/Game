@@ -12,21 +12,25 @@
 - 了解最基本的游戏运行逻辑，体会一个简单的游戏框架
 - 大幅度提高编程能力，将自身所想实际实现出来
 
-## 0. 写在前面
+## 〇、写在前面
 
 在开始大作业之前，请同学先学习以下前置知识。
 
-### 文档查询
+### 1）文档查询（MSDN）
 
 请同学们掌握文档查询能力，尤其是在编写大作业的过程中，可能会遇到许多没用过的函数（Win32 API函数等），这种时候可以用鼠标点击让光标停留在该函数上，然后按键盘上`F1`键，这将跳转到对应的微软MSDN文档函数说明，在文档中你将看到函数的参数、返回值，已经产生的效果。
 
-### 预编译
+### 2）预编译（宏）
 
 预编译做的只有一件事——字符串替换！牢记这件事，看下面的例子。
 
 > `##`可以在预编译时进行字符串拼接。
 >
 > `#include`就是把头文件原封不动地粘贴到这里。
+>
+> 库文件`#include`用尖括号：`#include <math.h>`
+>
+> 自己写的头文件用引号：`#include "util.h"`
 
 ```cpp
 #define ID 1
@@ -54,7 +58,7 @@ Funf(print)("%d", 1);
 
 > 有疑惑的同学可以自己先试一试！
 
-### 函数先声明再调用
+### 3）函数先声明再调用
 
 程序编译是自上而下的，函数应该先声明再调用，否则在调用时，并不知道函数长什么样。
 
@@ -72,13 +76,47 @@ int fun(int param) {
 }
 ```
 
-函数必须先声明再调用，函数定义可以在**任何地方**，包括声明时直接定义，或者定义在另一个`.cpp`文件中，这是多文件编程的基础。
+函数必须先声明（原型）再调用，函数定义（实现）可以在**任何地方**，包括声明时直接定义，或者定义在另一个`.cpp`文件中，这是多文件编程的基础。
 
 声明只是为了能正常**编译**，`.cpp`文件**编译**后还会进行**链接**，此时会把函数调用定位到具体的定义位置，因此函数定义可以放在任何地方。
 
 > 感兴趣的可以去整体了解下 预编译->编译->链接 可执行文件生成过程。
 
-### 语言关键字
+#### 头文件与源文件
+
+因为函数必须先声明再调用，而函数定义可以在任何地方，所有在多文件编程中，通常把函数的声明放在头文件里，而定义放在源文件里。
+
+这样，任何要调用该函数的源文件，只需要包含该函数声明的头文件即可。
+
+例如：
+
+```cpp
+// fun.h
+void fun();
+
+// fun.cpp
+void fun() {}
+
+// main.cpp
+#include "fun.h"
+
+int main() {
+    fun();
+}
+```
+
+再次提醒，预编译指令`#include`只做了复制粘贴，`main.cpp`实际上预编译后就是以下内容。
+
+```cpp
+// main.cpp
+void fun();
+
+int main() {
+    fun();
+}
+```
+
+### 4）语言关键字
 
 #### `static`关键字
 
@@ -144,7 +182,7 @@ int* arr = new int[10]();
 delete[] arr;
 ```
 
-### Visual Studio使用方式
+### 5）Visual Studio使用方式
 
 #### 声明定义快速预览
 
@@ -180,7 +218,17 @@ delete[] arr;
 
 > 以上快捷键同学们可以尽量熟悉，提高效率
 
-### C++ STL
+#### 预编译头加速
+
+预编译头是Visual Studio提供的一项功能，通过把一系列通常不变的头文件整合到一个头文件里单独编译，以此加速，参考该[文档](https://learn.microsoft.com/zh-cn/cpp/build/creating-precompiled-header-files?view=msvc-170)。
+
+大作业框架使用了预编译头加速功能，因此所有的源文件第一个包含的头文件必须是：
+
+```cpp
+#include "stdafx.h"
+```
+
+### 6）C++ STL
 
 大作业框架为了方便不可避免地使用了一些C++ STL相关的内容，包括：
 
@@ -230,15 +278,570 @@ int main() {
 }
 ```
 
-## 1. 框架预览
+### 7）所谓游戏
+
+游戏究根到底并没有同学想的那么复杂，不过是按一定的时间间隔更新游戏逻辑并把游戏画面在屏幕上绘制出来。同学们要做的就是游戏逻辑如何更新，与游戏画面如何绘制。于是这里有一些术语需要提前了解：
+
+- 帧：某一时刻的画面
+- 帧率：1秒中有多少画面
+- 帧间隔时间（帧耗时）：顾名思义，相邻两帧的间隔时间
+- 游戏时间：游戏实际运行的时间，打开游戏的时刻定为0
+- 场景：当前的所有内容认为是包含在一个场景里
+
+游戏很卡就是指帧率低，帧率低的原因是帧耗时过长，可能是这一帧更新游戏逻辑耗时过长，也可能是绘制画面耗时过长。
+
+## 一、框架预览
 
 同学们下载完框架代码后，可以双击`Game.sln`打开解决方案。
 
 首先尝试编译运行，理应可以成功运行。
 
-### 框架结构
+### 1）框架结构
 
 ![](images/framework.png)
 
-这个大作业框架的代码结构如上图所示，分为Win32应用程序部分、游戏框架部分和场景逻辑部分。
+这个大作业框架的代码结构如上图所示，分为Win32应用程序部分、游戏框架部分和场景逻辑部分，接下来逐个进行介绍。请注意，这部分代码可能略复杂，但分层设计的思想是解耦的重要方式，对大家编程能力和思想大有脾益。
+
+不失一般性，下面在提到`XXX`文件的时候，将同时包括`XXX.h`、`XXX.cpp`，`XXX.h`中是函数的声明，`XXX.cpp`中是函数的定义。
+
+### 2）Win32 应用程序层
+
+学习这一部分，请看`main.cpp`文件。这个文件绝大部分内容都是Visual Studio在创建“Windows桌面应用程序”时自动生成的，进行了一系列Windows桌面应用程序的初始化操作。
+
+`WinMain`函数是Windows桌面应用程序的入口函数，对应于之前写控制台程序时的`main`函数，这个函数只需要关注一个部分，也就是主消息循环：
+
+```cpp
+// main.cpp
+
+// 主消息循环:
+while (GetMessage(&msg, nullptr, 0, 0))
+{
+    if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+}
+```
+
+这个函数表示了程序和Windows操作系统的交互，也是**事件驱动**的程序设计模式。简单来讲就是，程序轮询操作系统，是否有某个事件发生，如果发生了某个事件，就对这个事件进行响应。
+
+实际的事件响应函数是`WndProc`函数，它的函数原型是：
+
+```cpp
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+```
+
+当操作系统检测到事件发生时，就会调用这个函数对事件进行响应，其中的`HWND`函数是窗口句柄（指针），`message`是消息的类型，`wParam`和`lParam`是消息对应的内容，至于具体如何解释这个内容，请选择对应的消息类型并按`F1`查看文档。
+
+`WndProc`函数用`switch-case`对类型进行了选择，我们可以看到以下几个比较重要的事件类型：
+
+- `WM_CREATE`：这是窗口创建后的事件，在这里我们调用了游戏初始化`GameInit`函数，并设置定时器
+- `WM_TIMER`：定时器会以固定间隔产生该定时事件，我们在定时事件中调用游戏主循环函数`GameLoop`，**计算一帧**
+- `WM_PAINT`：这是绘图事件，我们在该事件中绘制游戏画面，调用游戏渲染函数`GameRender`
+- `WM_KEY_DOWN`、`WM_KEY_OUT`、`WM_MOUSEMOVE`、`WM_LBUTTONDOWN`、`WM_LBUTTONUP`：这是一系列键盘和鼠标事件，我们在对应事件中设置键鼠输入
+
+除此之外的事件类型我们在框架中没有使用，比如`WM_COMMAND`、`WM_DESTROY`等，如果需要使用这些事件也可以查看文档，至于其他没有出现但可用的事件，也请查看文档。
+
+以下是Win32应用程序层的其他相关文件：
+
+- `info.h`和`main.cpp`中其他的一些额外函数处理了状态栏和日志输出的内容，有兴趣的同学可以自行学习了解。
+
+- `timer`中配置了定时器相关的内容，有兴趣的同学可以自行学习了解。
+
+- `stdafx`是预编译加速文件，把一些公共的头文件都放在了里面，`targetver.h`是Visual Studio自动生成的文件。
+- `config.h`是配置文件，会定义一些程序的属性，比如窗口大小等
+
+在`WndProc`函数中，我们调用了游戏框架层对应的函数，接下来我们移步到游戏框架层。
+
+### 3）游戏框架层
+
+游戏框架层，主要包括`core`、`resource.cpp`、`keyboard`和`mouse`。
+
+#### 游戏时间
+
+在`core`中，实现了一套游戏时间管理，包括游戏时间和帧间隔的统计以及帧率的显示等等，这部分有兴趣的同学可以自行学习了解。
+
+#### 游戏初始化
+
+游戏初始化函数`GameInit`定义在`core`中，函数比较短，抛开游戏时间统计，目前只做了两件事：
+
+```cpp
+// core.cpp
+
+void GameInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    // 初始化游戏资源
+    GameResourceInit(hWnd, wParam, lParam);
+    // 切换到开始场景
+    ChangeScene(StartScene);
+}
+```
+
+游戏资源初始化函数`GameResourceInit()`定义在`resource.cpp`中，这个函数负责初始化游戏中用到的资源，例如图片等，另外一些字符串资源也可以放在这里。
+
+```cpp
+// resource.cpp
+
+// 图片资源
+HBITMAP bmp_StartButton;     // 开始按钮图片
+
+void GameResourceInit(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    bmp_WhiteBackground = CreateBackground(hWnd, RGB(255, 255, 255));
+
+    // TODO: 引入其他的静态资源
+}
+```
+
+关于图片资源的使用更多内容请参考附一。
+
+初始化游戏资源后会切换到开始场景。
+
+#### 游戏循环
+
+游戏循环函数`GameLoop`定义在`core`中，函数中会统计帧耗时并刷新帧率显示。除此之外，调用`SceneLoop`把控制权交给场景层，最后发送更新游戏画面的通知。
+
+```cpp
+// core.cpp
+
+void GameLoop(HWND hWnd)
+{
+    // 场景循环更新
+    SceneLoop();
+
+    // 最后进行渲染，实际的渲染函数是GameRender，只重绘画面部分
+    RECT rect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+    InvalidateRect(hWnd, &rect, FALSE);
+}
+```
+
+`InvalidateRect`是Win32的API函数，调用这个函数后，操作系统便会产生一个`WM_PAINT`事件，在`WM_PAINT`事件里再调用`GameRender`。
+
+#### 游戏渲染
+
+游戏渲染函数`GameRender`定义在`core`中，函数会初始化Win32绘图的基本内容，比如画笔等，然后创建两个缓存，一个用来绘制画面，一个用来加载图片；绘制完场景之后，把缓存交换到屏幕上（也就是双缓冲绘图），再完成收尾工作。
+
+```cpp
+// core.cpp
+
+void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    // 开始绘制
+    PAINTSTRUCT ps;
+    HDC hdc_window = BeginPaint(hWnd, &ps);
+
+    // 创建缓存
+    HDC hdc_memBuffer = CreateCompatibleDC(hdc_window);
+    HDC hdc_loadBmp = CreateCompatibleDC(hdc_window);
+
+    // 初始化缓存
+    HBITMAP blankBmp = CreateCompatibleBitmap(hdc_window, WINDOW_WIDTH, WINDOW_HEIGHT);
+    SelectObject(hdc_memBuffer, blankBmp);
+
+    // 清空背景
+    SelectObject(hdc_loadBmp, bmp_WhiteBackground);
+    BitBlt(hdc_memBuffer, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, hdc_loadBmp, 0, 0, SRCCOPY);
+
+    // 绘制场景
+    RenderScene(hdc_memBuffer, hdc_loadBmp);
+
+    // 最后将所有的信息绘制到屏幕上
+    BitBlt(hdc_window, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, hdc_memBuffer, 0, 0, SRCCOPY);
+
+    // 回收资源所占的内存（非常重要）
+    DeleteObject(blankBmp);
+    DeleteDC(hdc_loadBmp);
+    DeleteDC(hdc_memBuffer);
+
+    // 结束绘制
+    EndPaint(hWnd, &ps);
+}
+```
+
+在期间，调用`RenderScene`把控制权交给场景层。
+
+#### 键盘、鼠标
+
+键盘相关函数定义在`keyboard`中、鼠标相关函数定义在`mouse`中，比较简单，同学自行了解即可。
+
+```cpp
+// keyboard.h
+
+// Windows应用程序框架的写入函数
+void KeyDown(HWND hWnd, WPARAM wParam, LPARAM lParam);
+void KeyUp(HWND hWnd, WPARAM wParam, LPARAM lParam);
+
+// 游戏逻辑的读取函数
+bool GetKeyDown(int keycode);
+```
+
+```cpp
+// mouse.h
+
+// Windows应用程序框架的写入函数
+void MouseMove(HWND hWnd, WPARAM wParam, LPARAM lParam);
+void LButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam);
+void LButtonUp(HWND hWnd, WPARAM wParam, LPARAM lParam);
+
+// 游戏逻辑的读取函数
+bool IsMouseLButtonDown();
+int GetMouseX();
+int GetMouseY();
+```
+
+### 4）场景逻辑层
+
+场景层的函数定义在`scene`中，而实际每个场景的函数实现在`scene1`、`scene2`中。
+
+场景有一个结构体用来保存当前场景的信息，可以通过`GetCurrentScene()`来获取。
+
+```cpp
+// scene.h
+
+// 游戏场景
+enum SceneId
+{
+    None = 0,       // 没有场景
+    StartScene = 1, // 开始场景
+    GameScene = 2   // 游戏场景
+};
+
+struct Scene
+{
+    SceneId sceneId; // 游戏场景的编号
+
+    // TODO: 如果场景需要保存更多信息，添加在这里
+};
+
+// 获取当前场景
+Scene *GetCurrentScene();
+```
+
+#### 场景循环
+
+对于场景循环函数`SceneLoop`和场景渲染函数`RenderScene`，会依次调用`LoadScene`、`UnloadScene`、`ProcessUiInput`、`CheckCollision`和`UpdateScene`和`RenderScene`。
+
+```cpp
+// scene.cpp
+
+// 场景循环
+void SceneLoop(double deltaTime)
+{
+	if (_newSceneId != None)
+	{
+		// 卸载当前场景
+		ROUTE_SCENE_FUNCTION(UnloadScene);
+		// 切换场景ID
+		currentScene->sceneId = _newSceneId;
+		_newSceneId = None;
+		// 加载新场景
+		ROUTE_SCENE_FUNCTION(LoadScene);
+	}
+
+	// 先处理UI输入
+	ROUTE_SCENE_FUNCTION(ProcessUiInput);
+
+	// 再计算碰撞
+	ROUTE_SCENE_FUNCTION(CheckCollision);
+
+	// 然后运行游戏逻辑
+	ROUTE_SCENE_FUNCTION_OneParam(UpdateScene, deltaTime);
+}
+
+// 渲染场景
+void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
+{
+	ROUTE_SCENE_FUNCTION_TwoParam(RenderScene, hdc_memBuffer, hdc_loadBmp);
+}
+```
+
+每一个函数都有其特定的含义：
+
+- `LoadScene`：在场景加载时应该做的初始化操作，比如创建一些对象、初始化一些变量等
+- `UnloadScene`：在场景卸载时应该做的资源清理操作，比如销毁一些对象等
+- `ProcessUiInput`：在场景循环开始的时候先判断当前的Ui操作，例如按钮点击等
+- `CheckCollision`：在场景循环中接着判断当前场景中的游戏对象是否产生碰撞，如果碰撞应该跑什么逻辑
+- `UpdateScene`：在场景循环中最后更新当前场景中的游戏对象，例如移动等
+- `RenderScene`：在场景中如何绘制当前场景
+
+这里的`ROUTE_SCENE_FUNCTION`是一个宏函数：
+
+```cpp
+// 宏函数 - 路由场景函数调用，如果有新的场景需要添加，在这里添加对应的 case 分支
+#define ROUTE_SCENE_FUNCTION(FUNCTION_NAME) \
+    switch (GetCurrentScene()->sceneId)     \
+    {                                       \
+    case None:                              \
+        break;                              \
+    case StartScene:                        \
+        FUNCTION_NAME##_StartScene();       \
+        break;                              \
+    case GameScene:                         \
+        FUNCTION_NAME##_GameScene();        \
+        break;                              \
+    default:                                \
+        break;                              \
+    }
+```
+
+> 记住宏函数是字符串替换。
+
+然后实际调用的函数就是`scene1`、`scene2`里面对应名称的函数。
+
+#### 切换场景
+
+切换场景时就是设置`_newSceneId`，然后在下一帧最开始的时候切换。
+
+```cpp
+// scene.cpp
+
+// 切换场景
+void ChangeScene(SceneId newSceneId)
+{
+	_newSceneId = newSceneId;
+}
+```
+
+#### 每个场景
+
+每个场景都必须在头文件声明相关的函数并进行实现，例如框架中的开始游戏场景。
+
+```cpp
+// scene.h
+// 加载场景
+void LoadScene_StartScene();
+
+// 卸载场景
+void UnloadScene_StartScene();
+
+// 处理UI输入
+void ProcessUiInput_StartScene();
+
+// 碰撞检测
+void CheckCollision_StartScene();
+
+// 更新场景
+void UpdateScene_StartScene(double deltaTime);
+
+// 渲染场景
+void RenderScene_StartScene(HDC hdc_memBuffer, HDC hdc_loadBmp);
+```
+
+在这六个函数中，都需要同时考虑游戏对象和UI组件两个部分（除了`ProcessUiInput`只针对Ui、`CheckCollision`只针对游戏对象外），例如对于目前的游戏场景，结构如下图所示：
+
+<img src="images/scene.png" style="width:90%;" />
+
+其中更新函数为：
+
+```cpp
+// scene2.cpp
+void UpdateScene_GameScene(double deltaTime)
+{
+    /* UI组件更新 */
+
+    /* 游戏对象更新 */
+    // 更新角色对象
+    UpdatePlayer(deltaTime);
+    // 更新敌人对象
+    UpdateEnemies(deltaTime);
+    // 更新子弹对象
+    UpdateBullets(deltaTime);
+    // TODO: 游戏场景中需要更新的游戏对象
+}
+```
+
+#### 游戏对象和UI组件
+
+现在每一个游戏对象和和UI组件的逻辑都写在了对应的文件里，例如`button`、`player`、`enemy`、`bullet`，这样编写程序可以高内聚、低耦合，逻辑也更加清晰，同学们可以看一下这些文件，在接下来的章节中，将带着大家编写出一个最简单的《飞机大战》游戏。
+
+## 二、上手游戏
+
+
+
+## 附一、Win32 绘图
+
+我们再回顾框架示意图，关注其中的`WM_PAINT`部分。
+
+![框架](images/framework.png)
+
+可以发现，绘图也是众多「事件」中的一种事件——它同样依靠操作系统事件循环一次次地触发。这个触发频率可能很高，例如达到每秒平均60次（注意这60次并不一定匀速触发），那么我们就说这个游戏的刷新帧率达到「60fps」。
+
+也正是在整个`WM_PAINT`链条中，我们把一个个抽象的变量变成画布上一个个鲜活的画面。
+
+```cpp
+// main.cpp
+// WndProc()函数
+case WM_PAINT:
+{
+    // 游戏渲染逻辑
+    GameRender(hWnd, wParam, lParam);
+}
+```
+
+### `GameRender()`：一切绘制，从这里开始
+
+在`GameRender()`中，我们使用了Win32中最原始，也是最直接的绘制方式「GDI」，但麻雀虽小，五脏俱全。
+
+```cpp
+void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    PAINTSTRUCT ps;
+    HDC hdc_window = BeginPaint(hWnd, &ps);
+  
+  	// 具体绘制逻辑
+  
+  	EndPaint(hWnd, &ps);
+}
+```
+
+这段逻辑的意思是，我们在`hWnd`这个窗口上开始绘制，而绘制通过`hdc_window`进行。（`HDC`是绘制中所有操作的上下文所在，所有对主窗口的绘制，都是对其`HDC`，即`hdc_window`调用函数来实现的）
+
+#### 画个矩形
+
+例如，我们可以在`// 具体绘制逻辑`部分加上绘制矩形的代码：
+
+```cpp
+void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    PAINTSTRUCT ps;
+    HDC hdc_window = BeginPaint(hWnd, &ps);
+  
+    Rectangle(hdc_window, 50, 50, 200, 100);
+  
+  	EndPaint(hWnd, &ps);
+}
+```
+
+这样，就可以画出一个左上角坐标`(50,50)`，右下角坐标`(200,100)`的矩形。
+
+如果我们想把矩形变成实心的，或者换个颜色，也是可以实现的，需要用到`FillRect()`、`PEN`和`BRUSH`，具体用法请参考GDI的文档：https://learn.microsoft.com/en-us/windows/win32/gdi/windows-gdi，但我们在此不多赘述。
+
+如果你想画其他的基本图元，例如圆、椭圆、线段等，也可以在文档中找到相应的方法。
+
+绘制文字也是类似，使用`DrawText`或`TextOut`等函数，同样可以参考文档：https://learn.microsoft.com/en-us/windows/win32/gdi/fonts-and-text。
+
+### 位图
+
+在我们的大作业中，这些基本图元难以组成精美的画面，相反，我们会用到的绝大多数资源都是**图片**，因此，我们将在这部分详细讲解图片的绘制。
+
+我们日常所见的`jpg`、`png`等格式的文件都是压缩的图片，**无法**被GDI直接使用；而只有**位图**格式，通常后缀为`bmp`，这样格式的文件才能被直接使用。
+
+#### 感受位图
+
+位图是完全没有压缩的图片，最直观反映在其文件大小上：我们知道，计算机上每一个像素是由红、绿、蓝三种颜色按比例混合而来的，例如，可以用每3个字节分别表示一个像素红、绿、蓝的亮度值（范围分别是`0~255`），比如`(255, 0,0)`代表纯红、`(255,255,255)`代表纯白、`(128,128,128)`代表一种灰色、`(0,0,0)`代表纯黑。
+
+对于一张图片，我们把代表所有像素的3个字节全部堆叠在一起（像数组一样）写入文件，就构成了一幅位图文件（此外，在文件开头需要一些信息注明其分辨率等信息）。
+
+例如，下图是一幅来自互联网的`png`格式压缩的图片，如果用「画图」打开，并且「另存为」`bmp`格式后，可以发现其文件大小显著增加了。
+
+![](images/Peking_University_seal.svg.png)
+
+![](images/mspaint.png)
+
+![](images\bmp_size.png)
+
+我们还可以做一个小计算：
+
+> 图片尺寸：$330 \times 330$像素
+>
+> 每个像素：$3$字节
+>
+> 一共大小：$330\times 330 \times 3=326,700$字节
+
+与上图显示的接近（因为文件开头还需要保存一些文件有关的信息，所以会大一些）。
+
+由此可见，位图格式的存储空间有极大的浪费，所以通常并不会直接存储或传输位图；然而，当一个程序需要将图像加载到内存之中时，图像都是以**位图**的形式存在的（即上面说的像素数组）。
+
+由于加载`jpg`、`png`需要引入额外的解码库，为了方便，我们推荐大家将所有的图像转为位图的形式进行调用。
+
+#### 使用位图
+
+##### 加载位图到`Game.rc`
+
+找到项目中`Game.rc`文件，双击打开后进入`Bitmap`文件夹，可以看到目前所有的位图；选中每一个位图后，可以在「属性」窗格中更改其`ID`。
+
+在`Game.rc`上右键「添加资源」，可以将找到的其他资源加入进来。
+
+##### 在`GameResourceInit()`中加载位图
+
+找到`资源\resource.cpp`文件，在`GameResourceInit`中使用`LoadBitmap`函数将位图加载到程序中。
+
+你可以仿照已有的代码加载更多位图。
+
+##### 把它画到`hdc_window`上
+
+还记得刚才我们用的画布`hdc_window`吗？
+
+我们使用`BitBlt()`和`TransparentBlt()`函数来绘制位图，但与刚才不一样的是，这里操作多了一步：
+
+```cpp
+void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    PAINTSTRUCT ps;
+    HDC hdc_window = BeginPaint(hWnd, &ps);
+  
+  	HDC hdc_loadBmp = CreateCompatibleDC(hdc_window);
+		SelectObject(hdc_loadBmp, bmp_Player);
+  	BitBlt(hdc_window, 0, 0, 200, 300, hdc_loadBmp, 0, 0, SRC_COPY);
+  
+  	EndPaint(hWnd, &ps);
+}
+```
+
+我们先不管`BitBlt`的调用参数（都是些和坐标变换有关的），先关注那个多出来的`hdc_loadBmp`。
+
+原来，`BitBlt`要求我们不能直接把位图画到`hdc_window`上，而需要通过一个中间层`hdc_loadBmp`来帮忙。
+
+这个`hdc_loadBmp`的类型同样是`HDC`，只不过它并没有和一个实际的窗口相关联，相反，它是一张仅存在于内存中的“虚拟画布”，我们先用`SelectObject`将位图加载到这张虚拟画布`hdc_loadBmp`上，再将这张虚拟画布画到窗口上。
+
+> `SelectObject`这个函数功能非常多，在这里作用是将位图加载到`hdc_loadBmp`上，在绘制图元的时候也用来选择画笔和画刷的颜色。
+
+在实际代码中（请参考`player.cpp`、`enemy.cpp`等对象的`Render`部分），我们会将框架`core.cpp`内创建好的一个`hdc_loadBmp`通过函数参数不断地传递下去，这是因为频繁地创建`hdc_loadBmp`会导致严重的性能问题，我们复用这样一个虚拟画布以优化性能。
+
+### 双缓冲绘图
+
+你可能会想，`BitBlt()`不能直接画位图，而要通过一个内存中的虚拟画布`HDC hdc_loadBmp`来中转这样的设计是多此一举，但事实是，位图绘制只是`BitBlt()`的功能之一，它更重要的是借此设计实现了双缓冲绘图。
+
+#### 双缓冲绘图：抵抗画面撕裂
+
+计算机的指令是一条条执行的，而当我们的图元太多的时候，绘制的过程就需要一定的时间；对于用户来说，它看到的画面就是一点一点地画出来的，就像「大屁股」电视一样，画面是一行一行扫描出来的，十分影响观感。
+
+「双缓冲绘图」思想便应运而生：既然最终显示在显示器上的画面**本质上就是一幅由很多像素组成的位图**，我们于是可以先在内存中创建一幅位图，把全部要绘制的内容绘制到它上面之后，再一次性将这张代表着这一帧内容的位图显示出去，于是就可以解决画面撕裂的问题了。
+
+#### 实现：`hdc_memBuffer`
+
+而实现这张「虚拟位图」的，就是刚刚提到的虚拟画布，只不过我们重新创建一个并另取名字：
+
+```cpp
+void GameRender(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    PAINTSTRUCT ps;
+    HDC hdc_window = BeginPaint(hWnd, &ps);
+  
+  	// 创建虚拟画布，并初始化缓存
+  	HDC hdc_memBuffer = CreateCompatibleDC(hdc_window);
+    HBITMAP blankBmp = CreateCompatibleBitmap(hdc_window, WINDOW_WIDTH, WINDOW_HEIGHT);
+    SelectObject(hdc_memBuffer, blankBmp);
+  
+  	/* 绘制部分
+  	HDC hdc_loadBmp = CreateCompatibleDC(hdc_window);
+		SelectObject(hdc_loadBmp, bmp_Player);
+  	BitBlt(hdc_memBuffer, 0, 0, 200, 300, hdc_loadBmp, 0, 0, SRC_COPY);
+  	*/
+  
+  	// 把虚拟画布画到窗口上
+  	BitBlt(hdc_window, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, hdc_memBuffer, 0, 0, SRCCOPY);
+  	
+  	EndPaint(hWnd, &ps);
+}
+```
+
+这里的`HDC hdc_memBuffer = CreateCompatibleDC(hdc_window);`，就是我们用来画图的虚拟画布。
+
+如果你去翻阅后续的所有渲染部分，会发现所有的绘制都是通过各种函数绘制在`hdc_memBuffer`上，然后当一些绘制结束，程序回到`core.cpp`时，通过`BitBlt`会知道窗口`hdc_window`上。
+
+由此，我们的绘制过程就全部完成了。
+
+
 
