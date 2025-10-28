@@ -182,7 +182,7 @@ void CheckCollision_GameScene_Player_Enemies()
             DestroyEnemy(enemy);
             if (player->attributes.health <= 0)
             {
-                Log(1, TEXT("游戏结束！"));
+                Log(2, TEXT("游戏结束！"));
                 ChangeScene(SceneId::StartScene);
             }
         }

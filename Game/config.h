@@ -30,7 +30,7 @@
 constexpr const int statusBarParts[3] = {150, 300, -1}; // 状态栏分栏，第一个分区宽度100，第二个占满剩余
 
 /* 游戏内参数 */
-#define FPS 200 // 游戏运行帧率
+#define FPS 100 // 游戏运行帧率
 
 /* 使用的计时器 */
 #define MAIN_TIMER_ID 1
