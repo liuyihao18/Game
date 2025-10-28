@@ -6,10 +6,10 @@
 #pragma once
 
 /* 游戏窗口位置与大小 */
-#define WINDOW_X 150           // 游戏窗口位置X坐标
-#define WINDOW_Y 80            // 游戏窗口位置Y坐标
-#define WINDOW_WIDTH 1000      // 游戏窗口宽度
-#define WINDOW_HEIGHT 800      // 游戏窗口高度
+#define WINDOW_X 150      // 游戏窗口位置X坐标
+#define WINDOW_Y 80       // 游戏窗口位置Y坐标
+#define WINDOW_WIDTH 1000 // 游戏窗口宽度
+#define WINDOW_HEIGHT 800 // 游戏窗口高度
 
 /* UI参数 */
 #define GAME_BOARDER 10                                        // 游戏场景左边区域的边框宽度
@@ -27,10 +27,10 @@
 #define BULLET_RADIUS 8
 
 /* 状态栏 */
-const int statusBarParts[3] = {150, 300, -1}; // 状态栏分栏，第一个分区宽度100，第二个占满剩余
+constexpr const int statusBarParts[3] = {150, 300, -1}; // 状态栏分栏，第一个分区宽度100，第二个占满剩余
 
 /* 游戏内参数 */
-#define FPS 165 // 游戏运行帧率
+#define FPS 100 // 游戏运行帧率
 
 /* 使用的计时器 */
 #define MAIN_TIMER_ID 1

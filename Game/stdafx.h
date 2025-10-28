@@ -12,6 +12,7 @@
 #include <mmsystem.h>
 #pragma comment(lib, "comctl32.lib") // 解决报错：无法解析的外部符号 __imp_InitCommonControlsEx
 #pragma comment(lib, "Msimg32.lib")  // 解决报错：无法解析的外部符号 __imp_TransparentBlt
+#pragma comment(lib, "Winmm.lib") // 解决报错：无法解析的外部符号 __imp_timeSetEvent
 // C运行库
 #include <stdlib.h>
 #include <malloc.h>
@@ -32,6 +33,3 @@
 #include "type.h"
 #include "info.h"
 #include "util.h"
-#if TIMER_USE == TIMER_MM_TIMER
-#pragma comment(lib, "Winmm.lib") // 解决报错：无法解析的外部符号 __imp_timeSetEvent
-#endif
