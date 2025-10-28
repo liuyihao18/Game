@@ -5,7 +5,10 @@
 
 #pragma once
 
+// TQ Timer
 void InitTQTimer(HWND hWnd);
-void InitMMTimer(HWND hWnd);
 void DeleteTQTimer();
+
+// MM Timer
+void InitMMTimer(HWND hWnd);
 void DeleteMMTimer();

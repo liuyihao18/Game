@@ -19,7 +19,7 @@ static HANDLE hTimerQueue = NULL;
 static VOID CALLBACK OnTQTimer(PVOID lpParam, BOOLEAN TimerOrWaitFired)
 {
     _CRT_UNUSED(TimerOrWaitFired);
-    GameLoop((HWND)lpParam);
+    PostMessage((HWND)lpParam, WM_TIMER, MAIN_TIMER_ID, 0);
 }
 
 void InitTQTimer(HWND hWnd)
@@ -27,7 +27,7 @@ void InitTQTimer(HWND hWnd)
     hTimerQueue = CreateTimerQueue();
     if (NULL == hTimerQueue)
     {
-        Log(0, "CreateTimerQueue failed (%d)\n");
+        Log(2, "CreateTimerQueue failed (%d)\n");
         return;
     }
 
@@ -35,7 +35,7 @@ void InitTQTimer(HWND hWnd)
                                (WAITORTIMERCALLBACK)OnTQTimer, (PVOID)hWnd, 0, (DWORD)(1000 / FPS), // timeout只接受整数
                                WT_EXECUTEINTIMERTHREAD | WT_EXECUTELONGFUNCTION))
     {
-        Log(0, "CreateTimerQueueTimer failed (%d)\n");
+        Log(2, "CreateTimerQueueTimer failed (%d)\n");
         return;
     }
 }
@@ -44,7 +44,8 @@ void DeleteTQTimer()
 {
     if (!DeleteTimerQueue(hTimerQueue))
     {
-        Log(0, "DeleteTimerQueue failed (%d)\n");
+        Log(2, "DeleteTimerQueue failed (%d)\n");
+        return;
     }
 }
 
@@ -61,7 +62,7 @@ static void CALLBACK OnMMTimer(UINT wTimerID, UINT msg, DWORD_PTR dwUser, DWORD_
     _CRT_UNUSED(msg);
     _CRT_UNUSED(dw1);
     _CRT_UNUSED(dw2);
-    GameLoop((HWND)dwUser);
+    PostMessage((HWND)dwUser, WM_TIMER, MAIN_TIMER_ID, 0);
 }
 
 void InitMMTimer(HWND hWnd)

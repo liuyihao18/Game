@@ -19,18 +19,21 @@
 #define MAX_LOADSTRING 100
 
 // 全局变量:
-HINSTANCE hInst;                     // 当前实例
-WCHAR szTitle[MAX_LOADSTRING];       // 标题栏文本
-WCHAR szWindowClass[MAX_LOADSTRING]; // 主窗口类名
-HWND hWnd;                           // 主窗口
-HWND hStatus;                        // 状态栏
+static HINSTANCE hInst;                     // 当前实例
+static WCHAR szTitle[MAX_LOADSTRING];       // 标题栏文本
+static WCHAR szWindowClass[MAX_LOADSTRING]; // 主窗口类名
+static HWND hWnd;                           // 主窗口
+static HWND hStatus;                        // 状态栏
+
+// 状态栏日志缓冲区
+static WCHAR LogMessage[sizeof(statusBarParts) / sizeof(decltype(*statusBarParts))][256];
 
 // 此代码模块中包含的函数的前向声明:
-ATOM MyRegisterClass(HINSTANCE hInstance);
-BOOL InitInstance(HINSTANCE, int);
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
-BOOL CreateStatusBar(HWND hWnd, WPARAM wParam, LPARAM lParam);
+static ATOM MyRegisterClass(HINSTANCE hInstance);
+static BOOL InitInstance(HINSTANCE, int);
+static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+static INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
+static BOOL CreateStatusBar(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                       _In_opt_ HINSTANCE hPrevInstance,
@@ -114,13 +117,16 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     hInst = hInstance; // 将实例句柄存储在全局变量中
 
+    RECT rc{0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX | WS_CLIPCHILDREN, TRUE);
+
     hWnd = CreateWindow(
         szWindowClass, szTitle,
-        WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX,
+        WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX | WS_CLIPCHILDREN,
         WINDOW_X,
         WINDOW_Y,
-        WINDOW_WIDTH,
-        WINDOW_HEIGHT + WINDOW_OTHER_HEIGHT,
+        rc.right - rc.left,
+        rc.bottom - rc.top,
         nullptr, nullptr, hInstance, nullptr);
 
     if (!hWnd)
@@ -195,7 +201,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         LButtonUp(hWnd, wParam, lParam);
     }
     break;
-#if TIMER_USE == TIMER_WM_TIMER
     case WM_TIMER:
     {
         // 游戏主循环逻辑
@@ -205,7 +210,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
     }
     break;
-#endif
     case WM_COMMAND:
     {
         int wmId = LOWORD(wParam);
@@ -280,6 +284,13 @@ BOOL CreateStatusBar(HWND hWnd, WPARAM wParam, LPARAM lParam)
         return FALSE;
     }
 
+    RECT rcStatus;
+    GetWindowRect(hStatus, &rcStatus);
+    RECT rc{0, 0, WINDOW_WIDTH, WINDOW_HEIGHT + rcStatus.bottom - rcStatus.top};
+    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX | WS_CLIPCHILDREN, TRUE);
+    SetWindowPos(hWnd, nullptr, 0, 0, rc.right - rc.left, rc.bottom - rc.top, SWP_NOMOVE);
+    SendMessage(hStatus, WM_SIZE, 0, 0);
+
     SendMessage(hStatus, SB_SETPARTS, sizeof(statusBarParts) / sizeof(int), (LPARAM)statusBarParts);
 
     Log(0, TEXT("状态栏已启用"));
@@ -298,10 +309,9 @@ void Log(int pos, const char *format, ...)
 
     va_end(args);
 
-    TCHAR wMessage[256];
-    MultiByteToWideChar(CP_ACP, 0, message, -1, wMessage, 256);
+    MultiByteToWideChar(CP_ACP, 0, message, -1, LogMessage[pos], 256);
 
-    SendMessage(hStatus, SB_SETTEXT, pos, (LPARAM)wMessage);
+    PostMessage(hStatus, SB_SETTEXT, pos, (LPARAM)LogMessage[pos]);
 }
 
 // 状态栏打印日志
@@ -310,10 +320,9 @@ void Log(int pos, const TCHAR *format, ...)
     va_list args;
     va_start(args, format);
 
-    TCHAR wMessage[256];
-    wsprintf(wMessage, format, args);
+    wsprintf(LogMessage[pos], format, args);
 
     va_end(args);
 
-    SendMessage(hStatus, SB_SETTEXT, pos, (LPARAM)wMessage);
+    PostMessage(hStatus, SB_SETTEXT, pos, (LPARAM)LogMessage[pos]);
 }
