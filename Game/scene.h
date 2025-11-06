@@ -34,16 +34,16 @@ void ChangeScene(SceneId newSceneId);
 
 // 宏函数 - 路由场景函数调用，如果有新的场景需要添加，在这里添加对应的 case 分支
 #define ROUTE_SCENE_FUNCTION(FUNCTION_NAME, ...) \
-    switch (GetCurrentScene()->sceneId)     \
-    {                                       \
-    case None:                              \
-        break;                              \
-    case StartScene:                        \
-        FUNCTION_NAME##_StartScene(__VA_ARGS__);       \
-        break;                              \
-    case GameScene:                         \
-        FUNCTION_NAME##_GameScene(__VA_ARGS__);        \
-        break;                              \
-    default:                                \
-        break;                              \
+    switch (GetCurrentScene()->sceneId)          \
+    {                                            \
+    case None:                                   \
+        break;                                   \
+    case StartScene:                             \
+        FUNCTION_NAME##_StartScene(__VA_ARGS__); \
+        break;                                   \
+    case GameScene:                              \
+        FUNCTION_NAME##_GameScene(__VA_ARGS__);  \
+        break;                                   \
+    default:                                     \
+        break;                                   \
     }
