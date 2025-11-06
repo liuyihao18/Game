@@ -33,47 +33,17 @@ Scene *GetCurrentScene();
 void ChangeScene(SceneId newSceneId);
 
 // 宏函数 - 路由场景函数调用，如果有新的场景需要添加，在这里添加对应的 case 分支
-#define ROUTE_SCENE_FUNCTION(FUNCTION_NAME) \
+#define ROUTE_SCENE_FUNCTION(FUNCTION_NAME, ...) \
     switch (GetCurrentScene()->sceneId)     \
     {                                       \
     case None:                              \
         break;                              \
     case StartScene:                        \
-        FUNCTION_NAME##_StartScene();       \
+        FUNCTION_NAME##_StartScene(__VA_ARGS__);       \
         break;                              \
     case GameScene:                         \
-        FUNCTION_NAME##_GameScene();        \
+        FUNCTION_NAME##_GameScene(__VA_ARGS__);        \
         break;                              \
     default:                                \
         break;                              \
-    }
-
-#define ROUTE_SCENE_FUNCTION_OneParam(FUNCTION_NAME, param1) \
-    switch (GetCurrentScene()->sceneId)                      \
-    {                                                        \
-    case None:                                               \
-        break;                                               \
-    case StartScene:                                         \
-        FUNCTION_NAME##_StartScene(param1);                  \
-        break;                                               \
-    case GameScene:                                          \
-        FUNCTION_NAME##_GameScene(param1);                   \
-        break;                                               \
-    default:                                                 \
-        break;                                               \
-    }
-
-#define ROUTE_SCENE_FUNCTION_TwoParam(FUNCTION_NAME, param1, param2) \
-    switch (GetCurrentScene()->sceneId)                              \
-    {                                                                \
-    case None:                                                       \
-        break;                                                       \
-    case StartScene:                                                 \
-        FUNCTION_NAME##_StartScene(param1, param2);                  \
-        break;                                                       \
-    case GameScene:                                                  \
-        FUNCTION_NAME##_GameScene(param1, param2);                   \
-        break;                                                       \
-    default:                                                         \
-        break;                                                       \
     }

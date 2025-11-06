@@ -37,13 +37,13 @@ void SceneLoop()
 	ROUTE_SCENE_FUNCTION(CheckCollision);
 
 	// 然后运行游戏逻辑
-	ROUTE_SCENE_FUNCTION_OneParam(UpdateScene, GetDeltaTime());
+	ROUTE_SCENE_FUNCTION(UpdateScene, GetDeltaTime());
 }
 
 // 渲染场景
 void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
 {
-	ROUTE_SCENE_FUNCTION_TwoParam(RenderScene, hdc_memBuffer, hdc_loadBmp);
+	ROUTE_SCENE_FUNCTION(RenderScene, hdc_memBuffer, hdc_loadBmp);
 }
 
 // 获取当前场景
