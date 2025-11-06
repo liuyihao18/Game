@@ -551,13 +551,13 @@ void SceneLoop(double deltaTime)
 	ROUTE_SCENE_FUNCTION(CheckCollision);
 
 	// 然后运行游戏逻辑
-	ROUTE_SCENE_FUNCTION_OneParam(UpdateScene, deltaTime);
+	ROUTE_SCENE_FUNCTION(UpdateScene, deltaTime);
 }
 
 // 渲染场景
 void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
 {
-	ROUTE_SCENE_FUNCTION_TwoParam(RenderScene, hdc_memBuffer, hdc_loadBmp);
+	ROUTE_SCENE_FUNCTION(RenderScene, hdc_memBuffer, hdc_loadBmp);
 }
 ```
 
@@ -574,19 +574,19 @@ void RenderScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
 
 ```cpp
 // 宏函数 - 路由场景函数调用，如果有新的场景需要添加，在这里添加对应的 case 分支
-#define ROUTE_SCENE_FUNCTION(FUNCTION_NAME) \
-    switch (GetCurrentScene()->sceneId)     \
-    {                                       \
-    case None:                              \
-        break;                              \
-    case StartScene:                        \
-        FUNCTION_NAME##_StartScene();       \
-        break;                              \
-    case GameScene:                         \
-        FUNCTION_NAME##_GameScene();        \
-        break;                              \
-    default:                                \
-        break;                              \
+#define ROUTE_SCENE_FUNCTION(FUNCTION_NAME, ...) \
+    switch (GetCurrentScene()->sceneId)          \
+    {                                            \
+    case None:                                   \
+        break;                                   \
+    case StartScene:                             \
+        FUNCTION_NAME##_StartScene(__VA_ARGS__); \
+        break;                                   \
+    case GameScene:                              \
+        FUNCTION_NAME##_GameScene(__VA_ARGS__);  \
+        break;                                   \
+    default:                                     \
+        break;                                   \
     }
 ```
 
