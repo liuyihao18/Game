@@ -1029,7 +1029,7 @@ void UpdatePlayer(double deltaTime)
 现在真的该让玩家动起来了！让我们用WASD或者上下左右方向键控制玩家移动！这显然也是在更新玩家对象，在`UpdatePlayer`当中实现即可。判断按钮是否按下，然后根据按钮按下的结果移动玩家就可以了！
 
 ```cpp
-// scene2.cpp
+// player.cpp
 void UpdatePlayer(double deltaTime)
 {
     // 读取键盘输入，然后控制角色位置
@@ -1064,7 +1064,7 @@ void UpdatePlayer(double deltaTime)
 现在运行程序，玩家飞机便可以正常运动，但是此时仍然有一个问题，就是飞机可以飞到它不该飞到的地方，因此我们需要限制玩家的运动范围，当玩家超出应用范围时掰回来。
 
 ```cpp
-// scene2.cpp
+// player.cpp
 
 void UpdatePlayer(double deltaTime)
 {
@@ -1182,7 +1182,7 @@ void RenderScene_GameScene(HDC hdc_memBuffer, HDC hdc_loadBmp)
 }
 ```
 
-然后在`RenderEnemy`中实际去绘制角色。
+然后在`RenderEnemies`中实际去绘制角色。
 
 ```cpp
 // enemy.cpp
