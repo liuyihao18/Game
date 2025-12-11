@@ -16,3 +16,6 @@ void KeyUp(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
 // 游戏逻辑的读取函数
 bool GetKeyDown(int keycode);
+
+// 游戏逻辑的清除函数
+void ClearKeyDown(int keycode);

@@ -38,3 +38,13 @@ bool GetKeyDown(int keycode)
     }
     return keyboard[keycode];
 }
+
+// 清除已经按下的按钮
+void ClearKeyDown(int keycode)
+{
+    if (keycode > 127)
+    {
+        return;
+    }
+    keyboard[keycode] = false;
+}
