@@ -181,10 +181,14 @@ void CheckCollision_GameScene_Player_Enemies()
             DestroyEnemy(enemy);
             if (player->attributes.health <= 0)
             {
-                Log(2, TEXT("游戏结束！"));
-                ChangeScene(SceneId::StartScene);
+                break;
             }
         }
+    }
+    if (player->attributes.health <= 0)
+    {
+        Log(2, TEXT("游戏结束！"));
+        ChangeScene(StartScene);
     }
 }
 
@@ -209,13 +213,17 @@ void CheckCollision_GameScene_Enemies_Bullets()
             {
                 // 碰撞后扣血、加分摧毁敌人和子弹
                 enemy->attributes.health -= bullet->damage;
+                DestroyBullet(bullet);
                 if (enemy->attributes.health <= 0)
                 {
-                    GetPlayer()->attributes.score += enemy->attributes.score;
-                    DestroyEnemy(enemy);
+                    break;
                 }
-                DestroyBullet(bullet);
             }
+        }
+        if (enemy->attributes.health <= 0)
+        {
+            GetPlayer()->attributes.score += enemy->attributes.score;
+            DestroyEnemy(enemy);
         }
     }
 }
