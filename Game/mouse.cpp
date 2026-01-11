@@ -40,6 +40,12 @@ bool IsMouseLButtonDown()
     return isMouseLButtonDown;
 }
 
+// 清除当前的按下状态
+void ClearMouseLButtonDown()
+{
+    isMouseLButtonDown = false;
+}
+
 // 获取当前鼠标的X坐标
 int GetMouseX()
 {

@@ -12,5 +12,6 @@ void LButtonUp(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
 // 游戏逻辑的读取函数
 bool IsMouseLButtonDown();
+void ClearMouseLButtonDown();
 int GetMouseX();
 int GetMouseY();

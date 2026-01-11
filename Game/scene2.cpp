@@ -166,9 +166,8 @@ void CheckCollision_GameScene_Player_Enemies()
     rect1.top = player->position.y;
     rect1.bottom = player->position.y + player->height;
     // 敌人用简单矩形表示
-    std::vector<Enemy *> enemies = GetEnemies();
     Rect rect2{};
-    for (Enemy *enemy : enemies)
+    for (Enemy *enemy : GetEnemies())
     {
         rect2.left = enemy->position.x;
         rect2.right = enemy->position.x + enemy->width;
@@ -182,10 +181,14 @@ void CheckCollision_GameScene_Player_Enemies()
             DestroyEnemy(enemy);
             if (player->attributes.health <= 0)
             {
-                Log(2, TEXT("游戏结束！"));
-                ChangeScene(SceneId::StartScene);
+                break;
             }
         }
+    }
+    if (player->attributes.health <= 0)
+    {
+        Log(2, TEXT("游戏结束！"));
+        ChangeScene(StartScene);
     }
 }
 
@@ -193,18 +196,16 @@ void CheckCollision_GameScene_Player_Enemies()
 void CheckCollision_GameScene_Enemies_Bullets()
 {
     // 敌人用简单矩形表示
-    std::vector<Enemy *> enemies = GetEnemies();
     Rect rect{};
     // 子弹用简单圆形表示
-    std::vector<Bullet *> bullets = GetBullets();
     Circle circle{};
-    for (Enemy *enemy : enemies)
+    for (Enemy *enemy : GetEnemies())
     {
         rect.left = enemy->position.x;
         rect.right = enemy->position.x + enemy->width;
         rect.top = enemy->position.y;
         rect.bottom = enemy->position.y + enemy->height;
-        for (Bullet *bullet : bullets)
+        for (Bullet *bullet : GetBullets())
         {
             circle.center = bullet->position;
             circle.radius = bullet->radius;
@@ -212,13 +213,17 @@ void CheckCollision_GameScene_Enemies_Bullets()
             {
                 // 碰撞后扣血、加分摧毁敌人和子弹
                 enemy->attributes.health -= bullet->damage;
+                DestroyBullet(bullet);
                 if (enemy->attributes.health <= 0)
                 {
-                    GetPlayer()->attributes.score += enemy->attributes.score;
-                    DestroyEnemy(enemy);
+                    break;
                 }
-                DestroyBullet(bullet);
             }
+        }
+        if (enemy->attributes.health <= 0)
+        {
+            GetPlayer()->attributes.score += enemy->attributes.score;
+            DestroyEnemy(enemy);
         }
     }
 }
